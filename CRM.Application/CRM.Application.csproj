@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="SecurityApplication\Services\Access\**" />
+	  <EmbeddedResource Remove="SecurityApplication\Services\Access\**" />
+	  <None Remove="SecurityApplication\Services\Access\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="WebFramework\Filters\UserAccessAttribute.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CRM.Infrastructure\CRM.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
+		<PackageReference Include="AutoMapper" Version="10.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.13" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.55.0" />
+		<PackageReference Include="Hellang.Authentication.JwtBearer.Google" Version="2.0.0" />
+		<PackageReference Include="MediatR" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
+		<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.2.2" />
+		<PackageReference Include="MailKit" Version="2.15.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.11" />
+		<PackageReference Include="MimeKit" Version="2.15.1" />
+		<PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2019.1.220" />
+
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.13" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="EmailSender">
+	    <HintPath>..\..\..\..\source\repos\EmailSender\EmailSender\bin\Debug\net5.0\EmailSender.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+</Project>

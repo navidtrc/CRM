@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Persistance\Configs\Security\AccessConfiguration.cs" />
+		<Compile Remove="Persistance\Configs\Security\AccessPermissionConfiguration.cs" />
+		<Compile Remove="Persistance\Configs\Security\AccessRoleConfiguration.cs" />
+		<Compile Remove="Persistance\Configs\Security\PermissionConfiguration.cs" />
+		<Compile Remove="Persistance\Configs\Security\UserAccessConfiguration.cs" />
+		<Compile Remove="Persistance\Configs\Security\UserPermissionConfiguration.cs" />
+		<Compile Remove="Persistance\Repositories\AccessPermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\AccessRepository.cs" />
+		<Compile Remove="Persistance\Repositories\AccessRoleRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IAccessPermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IAccessRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IAccessRoleRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IPermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IUserAccessRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IUserPermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\PermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\UserAccessRepository.cs" />
+		<Compile Remove="Persistance\Repositories\UserPermissionRepository.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.13" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CRM.Domain\CRM.Domain.csproj" />
+	</ItemGroup>
+
+</Project>
