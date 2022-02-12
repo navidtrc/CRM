@@ -2,9 +2,7 @@ import React from "react";
 import { Button, Col, Form, Modal, Nav, Row, Tab } from "react-bootstrap";
 import TicketPrice from "./TicketPrice";
 import GAH from "gah-datepicker";
-import { Grid, GridColumn } from "@progress/kendo-react-grid";
-import { InquiryCallActionCustomCell } from "./InquiryCallActionCustomCell";
-const editField = "inEdit";
+import { DataGrid, GridApi, GridCellValue } from "@mui/x-data-grid";
 
 export default class TicketInquiry extends React.Component {
   constructor(props) {
@@ -14,7 +12,59 @@ export default class TicketInquiry extends React.Component {
       update: { name: "update", title: "ویرایش" },
       delete: { name: "delete", title: "حذف" },
     };
-    debugger;
+
+    this.columns = [
+      { field: "id", headerName: "id", hide: true },
+      { field: "callDate", headerName: "تاریخ", width: 170 },
+      { field: "callTime", headerName: "ساعت", width: 170 },
+      {
+        field: "action",
+        headerName: "عملیات",
+        width: 250,
+        sortable: false,
+        renderCell: (params) => {
+          const api: GridApi = params.api;
+          const thisRow: Record<string, GridCellValue> = {};
+
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+
+          const onEditClick = (e) => {
+            e.stopPropagation();
+            this.handleUpdateCall(thisRow);
+          };
+          const onDeleteClick = (e) => {
+            e.stopPropagation();
+            this.handleRemoveCall(thisRow);
+          };
+
+          return (
+            <>
+              <Button
+                variant="warning"
+                size="sm"
+                style={{ marginLeft: "5px" }}
+                onClick={onEditClick}
+              >
+                ویرایش
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                style={{ marginLeft: "5px" }}
+                onClick={onDeleteClick}
+              >
+                حذف
+              </Button>
+            </>
+          );
+        },
+      },
+    ];
 
     this.state = {
       modeCall: this.mode.add,
@@ -43,14 +93,14 @@ export default class TicketInquiry extends React.Component {
         return true;
       case "update":
         const indexUpdate = copyCalls.findIndex((f) => {
-          return f.value.Id === call.value.Id;
+          return f.value.id === call.value.id;
         });
         copyCalls[indexUpdate].value = call.value;
         this.setState({ calls: copyCalls });
         return true;
       case "delete":
         const afterDelete = this.state.calls.filter(function (item) {
-          return item.value.Id !== call.value.Id;
+          return item.value.id !== call.value.id;
         });
         this.setState({ calls: afterDelete });
         return true;
@@ -85,31 +135,31 @@ export default class TicketInquiry extends React.Component {
     }
     return true;
   }
-  InquiryEditCell = (props) => (
-    <InquiryCallActionCustomCell
-      {...props}
-      onEditClick={this.handleUpdateCall}
-      onDeleteClick={this.handleRemoveCall}
-    />
-  );
+
   handleRemoveCall = (dataItem) => {
+    const item = this.state.calls.filter(
+      (item) => item.value.id === dataItem.id
+    )[0];
     const target = {
       name: "inquiryCall",
       action: this.mode.delete,
-      value: dataItem.value,
+      value: item.value,
     };
     this.handleInquiryCallChange(target);
   };
 
   handleUpdateCall = (dataItem) => {
+    const item = this.state.calls.filter(
+      (item) => item.value.id === dataItem.id
+    )[0];
     this.setState({
       modeCall: this.mode.update,
-      inquiryCallId: dataItem.value.Id,
-      inquiryCallReason: dataItem.value.CallReason,
-      inquiryCallDate: dataItem.value.CallDate,
-      inquiryCallTime: dataItem.value.CallTime,
-      inquiryCallDateTime: dataItem.value.CallDateTime,
-      inquiryCallAnswer: dataItem.value.CallAnswer,
+      inquiryCallId: item.value.id,
+      inquiryCallReason: item.value.callReason,
+      inquiryCallDate: item.value.callDate,
+      inquiryCallTime: item.value.callTime,
+      inquiryCallDateTime: item.value.callDateTime,
+      inquiryCallAnswer: item.value.callAnswer,
     });
   };
   newGuid = () => {
@@ -156,6 +206,14 @@ export default class TicketInquiry extends React.Component {
   }
 
   render() {
+    const gridItems = this.state.calls.map((item) => {
+      debugger;
+      return {
+        id: item.value.id,
+        callDate: item.value.callDate,
+        callTime: item.value.callTime,
+      };
+    });
     return (
       <Modal show={this.props.show} size="lg" className="rtl" centered>
         <Modal.Header>
@@ -311,17 +369,16 @@ export default class TicketInquiry extends React.Component {
                         if (!this.checkValidation()) {
                           return;
                         }
-                        debugger;
                         const target = {
                           name: "inquiryCall",
                           action: this.state.modeCall,
                           value: {
-                            Id: this.state.inquiryCallId,
-                            CallReason: this.state.inquiryCallReason,
-                            CallDate: this.state.inquiryCallDate,
-                            CallTime: this.state.inquiryCallTime,
-                            CallDateTime: `${this.state.inquiryCallDate} ${this.state.inquiryCallTime}`,
-                            CallAnswer: this.state.inquiryCallAnswer,
+                            id: this.state.inquiryCallId,
+                            callReason: this.state.inquiryCallReason,
+                            callDate: this.state.inquiryCallDate,
+                            callTime: this.state.inquiryCallTime,
+                            callDateTime: `${this.state.inquiryCallDate} ${this.state.inquiryCallTime}`,
+                            callAnswer: this.state.inquiryCallAnswer,
                           },
                         };
                         this.clearInputs();
@@ -332,22 +389,12 @@ export default class TicketInquiry extends React.Component {
                         ? this.mode.add.title
                         : this.mode.update.title}
                     </Button>
-                    <div dir="rtl" className="k-rtl">
-                      <Grid
-                        style={{
-                          marginTop: "10px",
-                        }}
-                        data={this.state.calls}
-                        editField={editField}
-                      >
-                        <GridColumn field="value.CallDateTime" title="زمان" />
-                        <GridColumn cell={this.InquiryEditCell} width="200px" />
-                      </Grid>
-                      <TicketInquiry
-                        onModalClose={() => {
-                          this.setState({ inquiryModalShow: false });
-                        }}
-                        show={this.state.inquiryModalShow}
+                    <div style={{ height: 300, width: "100%" }}>
+                      <DataGrid
+                        rows={gridItems}
+                        columns={this.columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
                       />
                     </div>
                   </Tab.Pane>

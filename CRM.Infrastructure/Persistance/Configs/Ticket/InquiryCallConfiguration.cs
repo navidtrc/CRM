@@ -1,14 +1,14 @@
-﻿using CRM.Domain.Models.Ticket.TicketTypeModels;
+﻿using CRM.Domain.Models.Ticket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CRM.Infrastructure.Persistance.Configs.Ticket
 {
-    public class InquiryDateConfiguration : IEntityTypeConfiguration<InquiryDate>
+    public class InquiryCallConfiguration : IEntityTypeConfiguration<InquiryCall>
     {
-        public void Configure(EntityTypeBuilder<InquiryDate> builder)
+        public void Configure(EntityTypeBuilder<InquiryCall> builder)
         {
-            builder.ToTable("InquiryDate", "TicketTypeModels");
+            builder.ToTable("InquiryCall", "Ticket");
 
             builder.HasOne(o => o.Inquiry)
                 .WithMany(m => m.InquiryDates)

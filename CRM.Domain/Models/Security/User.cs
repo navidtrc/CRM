@@ -1,6 +1,6 @@
 ﻿using Common.Enums;
 using CRM.Domain.Models.Core;
-using CRM.Domain.Models.Ticket.TicketTypeModels;
+using CRM.Domain.Models.Ticket;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,5 @@ namespace CRM.Domain.Models.Security
         //public ICollection<UserPermission> UserPermissions { get; set; }
         //public ICollection<UserAccess> UserAccesses { get; set; }
         public ICollection<Invoice> Invoices { get; set; }
-        public ICollection<Ticket.Ticket> Tickets { get; set; }
-        public ICollection<Ticket.TicketFlow> TicketFlows { get; set; }
     }
 }

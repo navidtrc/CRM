@@ -3,6 +3,7 @@ import TicketCustomer from "./Persistence/TicketCustomer";
 import TicketHeader from "./Persistence/TicketHeader";
 import TicketDevice from "./Persistence/TicketDevice";
 import { Modal, Tab, Row, Col, Nav } from "react-bootstrap";
+import authService from "../api-authorization/AuthorizeService";
 
 export default class AddOrUpdateTicket extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ export default class AddOrUpdateTicket extends React.Component {
       ticketState: {},
       customerFirstName: "",
       customerLastName: "",
-      customerPhoneName: "",
+      customerPhoneNumber: "",
       devices: [],
     };
   }
@@ -45,14 +46,14 @@ export default class AddOrUpdateTicket extends React.Component {
       case "update":
         const indexUpdate = copyDevices.findIndex((f) => {
           debugger;
-          return f.value.Id === device.value.Id;
+          return f.value.id === device.value.id;
         });
         copyDevices[indexUpdate].value = device.value;
         this.setState({ devices: copyDevices });
         return true;
       case "delete":
         const afterDelete = this.state.devices.filter(function (item) {
-          return item.value.Id !== device.value.Id;
+          return item.value.id !== device.value.id;
         });
         this.setState({ devices: afterDelete });
         return true;
@@ -66,10 +67,10 @@ export default class AddOrUpdateTicket extends React.Component {
 
     let selectedDevice = this.state.devices.filter((device) => {
       debugger;
-      return device.value.Id === inquiry.value.deviceId;
+      return device.value.id === inquiry.value.deviceId;
     });
 
-    selectedDevice[0].value.Inquiries = inquiry.value;
+    selectedDevice[0].value.inquiries = inquiry.value;
 
     const target = {
       name: "device",
@@ -79,6 +80,11 @@ export default class AddOrUpdateTicket extends React.Component {
 
     this.handleDeviceChange(target);
   };
+
+  async getToken() {
+    const token = await authService.getAccessToken();
+    return token;
+  }
 
   render() {
     console.log(this.state.devices);
@@ -151,21 +157,41 @@ export default class AddOrUpdateTicket extends React.Component {
               variant="success"
               className="btn btn-success"
               onClick={() => {
-                const target = {
-                  Number: this.state.ticketNumber,
-                  Date: this.state.ticketDate,
-                  State: this.state.ticketState,
-                  FirstName: this.state.customerFirstName,
-                  LastName: this.state.customerLastName,
-                  PhoneNumber: this.state.customerPhoneNumber,
-                  Devices: this.state.devices,
-                };
-                fetch("/", {
-                  method: "post",
-                  headers: { "Content-Type": "application/json" },
-                  body: target,
+                const devives = this.state.devices.map((device) => {
+                  return {
+                    state: device.action.name,
+                    type: device.value.type.title,
+                    brand: device.value.brand.title,
+                    model: device.value.model,
+                    accessories: device.value.accessories,
+                    description: device.value.description,
+                    customerPrice: device.value.customerPrice,
+                    shopPrice: device.value.shopPrice,
+                    repairWarranty: device.value.repairWarranty,
+                    shopWarranty: device.value.shopWarranty,
+                    // inquiries: device.value.inquiries,
+                  };
                 });
-                console.log(target);
+
+                const target = {
+                  number: this.state.ticketNumber,
+                  date: this.state.ticketDate,
+                  state: this.state.ticketState.id,
+                  firstName: this.state.customerFirstName,
+                  lastName: this.state.customerLastName,
+                  phoneNumber: this.state.customerPhoneNumber,
+                  devices: devives,
+                };
+                debugger;
+                const token = this.getToken();
+                fetch("api/ticket", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify(target),
+                });
                 this.closeModal();
               }}
             >

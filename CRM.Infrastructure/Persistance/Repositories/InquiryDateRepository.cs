@@ -1,12 +1,12 @@
-﻿using CRM.Domain.Models.Ticket.TicketTypeModels;
+﻿using CRM.Domain.Models.Ticket;
 using CRM.Infrastructure.Persistance.Core;
 using CRM.Infrastructure.Persistance.Repositories.Core;
 
 namespace CRM.Infrastructure.Persistance.Repositories
 {
-    public class InquiryDateRepository : Repository<InquiryDate>, IInquiryDateRepository
+    public class InquiryCallRepository : Repository<InquiryCall>, IInquiryCallRepository
     {
-        public InquiryDateRepository(ApplicationDbContext dbContext) : base(dbContext)
+        public InquiryCallRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
     }

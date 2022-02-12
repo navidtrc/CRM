@@ -24,12 +24,12 @@ namespace CRM.Infrastructure.Persistance.Core
         ICustomerRepository Customers { get; }
 
         IDeviceRepository Devices { get; }
-        IDeviceTypeRepository DeviceTypes { get; }
+        //IDeviceTypeRepository DeviceTypes { get; }
         IInquiryRepository Inquiries { get; }
-        IInquiryDateRepository InquiryDates { get; }
-        ITicketRepository Tickets { get; }
-        ITicketTypeRepository TicketTypes { get; }
-        ITicketFlowRepository TicketFlows { get; }
+        IInquiryCallRepository InquiryDates { get; }
+        //ITicketRepository Tickets { get; }
+        //ITicketTypeRepository TicketTypes { get; }
+        //ITicketFlowRepository TicketFlows { get; }
 
 
         int Complete();

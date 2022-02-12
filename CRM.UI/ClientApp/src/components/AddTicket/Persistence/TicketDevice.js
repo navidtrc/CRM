@@ -2,11 +2,8 @@ import React from "react";
 import { Button, Form } from "react-bootstrap";
 import TicketDropDown from "./TicketDropDown";
 import TicketPrice from "./TicketPrice";
-import { Grid, GridColumn } from "@progress/kendo-react-grid";
-import "@progress/kendo-theme-default/dist/all.css";
-import { DeviceActionCustomCell } from "./DeviceActionCustomCell";
 import TicketInquiry from "./TicketInquiry";
-const editField = "inEdit";
+import { DataGrid, GridApi, GridCellValue } from "@mui/x-data-grid";
 
 export default class TicketDevice extends React.Component {
   constructor(props) {
@@ -40,7 +37,70 @@ export default class TicketDevice extends React.Component {
       delete: { name: "delete", title: "حذف" },
       inquiry: { name: "inquiry", title: "" },
     };
+    this.columns = [
+      { field: "id", headerName: "id", hide: true },
+      { field: "type", headerName: "نوع", width: 170 },
+      { field: "brand", headerName: "برند", width: 170 },
+      { field: "model", headerName: "مدل", width: 170 },
+      {
+        field: "action",
+        headerName: "عملیات",
+        width: 250,
+        sortable: false,
+        renderCell: (params) => {
+          const api: GridApi = params.api;
+          const thisRow: Record<string, GridCellValue> = {};
 
+          api
+            .getAllColumns()
+            .filter((c) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+
+          const onEditClick = (e) => {
+            e.stopPropagation();
+            this.handleUpdateDevice(thisRow);
+          };
+          const onDeleteClick = (e) => {
+            e.stopPropagation();
+            this.handleRemoveDevice(thisRow);
+          };
+          const onInquiryClick = (e) => {
+            e.stopPropagation();
+            this.handleInquiryDevice(thisRow);
+          };
+          return (
+            <>
+              <Button
+                variant="warning"
+                size="sm"
+                style={{ marginLeft: "5px" }}
+                onClick={onEditClick}
+              >
+                ویرایش
+              </Button>
+              <Button
+                variant="danger"
+                size="sm"
+                style={{ marginLeft: "5px" }}
+                onClick={onDeleteClick}
+              >
+                حذف
+              </Button>
+              <Button
+                variant="info"
+                size="sm"
+                style={{ marginLeft: "5px" }}
+                onClick={onInquiryClick}
+              >
+                استعلام
+              </Button>
+            </>
+          );
+        },
+      },
+    ];
     this.state = {
       mode: this.mode.add,
       deviceId: this.newGuid(),
@@ -65,59 +125,63 @@ export default class TicketDevice extends React.Component {
     };
   }
 
-  DeviceEditCell = (props) => (
-    <DeviceActionCustomCell
-      {...props}
-      onEditClick={this.handleUpdateDevice}
-      onDeleteClick={this.handleRemoveDevice}
-      onInquiryClick={this.handleInquiryDevice}
-    />
-  );
+ 
   handleRemoveDevice = (dataItem) => {
+    if (this.state.mode === this.mode.update) {
+      alert("در حالت ویرایش امکان حذف وجود ندارد.");
+      return;
+    }
+    const item = this.props.items.filter(
+      (item) => item.value.id === dataItem.id
+    )[0];
     const target = {
       name: "device",
       action: this.mode.delete,
-      value: dataItem.value,
+      value: item.value,
     };
     this.props.onDeviceChange(target);
   };
 
   handleUpdateDevice = (dataItem) => {
-    debugger;
+    const item = this.props.items.filter(
+      (item) => item.value.id === dataItem.id
+    )[0];
     this.setState({
       mode: this.mode.update,
-      deviceId: dataItem.value.Id,
-      deviceType: dataItem.value.Type,
-      deviceBrand: dataItem.value.Brand,
-      deviceModel: dataItem.value.Model,
-      deviceAccessories: dataItem.value.Accessories,
-      deviceDescription: dataItem.value.Description,
-      deviceCustomerPrice: dataItem.value.CustomerPrice,
-      deviceShopPrice: dataItem.value.ShopPrice,
-      deviceRepairWarranty: dataItem.value.RepairWarranty,
-      deviceShopWarranty: dataItem.value.ShopWarranty,
+      deviceId: item.value.id,
+      deviceType: item.value.type,
+      deviceBrand: item.value.brand,
+      deviceModel: item.value.model,
+      deviceAccessories: item.value.accessories,
+      deviceDescription: item.value.description,
+      deviceCustomerPrice: item.value.customerPrice,
+      deviceShopPrice: item.value.shopPrice,
+      deviceRepairWarranty: item.value.repairWarranty,
+      deviceShopWarranty: item.value.shopWarranty,
     });
   };
 
   handleInquiryDevice = (dataItem) => {
-    debugger;
+    const item = this.props.items.filter(
+      (item) => item.value.id === dataItem.id
+    )[0];
     const deviceTemp = this.props.items.filter((device) => {
       debugger;
-      return device.value.Id === dataItem.value.Id;
+      return device.value.id === item.value.id;
     });
     let id = 0;
     let reason = "";
     let price = 0;
     let calls = [];
-    if (deviceTemp[0].value.Inquiries !== undefined) {
-      id = deviceTemp[0].value.Inquiries.inquiryId;
-      reason = deviceTemp[0].value.Inquiries.inquiryReason;
-      price = deviceTemp[0].value.Inquiries.inquiryPrice;
-      calls = deviceTemp[0].value.Inquiries.calls;
+    if (deviceTemp[0].value.inquiries !== undefined) {
+      id = deviceTemp[0].value.inquiries.inquiryId;
+      reason = deviceTemp[0].value.inquiries.inquiryReason;
+      price = deviceTemp[0].value.inquiries.inquiryPrice;
+      calls = deviceTemp[0].value.inquiries.calls;
     }
     this.setState({
       mode: this.mode.inquiry,
-      deviceId: dataItem.value.Id,
+      deviceId: item.value.id,
       inquiryId: id,
       inquiryReason: reason,
       inquiryPrice: price,
@@ -204,6 +268,15 @@ export default class TicketDevice extends React.Component {
   }
 
   render() {
+    const gridItems = this.props.items.map((item) => {
+      debugger;
+      return {
+        id: item.value.id,
+        type: item.value.type.title,
+        brand: item.value.brand.title,
+        model: item.value.model,
+      };
+    });
     return (
       <>
         <div className="container">
@@ -350,16 +423,16 @@ export default class TicketDevice extends React.Component {
               name: "device",
               action: this.state.mode,
               value: {
-                Id: this.state.deviceId,
-                Type: this.state.deviceType,
-                Brand: this.state.deviceBrand,
-                Model: this.state.deviceModel,
-                Accessories: this.state.deviceAccessories,
-                Description: this.state.deviceDescription,
-                CustomerPrice: this.state.deviceCustomerPrice,
-                ShopPrice: this.state.deviceShopPrice,
-                RepairWarranty: this.state.deviceRepairWarranty,
-                ShopWarranty: this.state.deviceShopWarranty,
+                id: this.state.deviceId,
+                type: this.state.deviceType,
+                brand: this.state.deviceBrand,
+                model: this.state.deviceModel,
+                accessories: this.state.deviceAccessories,
+                description: this.state.deviceDescription,
+                customerPrice: this.state.deviceCustomerPrice,
+                shopPrice: this.state.deviceShopPrice,
+                repairWarranty: this.state.deviceRepairWarranty,
+                shopWarranty: this.state.deviceShopWarranty,
               },
             };
             this.props.onDeviceChange(target);
@@ -370,39 +443,32 @@ export default class TicketDevice extends React.Component {
             ? this.mode.add.title
             : this.mode.update.title}
         </Button>
-        <div dir="rtl" className="k-rtl">
-          <Grid
-            style={{
-              marginTop: "10px",
-            }}
-            data={this.props.items}
-            editField={editField}
-          >
-            <GridColumn field="value.Type.title" title="نوع" />
-            <GridColumn field="value.Brand.title" title="برند" />
-            <GridColumn field="value.Model" title="مدل" />
-            <GridColumn field="value.ShopPrice" title="مبلغ فروشگاه" />
-            <GridColumn field="value.CustomerPrice" title="مبلغ مشتری" />
-            <GridColumn cell={this.DeviceEditCell} width="220px" />
-          </Grid>
-          {this.state.inquiryModalShow && (
-            <TicketInquiry
-              onModalClose={() => {
-                this.setState({ inquiryModalShow: false });
-              }}
-              show={this.state.inquiryModalShow}
-              deviceId={this.state.deviceId}
-              inquiryId={this.state.inquiryId}
-              reason={this.state.inquiryReason}
-              price={this.state.inquiryPrice}
-              calls={this.state.inquiryCalls}
-              onSubmit={(inquiry) => {
-                this.props.onChangeInquiry(inquiry);
-                this.clearInputs();
-              }}
-            />
-          )}
+        <div style={{ height: 300, width: "100%" }}>
+          <DataGrid
+            rows={gridItems}
+            columns={this.columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+          />
         </div>
+        
+        {this.state.inquiryModalShow && (
+          <TicketInquiry
+            onModalClose={() => {
+              this.setState({ inquiryModalShow: false });
+            }}
+            show={this.state.inquiryModalShow}
+            deviceId={this.state.deviceId}
+            inquiryId={this.state.inquiryId}
+            reason={this.state.inquiryReason}
+            price={this.state.inquiryPrice}
+            calls={this.state.inquiryCalls}
+            onSubmit={(inquiry) => {
+              this.props.onChangeInquiry(inquiry);
+              this.clearInputs();
+            }}
+          />
+        )}
       </>
     );
   }

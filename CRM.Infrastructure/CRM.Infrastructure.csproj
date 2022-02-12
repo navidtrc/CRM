@@ -17,10 +17,18 @@
 		<Compile Remove="Persistance\Repositories\Core\IAccessPermissionRepository.cs" />
 		<Compile Remove="Persistance\Repositories\Core\IAccessRepository.cs" />
 		<Compile Remove="Persistance\Repositories\Core\IAccessRoleRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\IDeviceTypeRepository.cs" />
 		<Compile Remove="Persistance\Repositories\Core\IPermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\ITicketFlowRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\ITicketRepository.cs" />
+		<Compile Remove="Persistance\Repositories\Core\ITicketTypeRepository.cs" />
 		<Compile Remove="Persistance\Repositories\Core\IUserAccessRepository.cs" />
 		<Compile Remove="Persistance\Repositories\Core\IUserPermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\DeviceTypeRepository.cs" />
 		<Compile Remove="Persistance\Repositories\PermissionRepository.cs" />
+		<Compile Remove="Persistance\Repositories\TicketFlowRepository.cs" />
+		<Compile Remove="Persistance\Repositories\TicketRepository.cs" />
+		<Compile Remove="Persistance\Repositories\TicketTypeRepository.cs" />
 		<Compile Remove="Persistance\Repositories\UserAccessRepository.cs" />
 		<Compile Remove="Persistance\Repositories\UserPermissionRepository.cs" />
 	</ItemGroup>
@@ -29,6 +37,10 @@
 		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="5.0.13" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.13" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.13">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
 	</ItemGroup>
 

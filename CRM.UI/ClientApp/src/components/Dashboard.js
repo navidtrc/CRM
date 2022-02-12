@@ -23,7 +23,7 @@ export class Dashboard extends Component {
   handleModalShow = () => {
     this.setState((prevState) => {
       return {
-        addModalShow: !prevState.addModalShow
+        addModalShow: !prevState.addModalShow,
       };
     });
   };
@@ -43,11 +43,12 @@ export class Dashboard extends Component {
           جدید
         </Button>
         <div className="col-md-12 bg-danger"></div>
-
-        <AddOrUpdateTicket
-          show={this.state.addModalShow}
-          onModalClose={this.handleModalShow}
-        />
+        {this.state.addModalShow && (
+          <AddOrUpdateTicket
+            show={this.state.addModalShow}
+            onModalClose={this.handleModalShow}
+          />
+        )}
       </div>
     );
 

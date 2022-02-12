@@ -2,7 +2,7 @@
 {
     public enum eInvoiceState
     {
-        NotSentYet,
+        NotSentYet = 1,
         SentToRepair,
         BackFromRepair,
         NeedInquiry,

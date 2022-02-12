@@ -1,4 +1,4 @@
-﻿using CRM.Domain.Models.Ticket.TicketTypeModels;
+﻿using CRM.Domain.Models.Ticket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,17 +8,16 @@ namespace CRM.Infrastructure.Persistance.Configs.Ticket
     {
         public void Configure(EntityTypeBuilder<Inquiry> builder)
         {
-            builder.ToTable("Inquiry", "TicketTypeModels");
+            builder.ToTable("Inquiry", "Ticket");
 
             builder.HasOne(o => o.Device)
-                .WithMany(m => m.Inquiries)
-                .HasForeignKey(f => f.DeviceId)
+                .WithOne(m => m.Inquiry)
+                .HasForeignKey<Inquiry>(f => f.DeviceId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(p => p.Reason).IsRequired();
             builder.Property(p => p.Price).IsRequired();
-            builder.Property(p => p.IsConfirmed).IsRequired(false);
         }
     }
 }

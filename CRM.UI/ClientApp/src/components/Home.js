@@ -8,7 +8,7 @@ export class Home extends Component {
     return (
       <div>
         <h1 style={{marginTop:"45px"}} className="text-center">سامانه CRM دستگاه های تعمیری براون موسوی</h1>
-        <img className="mx-auto d-block" alt="crm-main-img" src={require('../content/images/crm-main.jpg')}></img>
+        <img className="mx-auto d-block" alt="crm-main-img" src={require('../content/images/crm-main.jpg').default}></img>
         <p>این سایت سامانه مشتریان نمایندگی براون موسوی میباشد که میتوانید:</p>
         <ul>
           <li>پیگیری تعمیرات دستگاه های شما</li>

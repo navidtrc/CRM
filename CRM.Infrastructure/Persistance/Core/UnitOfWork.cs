@@ -58,8 +58,8 @@ namespace CRM.Infrastructure.Persistance.Core
         private IDeviceRepository _devices;
         public IDeviceRepository Devices => _devices == null ? _devices = new DeviceRepository(_db) : _devices;
 
-        private IDeviceTypeRepository _deviceTypes;
-        public IDeviceTypeRepository DeviceTypes => _deviceTypes == null ? _deviceTypes = new DeviceTypeRepository(_db) : _deviceTypes;
+        //private IDeviceTypeRepository _deviceTypes;
+        //public IDeviceTypeRepository DeviceTypes => _deviceTypes == null ? _deviceTypes = new DeviceTypeRepository(_db) : _deviceTypes;
 
         private IInvoiceRepository _invoices;
         public IInvoiceRepository Invoices => _invoices == null ? _invoices = new InvoiceRepository(_db) : _invoices;
@@ -67,17 +67,17 @@ namespace CRM.Infrastructure.Persistance.Core
         private IInquiryRepository _inquiries;
         public IInquiryRepository Inquiries => _inquiries == null ? _inquiries = new InquiryRepository(_db) : _inquiries;
 
-        private IInquiryDateRepository _inquiryDates;
-        public IInquiryDateRepository InquiryDates => _inquiryDates == null ? _inquiryDates = new InquiryDateRepository(_db) : _inquiryDates;
+        private IInquiryCallRepository _inquiryDates;
+        public IInquiryCallRepository InquiryDates => _inquiryDates == null ? _inquiryDates = new InquiryCallRepository(_db) : _inquiryDates;
 
-        private ITicketRepository _tickets;
-        public ITicketRepository Tickets => _tickets == null ? _tickets = new TicketRepository(_db) : _tickets;
+        //private ITicketRepository _tickets;
+        //public ITicketRepository Tickets => _tickets == null ? _tickets = new TicketRepository(_db) : _tickets;
 
-        private ITicketTypeRepository _ticketTypes;
-        public ITicketTypeRepository TicketTypes => _ticketTypes == null ? _ticketTypes = new TicketTypeRepository(_db) : _ticketTypes;
+        //private ITicketTypeRepository _ticketTypes;
+        //public ITicketTypeRepository TicketTypes => _ticketTypes == null ? _ticketTypes = new TicketTypeRepository(_db) : _ticketTypes;
 
-        private ITicketFlowRepository _ticketFlow;
-        public ITicketFlowRepository TicketFlows => _ticketFlow == null ? _ticketFlow = new TicketFlowRepository(_db) : _ticketFlow;
+        //private ITicketFlowRepository _ticketFlow;
+        //public ITicketFlowRepository TicketFlows => _ticketFlow == null ? _ticketFlow = new TicketFlowRepository(_db) : _ticketFlow;
 
 
 

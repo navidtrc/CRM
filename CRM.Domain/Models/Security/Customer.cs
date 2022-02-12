@@ -1,4 +1,4 @@
-﻿using CRM.Domain.Models.Ticket.TicketTypeModels;
+﻿using CRM.Domain.Models.Ticket;
 using System.Collections.Generic;
 
 namespace CRM.Domain.Models.Security

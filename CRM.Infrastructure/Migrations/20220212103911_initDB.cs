@@ -11,9 +11,6 @@ namespace CRM.Infrastructure.Migrations
                 name: "Security");
 
             migrationBuilder.EnsureSchema(
-                name: "TicketTypeModels");
-
-            migrationBuilder.EnsureSchema(
                 name: "Ticket");
 
             migrationBuilder.CreateSequence(
@@ -79,47 +76,6 @@ namespace CRM.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PersistedGrants", x => x.Key);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TicketType",
-                schema: "Ticket",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModelId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TicketType", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TicketTypeBaseModel",
-                schema: "TicketTypeModels",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TicketTypeBaseModel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,26 +160,6 @@ namespace CRM.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeviceType",
-                schema: "TicketTypeModels",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeviceType", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DeviceType_TicketTypeBaseModel_Id",
-                        column: x => x.Id,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "TicketTypeBaseModel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Person",
                 schema: "Security",
                 columns: table => new
@@ -254,58 +190,6 @@ namespace CRM.Infrastructure.Migrations
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ticket",
-                schema: "Ticket",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Subject = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TicketTypeBaseModelId = table.Column<int>(type: "int", nullable: false),
-                    TicketTypeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ParentId = table.Column<int>(type: "int", nullable: true),
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ticket", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ticket_Ticket_ParentId",
-                        column: x => x.ParentId,
-                        principalSchema: "Ticket",
-                        principalTable: "Ticket",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Ticket_TicketType_TicketTypeId",
-                        column: x => x.TicketTypeId,
-                        principalSchema: "Ticket",
-                        principalTable: "TicketType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ticket_TicketTypeBaseModel_TicketTypeBaseModelId",
-                        column: x => x.TicketTypeBaseModelId,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "TicketTypeBaseModel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Ticket_User_UserId",
-                        column: x => x.UserId,
-                        principalSchema: "Security",
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -442,14 +326,17 @@ namespace CRM.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TicketFlow",
+                name: "Invoice",
                 schema: "Ticket",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TicketId = table.Column<int>(type: "int", nullable: false),
-                    ToUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    State = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -459,49 +346,12 @@ namespace CRM.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TicketFlow", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TicketFlow_Ticket_TicketId",
-                        column: x => x.TicketId,
-                        principalSchema: "Ticket",
-                        principalTable: "Ticket",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_TicketFlow_User_ToUserId",
-                        column: x => x.ToUserId,
-                        principalSchema: "Security",
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Invoice",
-                schema: "TicketTypeModels",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    State = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
                     table.PrimaryKey("PK_Invoice", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Invoice_Customer_CustomerId",
                         column: x => x.CustomerId,
                         principalSchema: "Security",
                         principalTable: "Customer",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Invoice_TicketTypeBaseModel_Id",
-                        column: x => x.Id,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "TicketTypeBaseModel",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -515,57 +365,55 @@ namespace CRM.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Device",
-                schema: "TicketTypeModels",
+                schema: "Ticket",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Brand = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Accessories = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShopWarranty = table.Column<bool>(type: "bit", nullable: false),
                     RepairWarranty = table.Column<bool>(type: "bit", nullable: false),
-                    WarrantyDesc = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CustomerPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    ShopPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CustomerPrice = table.Column<long>(type: "bigint", nullable: true),
+                    ShopPrice = table.Column<long>(type: "bigint", nullable: true),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
-                    DeviceTypeId = table.Column<int>(type: "int", nullable: false)
+                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Device", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Device_DeviceType_DeviceTypeId",
-                        column: x => x.DeviceTypeId,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "DeviceType",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Device_Invoice_InvoiceId",
                         column: x => x.InvoiceId,
-                        principalSchema: "TicketTypeModels",
+                        principalSchema: "Ticket",
                         principalTable: "Invoice",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Device_TicketTypeBaseModel_Id",
-                        column: x => x.Id,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "TicketTypeBaseModel",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Inquiry",
-                schema: "TicketTypeModels",
+                schema: "Ticket",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
-                    DeviceId = table.Column<int>(type: "int", nullable: false)
+                    DeviceId = table.Column<int>(type: "int", nullable: false),
+                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -573,46 +421,40 @@ namespace CRM.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Inquiry_Device_DeviceId",
                         column: x => x.DeviceId,
-                        principalSchema: "TicketTypeModels",
+                        principalSchema: "Ticket",
                         principalTable: "Device",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Inquiry_TicketTypeBaseModel_Id",
-                        column: x => x.Id,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "TicketTypeBaseModel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "InquiryDate",
-                schema: "TicketTypeModels",
+                name: "InquiryCall",
+                schema: "Ticket",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CallDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsAnswered = table.Column<bool>(type: "bit", nullable: false),
-                    InquiryId = table.Column<int>(type: "int", nullable: false)
+                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
+                    InquiryId = table.Column<int>(type: "int", nullable: false),
+                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InquiryDate", x => x.Id);
+                    table.PrimaryKey("PK_InquiryCall", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InquiryDate_Inquiry_InquiryId",
+                        name: "FK_InquiryCall_Inquiry_InquiryId",
                         column: x => x.InquiryId,
-                        principalSchema: "TicketTypeModels",
+                        principalSchema: "Ticket",
                         principalTable: "Inquiry",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InquiryDate_TicketTypeBaseModel_Id",
-                        column: x => x.Id,
-                        principalSchema: "TicketTypeModels",
-                        principalTable: "TicketTypeBaseModel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -623,14 +465,8 @@ namespace CRM.Infrastructure.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Device_DeviceTypeId",
-                schema: "TicketTypeModels",
-                table: "Device",
-                column: "DeviceTypeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Device_InvoiceId",
-                schema: "TicketTypeModels",
+                schema: "Ticket",
                 table: "Device",
                 column: "InvoiceId");
 
@@ -647,25 +483,26 @@ namespace CRM.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inquiry_DeviceId",
-                schema: "TicketTypeModels",
+                schema: "Ticket",
                 table: "Inquiry",
-                column: "DeviceId");
+                column: "DeviceId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_InquiryDate_InquiryId",
-                schema: "TicketTypeModels",
-                table: "InquiryDate",
+                name: "IX_InquiryCall_InquiryId",
+                schema: "Ticket",
+                table: "InquiryCall",
                 column: "InquiryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_CustomerId",
-                schema: "TicketTypeModels",
+                schema: "Ticket",
                 table: "Invoice",
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoice_UserId",
-                schema: "TicketTypeModels",
+                schema: "Ticket",
                 table: "Invoice",
                 column: "UserId");
 
@@ -697,42 +534,6 @@ namespace CRM.Infrastructure.Migrations
                 schema: "Security",
                 table: "RoleClaim",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ticket_ParentId",
-                schema: "Ticket",
-                table: "Ticket",
-                column: "ParentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ticket_TicketTypeBaseModelId",
-                schema: "Ticket",
-                table: "Ticket",
-                column: "TicketTypeBaseModelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ticket_TicketTypeId",
-                schema: "Ticket",
-                table: "Ticket",
-                column: "TicketTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ticket_UserId",
-                schema: "Ticket",
-                table: "Ticket",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TicketFlow_TicketId",
-                schema: "Ticket",
-                table: "TicketFlow",
-                column: "TicketId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TicketFlow_ToUserId",
-                schema: "Ticket",
-                table: "TicketFlow",
-                column: "ToUserId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -773,8 +574,8 @@ namespace CRM.Infrastructure.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
-                name: "InquiryDate",
-                schema: "TicketTypeModels");
+                name: "InquiryCall",
+                schema: "Ticket");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
@@ -790,10 +591,6 @@ namespace CRM.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "Staff",
                 schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "TicketFlow",
-                schema: "Ticket");
 
             migrationBuilder.DropTable(
                 name: "UserClaim",
@@ -813,10 +610,6 @@ namespace CRM.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Inquiry",
-                schema: "TicketTypeModels");
-
-            migrationBuilder.DropTable(
-                name: "Ticket",
                 schema: "Ticket");
 
             migrationBuilder.DropTable(
@@ -824,27 +617,15 @@ namespace CRM.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Device",
-                schema: "TicketTypeModels");
-
-            migrationBuilder.DropTable(
-                name: "TicketType",
                 schema: "Ticket");
 
             migrationBuilder.DropTable(
-                name: "DeviceType",
-                schema: "TicketTypeModels");
-
-            migrationBuilder.DropTable(
                 name: "Invoice",
-                schema: "TicketTypeModels");
+                schema: "Ticket");
 
             migrationBuilder.DropTable(
                 name: "Customer",
                 schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "TicketTypeBaseModel",
-                schema: "TicketTypeModels");
 
             migrationBuilder.DropTable(
                 name: "Person",
