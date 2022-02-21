@@ -16,9 +16,8 @@ namespace CRM.Infrastructure.Persistance.Configs.Ticket
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(p => p.Type).IsRequired();
-            builder.Property(p => p.Brand).IsRequired();
             builder.Property(p => p.Model).IsRequired();
+            builder.Property(p => p.Description).IsRequired();
         }
     }
 }

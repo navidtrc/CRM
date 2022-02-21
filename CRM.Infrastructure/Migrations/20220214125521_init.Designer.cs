@@ -4,14 +4,16 @@ using CRM.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CRM.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220214125521_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,7 +244,7 @@ namespace CRM.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("CustomerPrice")
+                    b.Property<long?>("CustomerPrice")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Description")
@@ -257,9 +259,6 @@ namespace CRM.Infrastructure.Migrations
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("InquiryId")
-                        .HasColumnType("int");
 
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
@@ -280,7 +279,7 @@ namespace CRM.Infrastructure.Migrations
                     b.Property<bool>("RepairWarranty")
                         .HasColumnType("bit");
 
-                    b.Property<long>("ShopPrice")
+                    b.Property<long?>("ShopPrice")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("ShopWarranty")
@@ -325,8 +324,8 @@ namespace CRM.Infrastructure.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Price")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Reason")
                         .IsRequired()

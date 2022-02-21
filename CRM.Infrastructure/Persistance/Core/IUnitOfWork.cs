@@ -24,6 +24,7 @@ namespace CRM.Infrastructure.Persistance.Core
         ICustomerRepository Customers { get; }
 
         IDeviceRepository Devices { get; }
+        ILookupRepository Lookup { get; }
         //IDeviceTypeRepository DeviceTypes { get; }
         IInquiryRepository Inquiries { get; }
         IInquiryCallRepository InquiryDates { get; }

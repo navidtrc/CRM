@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Globalization;
 
-namespace Common.Utilities
+namespace System
 {
     public static class StringExtensions
     {
@@ -101,6 +102,33 @@ namespace Common.Utilities
         public static string NullIfEmpty(this string str)
         {
             return str?.Length == 0 ? null : str;
+        }
+
+        public static DateTime ToGregorianDateTime(this string persianDateTime, char seprator = '/')
+        {
+            string gregorian = string.Empty;
+            PersianCalendar persianCalendar = new PersianCalendar();
+            var dateAndHour = persianDateTime.Split(' ');
+            if (dateAndHour.Length == 1) // without time
+            {
+                var dateParts = persianDateTime.Split(seprator);
+                var year = int.Parse(dateParts[0]);
+                var month = int.Parse(dateParts[1]);
+                var day = int.Parse(dateParts[2]);
+                return persianCalendar.ToDateTime(year, month, day, 0, 0, 0, 0);
+            }
+            else // with time
+            {
+                var dateParts = dateAndHour[0].Split(seprator);
+                var year = int.Parse(dateParts[0]);
+                var month = int.Parse(dateParts[1]);
+                var day = int.Parse(dateParts[2]);
+
+                var timeParts = dateAndHour[1].Split(':');
+                var hour = dateAndHour[2] == "AM" ? int.Parse(timeParts[0]) : int.Parse(timeParts[0]) + 12;
+                var minute = int.Parse(timeParts[1]);
+                return persianCalendar.ToDateTime(year, month, day, hour, minute, 0, 0);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace CRM.Domain.Models.Core
 {
@@ -26,6 +27,7 @@ namespace CRM.Domain.Models.Core
         public virtual string Description { get; set; }
         public virtual bool IsActive { get; set; } = true;
         public virtual bool IsDeleted { get; set; } = false;
+        
     }
 
     public abstract class BaseEntity : BaseEntity<int>

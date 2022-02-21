@@ -9,8 +9,5 @@ namespace CRM.Domain.Common.Enums
 
         [Display(Name = "Male")]
         Male,
-        
-        [Display(Name = "Other")]
-        Other
     }
 }

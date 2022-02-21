@@ -8,6 +8,7 @@ import authService from "../api-authorization/AuthorizeService";
 export default class AddOrUpdateTicket extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       ticketNumber: 0,
       ticketDate: this.getCurrentDate(),
@@ -20,18 +21,21 @@ export default class AddOrUpdateTicket extends React.Component {
   }
 
   componentDidMount() {
-    debugger;
-    const token = this.getToken();
-    fetch("api/invoicenumber", {
-      method: "get",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((value) => value.json())
-      .then((value) => {
-        this.setState({ ticketNumber: value.data.data });
-      });
+    if (this.props.openMode === "add") {
+      const token = this.getToken();
+      fetch("api/invoicenumber", {
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((value) => value.json())
+        .then((value) => {
+          this.setState({ ticketNumber: value.data.data });
+        });
+        
+    } else {
+    }
   }
 
   getCurrentDate = () => {

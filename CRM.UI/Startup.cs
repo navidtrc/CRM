@@ -1,6 +1,8 @@
+using Autofac;
 using Common;
 using CRM.Application.Common;
 using CRM.Application.SecurityApplication.Authentication.Login;
+using CRM.Application.Services.Sms;
 using CRM.Application.WebFramework.Configuration;
 using CRM.Application.WebFramework.CustomMapping;
 using CRM.Domain.Models.Security;
@@ -64,6 +66,12 @@ namespace CRM.UI
                 .AddIdentityServerJwt();
 
             services.AddControllersWithViews();
+
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+
             services.AddRazorPages();
 
             // In production, the React files will be served from this directory
@@ -77,13 +85,20 @@ namespace CRM.UI
             services.AddEmailService(Configuration);
             //services.AddScoped<IAccessService, AccessService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ISmsService, SmsService>();
             //services.AddScoped<IAccessRepository, AccessRepository>();
             services.AddScoped<IStaffRepository, StaffRepository>();
+        }
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            //Register Services to Autofac ContainerBuilder
+            builder.AddServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.IntializeDatabase();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

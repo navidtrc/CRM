@@ -22,6 +22,9 @@ namespace CRM.Infrastructure.Persistance.Core
         private IStaffRepository _staffs;
         public IStaffRepository Staffs => _staffs == null ? _staffs = new StaffRepository(_db) : _staffs;
 
+        private ILookupRepository _lookup;
+        public ILookupRepository Lookup => _lookup == null ? _lookup = new LookupRepository(_db) : _lookup;
+
         //private ISettingRepository _settings;
         //public ISettingRepository Settings => _settings == null ? _settings = new SettingRepository(_db) : _settings;
 
