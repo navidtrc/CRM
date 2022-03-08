@@ -3,33 +3,11 @@ import { Button, Form } from "react-bootstrap";
 import TicketDropDown from "./TicketDropDown";
 import TicketPrice from "./TicketPrice";
 import TicketInquiry from "./TicketInquiry";
-import { DataGrid, GridApi, GridCellValue } from "@mui/x-data-grid";
+import DeviceTable from "./DeviceTable";
 
 export default class TicketDevice extends React.Component {
   constructor(props) {
     super(props);
-
-    this.deviceType = [
-      { id: "1", name: "shaver", title: "شیور" },
-      { id: "2", name: "trimmer", title: "تریمر" },
-      { id: "3", name: "epilady", title: "اپیلیدی" },
-      { id: "4", name: "hairdryer", title: "سشوار" },
-      { id: "5", name: "straighteners", title: "حالت دهنده" },
-      { id: "6", name: "toothbrush", title: "مسواک" },
-      { id: "7", name: "charger", title: "شارژر" },
-      { id: "8", name: "other", title: "غیره" },
-    ];
-
-    this.deviceBrand = [
-      { id: "1", name: "braun", title: "براون" },
-      { id: "2", name: "philips", title: "فیلیپس" },
-      { id: "3", name: "remington", title: "رمینگتون" },
-      { id: "4", name: "panasonic", title: "پاناسونیک" },
-      { id: "5", name: "moser", title: "موزر" },
-      { id: "6", name: "wahl", title: "وال" },
-      { id: "7", name: "promax", title: "پرو مکس" },
-      { id: "8", name: "other", title: "متفرقه" },
-    ];
 
     this.mode = {
       add: { name: "add", title: "ایجاد" },
@@ -37,70 +15,7 @@ export default class TicketDevice extends React.Component {
       delete: { name: "delete", title: "حذف" },
       inquiry: { name: "inquiry", title: "" },
     };
-    this.columns = [
-      { field: "id", headerName: "id", hide: true },
-      { field: "type", headerName: "نوع", width: 170 },
-      { field: "brand", headerName: "برند", width: 170 },
-      { field: "model", headerName: "مدل", width: 170 },
-      {
-        field: "action",
-        headerName: "عملیات",
-        width: 250,
-        sortable: false,
-        renderCell: (params) => {
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridCellValue> = {};
 
-          api
-            .getAllColumns()
-            .filter((c) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c) => (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-
-          const onEditClick = (e) => {
-            e.stopPropagation();
-            this.handleUpdateDevice(thisRow);
-          };
-          const onDeleteClick = (e) => {
-            e.stopPropagation();
-            this.handleRemoveDevice(thisRow);
-          };
-          const onInquiryClick = (e) => {
-            e.stopPropagation();
-            this.handleInquiryDevice(thisRow);
-          };
-          return (
-            <>
-              <Button
-                variant="warning"
-                size="sm"
-                style={{ marginLeft: "5px" }}
-                onClick={onEditClick}
-              >
-                ویرایش
-              </Button>
-              <Button
-                variant="danger"
-                size="sm"
-                style={{ marginLeft: "5px" }}
-                onClick={onDeleteClick}
-              >
-                حذف
-              </Button>
-              <Button
-                variant="info"
-                size="sm"
-                style={{ marginLeft: "5px" }}
-                onClick={onInquiryClick}
-              >
-                استعلام
-              </Button>
-            </>
-          );
-        },
-      },
-    ];
     this.state = {
       mode: this.mode.add,
       deviceId: this.newGuid(),
@@ -125,14 +40,14 @@ export default class TicketDevice extends React.Component {
     };
   }
 
- 
-  handleRemoveDevice = (dataItem) => {
+  handleRemoveDevice = (id) => {
+    debugger;
     if (this.state.mode === this.mode.update) {
       alert("در حالت ویرایش امکان حذف وجود ندارد.");
       return;
     }
     const item = this.props.items.filter(
-      (item) => item.value.id === dataItem.id
+      (item) => item.value.id === id
     )[0];
     const target = {
       name: "device",
@@ -142,9 +57,10 @@ export default class TicketDevice extends React.Component {
     this.props.onDeviceChange(target);
   };
 
-  handleUpdateDevice = (dataItem) => {
+  handleUpdateDevice = (id) => {
+    debugger;
     const item = this.props.items.filter(
-      (item) => item.value.id === dataItem.id
+      (item) => item.value.id === id
     )[0];
     this.setState({
       mode: this.mode.update,
@@ -163,7 +79,7 @@ export default class TicketDevice extends React.Component {
 
   handleInquiryDevice = (dataItem) => {
     const item = this.props.items.filter(
-      (item) => item.value.id === dataItem.id
+      (item) => item.value.id === dataItem
     )[0];
     const deviceTemp = this.props.items.filter((device) => {
       debugger;
@@ -286,7 +202,7 @@ export default class TicketDevice extends React.Component {
                 <Form.Label>نوع</Form.Label>
                 <TicketDropDown
                   name="deviceType"
-                  items={this.deviceType}
+                  items={this.props.deviceTypeItems}
                   selectedItem={this.state.deviceType}
                   onChangeSelectedItem={this.handleInputChange}
                 />
@@ -303,7 +219,7 @@ export default class TicketDevice extends React.Component {
                 <Form.Label>برند</Form.Label>
                 <TicketDropDown
                   name="deviceBrand"
-                  items={this.deviceBrand}
+                  items={this.props.deviceBrandItems}
                   selectedItem={this.state.deviceBrand}
                   onChangeSelectedItem={this.handleInputChange}
                 />
@@ -444,14 +360,14 @@ export default class TicketDevice extends React.Component {
             : this.mode.update.title}
         </Button>
         <div style={{ height: 300, width: "100%" }}>
-          <DataGrid
-            rows={gridItems}
-            columns={this.columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
+          <DeviceTable
+            items={gridItems}
+            onRemoveItem={this.handleRemoveDevice}
+            onUpdateItem={this.handleUpdateDevice}
+            onInquiryItem={this.handleInquiryDevice}
           />
         </div>
-        
+
         {this.state.inquiryModalShow && (
           <TicketInquiry
             onModalClose={() => {

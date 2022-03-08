@@ -12,7 +12,7 @@ namespace CRM.Application.InvoiceApplication.ViewModels
         public int PageSize { get; set; }
         public List<Filter> Filters { get; set; }
         public Sort Sort { get; set; }
-    }
+    }   
     public class Filter
     {
         public string Column { get; set; }

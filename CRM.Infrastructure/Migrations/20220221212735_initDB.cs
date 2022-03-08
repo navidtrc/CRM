@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CRM.Infrastructure.Migrations
 {
-    public partial class init : Migration
+    public partial class initDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -409,9 +409,10 @@ namespace CRM.Infrastructure.Migrations
                     Accessories = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ShopWarranty = table.Column<bool>(type: "bit", nullable: false),
                     RepairWarranty = table.Column<bool>(type: "bit", nullable: false),
-                    CustomerPrice = table.Column<long>(type: "bigint", nullable: true),
-                    ShopPrice = table.Column<long>(type: "bigint", nullable: true),
+                    CustomerPrice = table.Column<long>(type: "bigint", nullable: false),
+                    ShopPrice = table.Column<long>(type: "bigint", nullable: false),
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
+                    InquiryId = table.Column<int>(type: "int", nullable: false),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -451,7 +452,7 @@ namespace CRM.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Price = table.Column<long>(type: "bigint", nullable: false),
                     DeviceId = table.Column<int>(type: "int", nullable: false),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),

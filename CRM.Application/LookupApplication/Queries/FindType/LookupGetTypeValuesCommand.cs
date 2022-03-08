@@ -11,6 +11,6 @@ namespace CRM.Application.LookupApplication.Queries.FindType
 {
     public class LookupGetTypeValuesCommand : IRequest<OperationResult<List<Lookup>>>
     {
-        public string[] Types { get; set; }
+        public List<string> Types { get; set; }
     }
 }

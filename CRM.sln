@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRM.UI", "CRM.UI\CRM.UI.csproj", "{8202E943-8F20-4806-903B-5F8EB2B68E63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRM.UI", "CRM.UI\CRM.UI.csproj", "{8202E943-8F20-4806-903B-5F8EB2B68E63}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{449255D1-D13B-4D90-8624-FE8F5C565571}"
 EndProject

@@ -4,18 +4,6 @@ import { Form } from "react-bootstrap";
 import GAH from "gah-datepicker";
 
 export default class TicketHeader extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.ticketStateItems = [
-      { id: "1", name: "NotSentYet", title: "ارسال نشده" },
-      { id: "2", name: "SentToRepair", title: "ارسال شده برای تعمیرگاه" },
-      { id: "3", name: "BackFromRepair", title: "برگشت از تعمیرگاه" },
-      { id: "4", name: "NeedInquiry", title: "نیاز به استعلام" },
-      { id: "5", name: "Repairing", title: "در حال تعمیر" },
-      { id: "6", name: "Ready", title: "آماده" },
-      { id: "7", name: "Done", title: "تحویل داده شده" },
-    ];
-  }
   handleInputChange = (e) => {
     this.props.onHeaderChange(e);
   };
@@ -58,7 +46,7 @@ export default class TicketHeader extends React.PureComponent {
           <Form.Label>وضعیت</Form.Label>
           <TicketDropDown
             name="ticketState"
-            items={this.ticketStateItems}
+            items={this.props.invoiceStateItems}
             selectedItem={this.props.ticketState}
             onChangeSelectedItem={this.handleInputChange}
           />

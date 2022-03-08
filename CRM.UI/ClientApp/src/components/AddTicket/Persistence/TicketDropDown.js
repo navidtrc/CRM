@@ -3,7 +3,7 @@ import { Dropdown, DropdownButton } from "react-bootstrap";
 
 export default class TicketDropDown extends React.Component {
   handleChange = (e) => {
-    const selectedItem = this.props.items.filter((item) => item.id === e)[0];
+    const selectedItem = this.props.items.filter((item) => item.id == e)[0];
     this.props.onChangeSelectedItem({
       target: {
         name: this.props.name,

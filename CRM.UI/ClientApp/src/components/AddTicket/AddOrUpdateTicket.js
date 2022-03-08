@@ -8,7 +8,9 @@ import authService from "../api-authorization/AuthorizeService";
 export default class AddOrUpdateTicket extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
+      lookups: [],
       ticketNumber: 0,
       ticketDate: this.getCurrentDate(),
       ticketState: {},
@@ -20,18 +22,60 @@ export default class AddOrUpdateTicket extends React.Component {
   }
 
   componentDidMount() {
-    debugger;
-    const token = this.getToken();
-    fetch("api/invoicenumber", {
-      method: "get",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((value) => value.json())
-      .then((value) => {
-        this.setState({ ticketNumber: value.data.data });
-      });
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", this.getToken());
+
+    var raw = JSON.stringify({
+      Types: ["InvoiceState", "DeviceType", "DeviceBrand"],
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("api/Lookup/Get", requestOptions)
+      .then((response) => response.json())
+      .then((resultLookup) => {
+        if (this.props.invoiceId !== 0) {
+          fetch(`api/Invoice/Get?id=${this.props.invoiceId}`, {
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${this.getToken()}`,
+            },
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              debugger;
+              this.setState({
+                lookups: resultLookup.data.data,
+                ticketNumber: response.data.data.number,
+                ticketDate: response.data.data.datePersian.split(" ")[0],
+                customerFirstName: response.data.data.customer.firstName,
+                customerLastName: response.data.data.customer.lastName,
+                customerPhoneNumber: response.data.data.customer.phoneNumber,
+              });
+            });
+        } else {
+          fetch("api/Invoice/GetLastInvoiceNumber", {
+            method: "get",
+            headers: {
+              Authorization: `Bearer ${this.getToken()}`,
+            },
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              this.setState({
+                lookups: resultLookup.data.data,
+                ticketNumber: response.data.data,
+              });
+            });
+        }
+      })
+      .catch((error) => console.log("error", error));
   }
 
   getCurrentDate = () => {
@@ -102,7 +146,28 @@ export default class AddOrUpdateTicket extends React.Component {
     return token;
   }
 
+  toDropDown(lookup) {
+    var result = lookup.map((item) => {
+      return {
+        id: item.id,
+        name: item.aux1,
+        title: item.aux2,
+      };
+    });
+    return result;
+  }
+
   render() {
+    const invoiceStateItems = this.toDropDown(
+      this.state.lookups.filter((item) => item.typeTitle === "InvoiceState")
+    );
+    const deviceTypeItems = this.toDropDown(
+      this.state.lookups.filter((item) => item.typeTitle === "DeviceType")
+    );
+    const deviceBrandItems = this.toDropDown(
+      this.state.lookups.filter((item) => item.typeTitle === "DeviceBrand")
+    );
+    debugger;
     return (
       <>
         <Modal
@@ -141,6 +206,7 @@ export default class AddOrUpdateTicket extends React.Component {
                         ticketNumber={this.state.ticketNumber}
                         ticketDate={this.state.ticketDate}
                         ticketState={this.state.ticketState}
+                        invoiceStateItems={invoiceStateItems}
                         onHeaderChange={this.handleHeaderChange}
                       />
                     </Tab.Pane>
@@ -157,6 +223,8 @@ export default class AddOrUpdateTicket extends React.Component {
                         items={this.state.devices}
                         onDeviceChange={this.handleDeviceChange}
                         onChangeInquiry={this.handleInquiryChange}
+                        deviceTypeItems={deviceTypeItems}
+                        deviceBrandItems={deviceBrandItems}
                       />
                     </Tab.Pane>
                     {/* <Tab.Pane eventKey="fourth">
@@ -173,10 +241,15 @@ export default class AddOrUpdateTicket extends React.Component {
               className="btn btn-success"
               onClick={() => {
                 const devives = this.state.devices.map((device) => {
+                  
                   return {
                     state: device.action.name,
-                    type: device.value.type.title,
-                    brand: device.value.brand.title,
+                    type: this.state.lookups.filter(
+                      (item) => item.aux2 === device.value.type.title && item.typeTitle === "DeviceType"
+                    )[0],
+                    brand: this.state.lookups.filter(
+                      (item) => item.aux2 === device.value.brand.title && item.typeTitle === "DeviceBrand"
+                    )[0],
                     model: device.value.model,
                     accessories: device.value.accessories,
                     description: device.value.description,
@@ -184,22 +257,23 @@ export default class AddOrUpdateTicket extends React.Component {
                     shopPrice: device.value.shopPrice,
                     repairWarranty: device.value.repairWarranty,
                     shopWarranty: device.value.shopWarranty,
-                    // inquiries: device.value.inquiries,
+                    inquiries: device.value.inquiries,
                   };
                 });
+                debugger;
 
                 const target = {
-                  number: String(this.state.ticketNumber),
-                  date: this.state.ticketDate,
-                  state: this.state.ticketState.id,
-                  firstName: this.state.customerFirstName,
-                  lastName: this.state.customerLastName,
-                  phoneNumber: this.state.customerPhoneNumber,
-                  devices: devives,
+                  Number: String(this.state.ticketNumber),
+                  Date: this.state.ticketDate,
+                  State: this.state.ticketState.id,
+                  FirstName: this.state.customerFirstName,
+                  LastName: this.state.customerLastName,
+                  PhoneNumber: this.state.customerPhoneNumber,
+                  Devices: devives,
                 };
                 debugger;
                 const token = this.getToken();
-                fetch("api/ticket", {
+                fetch("api/Invoive/Post", {
                   method: "post",
                   headers: {
                     "Content-Type": "application/json",

@@ -124,6 +124,7 @@ namespace CRM.Application.InvoiceApplication.Queries.GetByPagination
                 }
             }
             var result = await query
+                .OrderByDescending(o => o.Number)
                 .ProjectTo<InvoiceViewModel>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
             return new OperationResult<List<InvoiceViewModel>>(true, result);

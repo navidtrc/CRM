@@ -40,7 +40,7 @@ namespace CRM.UI.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/[controller]/[action]")]
         public async Task<IActionResult> GetByPagination(PaginationRequest request, CancellationToken cancellationToken)
         {
