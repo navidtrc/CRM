@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CRM.Application.SecurityApplication.Queries.FindAll;
+//using CRM.Application.SecurityApplication.Queries.FindAll;
 using CRM.Domain.Models.Core;
 using CRM.Infrastructure.Persistance.Core;
-using Kendo.Mvc.UI;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
