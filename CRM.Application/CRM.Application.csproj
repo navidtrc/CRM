@@ -8,6 +8,7 @@
 	  <Compile Remove="SecurityApplication\Services\Access\**" />
 	  <EmbeddedResource Remove="SecurityApplication\Services\Access\**" />
 	  <None Remove="SecurityApplication\Services\Access\**" />
+	  <None Remove="EmailSender" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -45,10 +46,11 @@
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.13" />
 	</ItemGroup>
 
+	
+
 	<ItemGroup>
 	  <Reference Include="EmailSender">
-	    <HintPath>..\..\EmailSender\EmailSender\bin\Release\net5.0\EmailSender.dll</HintPath>
+	    <HintPath>..\..\EmailSender\EmailSender\bin\Debug\net5.0\EmailSender.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
-
 </Project>
