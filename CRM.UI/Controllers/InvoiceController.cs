@@ -7,7 +7,9 @@ using CRM.Application.InvoiceApplication.Queries.GetByPagination;
 using CRM.Application.InvoiceApplication.Queries.GetNextInvoiceNumber;
 using CRM.Application.InvoiceApplication.ViewModels;
 using CRM.Application.WebFramework.Api;
+using CRM.Domain.Models.Ticket;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +17,7 @@ using System.Threading.Tasks;
 namespace CRM.UI.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     public class InvoiceController : BaseController
     {
         public InvoiceController(IMediator mediator, IMapper mapper) : base(mediator, mapper)
@@ -58,7 +61,7 @@ namespace CRM.UI.Controllers
 
         [HttpPost]
         [Route("api/[controller]/[action]")]
-        public async Task<IActionResult> Post(InvoiceViewModel invoice, CancellationToken cancellationToken)
+        public async Task<IActionResult> Post(Invoice invoice, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new CreateInvoiceCommand { ViewModel = invoice }, cancellationToken);
             if (result.IsSuccess)

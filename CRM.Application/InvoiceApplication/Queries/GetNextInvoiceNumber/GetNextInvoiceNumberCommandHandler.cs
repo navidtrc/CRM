@@ -21,6 +21,8 @@ namespace CRM.Application.InvoiceApplication.Queries.GetNextInvoiceNumber
         public async Task<OperationResult<int>> Handle(GetNextInvoiceNumberCommand request, CancellationToken cancellationToken)
         {
             var lastInvoice = await uow.Invoices.TableNoTracking.OrderByDescending(f => f.Number).FirstOrDefaultAsync(cancellationToken);
+            if (lastInvoice == null)
+                return new OperationResult<int>(true, 1);
             return new OperationResult<int>(true, int.Parse(lastInvoice.Number) + 1);
         }
 

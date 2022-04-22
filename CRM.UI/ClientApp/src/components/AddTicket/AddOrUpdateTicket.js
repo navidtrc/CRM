@@ -22,7 +22,7 @@ export default class AddOrUpdateTicket extends React.Component {
   }
 
   componentDidMount() {
-    var myHeaders = new Headers();
+    let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", this.getToken());
 
@@ -167,7 +167,6 @@ export default class AddOrUpdateTicket extends React.Component {
     const deviceBrandItems = this.toDropDown(
       this.state.lookups.filter((item) => item.typeTitle === "DeviceBrand")
     );
-    debugger;
     return (
       <>
         <Modal
@@ -240,47 +239,57 @@ export default class AddOrUpdateTicket extends React.Component {
               variant="success"
               className="btn btn-success"
               onClick={() => {
+                debugger;
                 const devives = this.state.devices.map((device) => {
-                  
+                  const brandId = this.state.lookups.filter(
+                    (item) =>
+                      item.aux2 === device.value.brand.title &&
+                      item.typeTitle === "DeviceBrand"
+                  )[0].id;
+                  const typeId = this.state.lookups.filter(
+                    (item) =>
+                      item.aux2 === device.value.type.title &&
+                      item.typeTitle === "DeviceType"
+                  )[0].id;
                   return {
-                    state: device.action.name,
-                    type: this.state.lookups.filter(
-                      (item) => item.aux2 === device.value.type.title && item.typeTitle === "DeviceType"
-                    )[0],
-                    brand: this.state.lookups.filter(
-                      (item) => item.aux2 === device.value.brand.title && item.typeTitle === "DeviceBrand"
-                    )[0],
-                    model: device.value.model,
-                    accessories: device.value.accessories,
-                    description: device.value.description,
-                    customerPrice: device.value.customerPrice,
-                    shopPrice: device.value.shopPrice,
-                    repairWarranty: device.value.repairWarranty,
-                    shopWarranty: device.value.shopWarranty,
-                    inquiries: device.value.inquiries,
+                    DeviceBrandId: brandId,
+                    DeviceTypeId: typeId,
+                    Model: device.value.model,
+                    Accessories: device.value.accessories,
+                    Description: device.value.description,
+                    CustomerPrice: device.value.customerPrice,
+                    ShopPrice: device.value.shopPrice,
+                    RepairWarranty: device.value.repairWarranty,
+                    ShopWarranty: device.value.shopWarranty,
+                    Inquiries: device.value.inquiries,
                   };
                 });
-                debugger;
 
                 const target = {
                   Number: String(this.state.ticketNumber),
-                  Date: this.state.ticketDate,
-                  State: this.state.ticketState.id,
-                  FirstName: this.state.customerFirstName,
-                  LastName: this.state.customerLastName,
-                  PhoneNumber: this.state.customerPhoneNumber,
+                  DatePersian: this.state.ticketDate,
+                  StateId: this.state.ticketState.id,
+                  Customer: {
+                    FirstName: this.state.customerFirstName,
+                    LastName: this.state.customerLastName,
+                    PhoneNumber: this.state.customerPhoneNumber,
+                  },
                   Devices: devives,
                 };
-                debugger;
-                const token = this.getToken();
+
+                let myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
                 fetch("api/Invoive/Post", {
-                  method: "post",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                  },
+                  method: "POST",
+                  headers: myHeaders,
                   body: JSON.stringify(target),
-                });
+                  redirect: 'follow'
+                })
+                  .then((response) => response.json())
+                  .then((result) => {
+                    debugger;
+                  });
                 this.closeModal();
               }}
             >

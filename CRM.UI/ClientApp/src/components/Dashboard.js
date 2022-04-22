@@ -79,7 +79,7 @@ export class Dashboard extends Component {
           className="btn-primary"
           onClick={this.handleModalShow}
         >
-          جدید
+          جدید        
         </Button>
         <div style={{ height: 300, width: "100%", marginTop: "10px" }}>
           <InvoiceTable

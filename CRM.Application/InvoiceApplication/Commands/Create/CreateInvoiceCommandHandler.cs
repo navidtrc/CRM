@@ -24,7 +24,7 @@ namespace CRM.Application.InvoiceApplication.Commands.Create
         }
         public async Task<OperationResult> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
         {
-            var invoice = request.ViewModel.ToEntity(mapper);
+            var invoice = request.ViewModel;
             await uow.Invoices.AddAsync(invoice, cancellationToken);
             await uow.CompleteAsync(cancellationToken);
 

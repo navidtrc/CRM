@@ -1,11 +1,11 @@
 ﻿using Common;
-using CRM.Application.InvoiceApplication.ViewModels;
+using CRM.Domain.Models.Ticket;
 using MediatR;
 
 namespace CRM.Application.InvoiceApplication.Commands.Create
 {
     public class CreateInvoiceCommand : IRequest<OperationResult>
     {
-        public InvoiceViewModel ViewModel { get; set; }
+        public Invoice ViewModel { get; set; }
     }
 }
