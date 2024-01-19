@@ -82,7 +82,6 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
           return {
             id: item.Person.Id,
             userId: item.Person.User.Id,
-            username: item.Person.User.UserName,
             firstName: item.Person.FirstName,
             lastName: item.Person.LastName,
             email: item.Person.User.Email,
@@ -117,23 +116,23 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
 
   const columns = useMemo(
     () => [
-      {
-        accessorKey: "username",
-        header: "نام کاربری",
-        muiEditTextFieldProps: {
-          type: "text",
-          required: true,
-          error: !!validationErrors?.username,
-          helperText: validationErrors?.username,
-          //remove any previous validation errors when user focuses on the input
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              username: undefined,
-            }),
-          //optionally add validation checking for onBlur or onChange
-        },
-      },
+      // {
+      //   accessorKey: "username",
+      //   header: "نام کاربری",
+      //   muiEditTextFieldProps: {
+      //     type: "text",
+      //     required: true,
+      //     error: !!validationErrors?.username,
+      //     helperText: validationErrors?.username,
+      //     //remove any previous validation errors when user focuses on the input
+      //     onFocus: () =>
+      //       setValidationErrors({
+      //         ...validationErrors,
+      //         username: undefined,
+      //       }),
+      //     //optionally add validation checking for onBlur or onChange
+      //   },
+      // },
       {
         accessorKey: "firstName",
         header: "نام",
@@ -168,22 +167,6 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
         },
       },
       {
-        accessorKey: "email",
-        header: "ایمیل",
-        muiEditTextFieldProps: {
-          type: "email",
-          required: true,
-          error: !!validationErrors?.email,
-          helperText: validationErrors?.email,
-          //remove any previous validation errors when user focuses on the input
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              email: undefined,
-            }),
-        },
-      },
-      {
         accessorKey: "phoneNumber",
         header: "شماره تماس",
         muiEditTextFieldProps: {
@@ -199,6 +182,22 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
             }),
         },
       },
+      {
+        accessorKey: "email",
+        header: "ایمیل",
+        muiEditTextFieldProps: {
+          type: "email",
+          required: true,
+          error: !!validationErrors?.email,
+          helperText: validationErrors?.email,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              email: undefined,
+            }),
+        },
+      },
     ],
     [validationErrors]
   );
@@ -206,7 +205,7 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
   const handleDeactiveUser = (user) => {
     debugger;
     Swal.fire({
-      title: `کاربر ${user.username}؟`,
+      title: `کاربر ${user.firstName}؟ ${user.lastName}`,
       text: `وضعیت این کاربر به صورت ${
         user.lockoutEnabled !== true ? "فعال" : "غیرفعال"
       } میباشد.`,
@@ -240,7 +239,7 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
   const handleDeleteUser = (user) => {
     debugger;
     Swal.fire({
-      title: `آیا از حذف کاربر ${user.username} اظمینان دارید؟`,
+      title: `آیا از حذف کاربر ${user.firstName} ${user.lastName} اظمینان دارید؟`,
       text: "در صورت حذف امکان بازگشت وجود ندارد",
       icon: "warning",
       showCancelButton: true,
@@ -258,7 +257,7 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
         fetch(`/api/people/delete?id=${user.id}`, requestOptions)
           .then(() => {
             Swal.fire({
-              title: `کاربر ${user.username} حذف شد`,
+              title: `کاربر ${user.firstName} ${user.lastName} حذف شد`,
               icon: "success",
             });
             onSetIsRefetching(true);

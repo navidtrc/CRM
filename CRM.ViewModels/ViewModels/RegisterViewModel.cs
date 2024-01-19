@@ -15,9 +15,6 @@ namespace CRM.ViewModels.ViewModels
         [Display(Name = "Id", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
         public string Id { get; set; }
 
-        [Display(Name = "UserName", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public string UserName { get; set; }
-
         [Display(Name = "Password", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
         public string Password { get; set; }
 

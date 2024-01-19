@@ -186,6 +186,12 @@
   <data name="DoneDate" xml:space="preserve">
     <value>تاریخ تحویل</value>
   </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>ایمیل تکراری</value>
+  </data>
+  <data name="DuplicatePhone" xml:space="preserve">
+    <value>شماره تماس تکراری</value>
+  </data>
   <data name="Email" xml:space="preserve">
     <value>ایمیل</value>
   </data>
@@ -296,6 +302,9 @@
   </data>
   <data name="PersonType" xml:space="preserve">
     <value>نوع شخص</value>
+  </data>
+  <data name="PhoneNotConfirmed" xml:space="preserve">
+    <value>شماره تماس تایید نشده است</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
     <value>تلفن</value>

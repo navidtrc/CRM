@@ -24,6 +24,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import StaffManager from "../forms/staff/StaffManager";
+import CustomerManager from "../forms/customer/CustomerManager";
 
 const drawerWidth = 240;
 
@@ -95,7 +96,7 @@ const Drawer = styled(MuiDrawer, {
 export default function DashboardLayout() {
   //   const [userData, setUserData] = useState(data);
   const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("admins");
+  const [activeTab, setActiveTab] = useState(1);
 
   //   useEffect(() => {
   //     setUserData(data);
@@ -150,9 +151,9 @@ export default function DashboardLayout() {
           {["تیکت ها", "کاربران ادمین", "تامین کنندکان", "مشتری ها"].map(
             (text, index) => (
               <ListItem
-                //   onClick={() => {
-                //     setActiveTab(index);
-                //   }}
+                  onClick={() => {
+                    setActiveTab(index);
+                  }}
                 key={text}
                 disablePadding
                 sx={{ display: "block" }}
@@ -214,7 +215,8 @@ export default function DashboardLayout() {
         <DrawerHeader />
         <Grid container>
           <Grid item xs={12} md={12} sx={{ boxShadow: 3 }}></Grid>
-          {activeTab === "admins" && <StaffManager />}
+          {activeTab === 1 && <StaffManager />}
+          {activeTab === 3 && <CustomerManager />}
           
         </Grid>
       </Box>

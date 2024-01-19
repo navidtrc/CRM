@@ -5,8 +5,8 @@ namespace CRM.ViewModels.ViewModels
 {
     public class LoginViewModel
     {
-        [Display(Name = "UserName", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public string UserName { get; set; }
+        [Display(Name = "PhoneNumber", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        public string PhoneNumber { get; set; }
 
         [Display(Name = "Password", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
         public string Password { get; set; }

@@ -77,7 +77,7 @@ namespace CRM.Service.User
         }
         public async Task<ResultContent<string>> Login(LoginViewModel loginViewModel, CancellationToken cancellationToken)
         {
-            var result = await _uow.Users.GetByUserAndPass(loginViewModel.UserName, loginViewModel.Password, cancellationToken);
+            var result = await _uow.Users.GetByPhoneAndPass(loginViewModel.PhoneNumber, loginViewModel.Password, cancellationToken);
             if (result.IsSuccess)
                 return new ResultContent<string>(true, await jwtService.Generate(result.Data));
             return new ResultContent<string>(result.IsSuccess, null, result.Message);
@@ -147,7 +147,9 @@ namespace CRM.Service.User
 
         public async Task<ResultContent> ForgetPassword(ForgetPasswordViewModel forgetPasswordViewModel, HttpRequest request, CancellationToken cancellationToken)
         {
-            var user = await _uow.Users.TableNoTracking.FirstOrDefaultAsync(f => f.UserName == forgetPasswordViewModel.UserName);
+            var user = await _uow.Users.TableNoTracking.FirstOrDefaultAsync(f => f.PhoneNumber == forgetPasswordViewModel.Phone);
+            if (user == null)
+                return new ResultContent(false, Resource.ResourceManager.GetString("UserNotFound"));
             string link = $"{request.HttpContext.Request.Scheme}://{request.HttpContext.Request.Host.Value}/forgetpass/{Guid.NewGuid()}";
 
             switch (forgetPasswordViewModel.ForgetType)

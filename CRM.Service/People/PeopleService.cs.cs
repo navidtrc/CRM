@@ -53,24 +53,34 @@ namespace CRM.Service.People
         }
         public async Task<ResultContent> Create(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
         {
-            Entities.DataModels.Security.User user = null;
-            if (registerViewModel.User != null)
+            // چک کردن یکی بودن پسورد و تکرار آن
+            if (!string.IsNullOrEmpty(registerViewModel.User.Password) && registerViewModel.User.Password != registerViewModel.User.ConfirmPassword)
+                return new ResultContent(false, Resource.ResourceManager.GetString("PasswordNotMatch"));
+
+            // چک کردن تکراری نبودن شماره تماس
+            if (await _uow.Users.TableNoTracking.FirstOrDefaultAsync(w => w.PhoneNumber == registerViewModel.User.PhoneNumber, cancellationToken) != null)
+                return new ResultContent(false, Resource.ResourceManager.GetString("DuplicatePhone"));
+
+            // چک کردن تکراری نبودن ایمیل
+            if (await _uow.Users.TableNoTracking.FirstOrDefaultAsync(w => w.Email == registerViewModel.User.Email, cancellationToken) != null)
+                return new ResultContent(false, Resource.ResourceManager.GetString("DuplicateEmail"));
+
+            Entities.DataModels.Security.User user = new Entities.DataModels.Security.User
             {
-                user = new Entities.DataModels.Security.User();
-                if (registerViewModel.User.Password != registerViewModel.User.ConfirmPassword)
-                    return new ResultContent(false, Resource.ResourceManager.GetString("PasswordNotMatch"));
+                UserName = registerViewModel.User.PhoneNumber,
+                Email = registerViewModel.User?.Email,
+                PhoneNumber = registerViewModel.User.PhoneNumber,
+            };
 
-                if (await _uow.Users.TableNoTracking.FirstOrDefaultAsync(w => w.UserName == registerViewModel.User.UserName, cancellationToken) != null)
-                    return new ResultContent(false, Resource.ResourceManager.GetString("TryAnotherUserName"));
-
-                user = new Entities.DataModels.Security.User()
-                {
-                    UserName = registerViewModel.User.UserName,
-                    Email = registerViewModel.User.Email,
-                    PhoneNumber = registerViewModel.User.PhoneNumber,
-                };
-                await _uow.Users.AddAsync(user, registerViewModel.User.Password, cancellationToken);
+            // وقتی کاربر مشتری میباشد و ما برای مشتری پسورد در نظر نگرفتیم. چون مشتری اطلاعات لاگین به سیستم لازم نداره
+            // معمولا هنگام ایجاد تیکت جدید وقتی میخواییم مشخصات مشتری رو وارد کنیم
+            if (registerViewModel.Person.ePersonType == ePersonType.Customer && string.IsNullOrEmpty(registerViewModel.User.Password))
+            {
+                user.LockoutEnabled = true;
+                user.LockoutEnd = DateTime.MaxValue;
+                user.PasswordHash = $"!@#{user.PhoneNumber}$%^";
             }
+            await _uow.Users.AddAsync(user, registerViewModel.User.Password, cancellationToken);
 
             var person = new Person
             {
@@ -114,24 +124,20 @@ namespace CRM.Service.People
                 .FirstOrDefaultAsync(i => i.Id == registerViewModel.Person.Id, cancellationToken);
 
             var (FirstName, LastName, BirthDate, Gender) = registerViewModel.Person;
-            
+
             person.FirstName = FirstName;
             person.LastName = LastName;
             person.BirthDate = BirthDate;
             person.Gender = Gender;
 
-            if (person.User != null)
-            {
-                // FOR CUSTOMER: If user is not null, it means user for customer is modified or its created
-                // Implimentation must change in future as soon as posible ...
-                if (person.User.Email != registerViewModel.User.Email)
-                    person.User.EmailConfirmed= false;
-                person.User.Email = registerViewModel.User.Email;
+            if (person.User.Email != registerViewModel.User.Email)
+                person.User.EmailConfirmed = false;
+            person.User.Email = registerViewModel.User.Email;
 
-                if (person.User.PhoneNumber != registerViewModel.User.PhoneNumber)
-                    person.User.PhoneNumberConfirmed = false;
-                person.User.PhoneNumber = registerViewModel.User.PhoneNumber;
-            }
+            if (person.User.PhoneNumber != registerViewModel.User.PhoneNumber)
+                person.User.PhoneNumberConfirmed = false;
+            person.User.PhoneNumber = registerViewModel.User.PhoneNumber;
+            person.User.UserName = registerViewModel.User.PhoneNumber;
 
             await _uow.People.UpdateAsync(person, cancellationToken);
             await _uow.CompleteAsync(cancellationToken);

@@ -19,7 +19,7 @@ namespace CRM.Common.Resources.StringResources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource {
@@ -264,6 +264,24 @@ namespace CRM.Common.Resources.StringResources {
         public static string DoneDate {
             get {
                 return ResourceManager.GetString("DoneDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ایمیل تکراری.
+        /// </summary>
+        public static string DuplicateEmail {
+            get {
+                return ResourceManager.GetString("DuplicateEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شماره تماس تکراری.
+        /// </summary>
+        public static string DuplicatePhone {
+            get {
+                return ResourceManager.GetString("DuplicatePhone", resourceCulture);
             }
         }
         
@@ -597,6 +615,15 @@ namespace CRM.Common.Resources.StringResources {
         public static string PersonType {
             get {
                 return ResourceManager.GetString("PersonType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شماره تماس تایید نشده است.
+        /// </summary>
+        public static string PhoneNotConfirmed {
+            get {
+                return ResourceManager.GetString("PhoneNotConfirmed", resourceCulture);
             }
         }
         

@@ -20,11 +20,13 @@ namespace CRM.Repository.Persistence.Repositories
         public UserRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
-        public async Task<ResultContent<User>> GetByUserAndPass(string username, string password, CancellationToken cancellationToken)
+        public async Task<ResultContent<User>> GetByPhoneAndPass(string phone, string password, CancellationToken cancellationToken)
         {
-            var user = await TableNoTracking.FirstOrDefaultAsync(f => f.UserName == username, cancellationToken);
+            var user = await TableNoTracking.FirstOrDefaultAsync(f => f.UserName == phone, cancellationToken);
             if (user == null)
                 return new ResultContent<User>(false, null, Resource.ResourceManager.GetString("UserNotFound"));
+            if (user.PhoneNumberConfirmed == false)
+                return new ResultContent<User>(false, null, Resource.ResourceManager.GetString("PhoneNotConfirmed"));
             return user.PasswordHash == SecurityHelper.GetSha256Hash(password) ? new ResultContent<User>(true, user) : new ResultContent<User>(false, null, Resource.ResourceManager.GetString("IncorrectUserOrPass"));
         }
 
@@ -48,7 +50,7 @@ namespace CRM.Repository.Persistence.Repositories
 
         public Task ChangeLockout(User user, CancellationToken cancellationToken)
         {
-            
+
             user.LastLoginDate = DateTime.Now;
             return UpdateAsync(user, cancellationToken);
         }
