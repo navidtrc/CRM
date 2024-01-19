@@ -1,28 +1,27 @@
 import { useState } from "react";
-import StaffDataGrid from "./StaffDataGrid";
-import AddEditUserModal from "./modals/AddEditUser";
-import ChangePasswordModal from "./modals/ChangePassword";
+import PeopleDataGrid from "./PeopleDataGrid";
+import AddEditPersonModal from "./modals/AddEditPersonModal";
+import UserAccessModal from "./modals/UserAccessModal";
 import EmailConfirmation from "../global/modals/EmailConfirmation";
 import PhoneConfirmation from "../global/modals/PhoneConfirmation";
 
-const StaffManager = () => {
+const PeopleManager = ({ personType, personTitle }) => {
   const [user, setUser] = useState(null);
-  const [addEditOpen, setAddEditOpen] = useState(false);
-  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+  const [addEditPersonOpen, setAddEditPersonOpen] = useState(false);
+  const [UserAccesOpen, setUserAccessOpen] = useState(false);
   const [emailConfirmOpen, setEmailConfirmOpen] = useState(false);
   const [phoneConfirmOpen, setPhoneConfirmOpen] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
 
   function modalOpenHandler(type, payload) {
-    debugger;
     switch (type) {
       case "addedit":
         setUser(payload);
-        setAddEditOpen(true);
+        setAddEditPersonOpen(true);
         break;
-      case "changepassword":
+      case "useraccess":
         setUser(payload);
-        setChangePasswordOpen(true);
+        setUserAccessOpen(true);
         break;
       case "emailconfirm":
         setUser(payload);
@@ -39,21 +38,21 @@ const StaffManager = () => {
 
   return (
     <>
-      {addEditOpen && (
-        <AddEditUserModal
-          open={addEditOpen}
+      {addEditPersonOpen && (
+        <AddEditPersonModal
+          open={addEditPersonOpen}
           onClose={() => {
-            setAddEditOpen(false);
+            setAddEditPersonOpen(false);
             setUser(null);
             setIsRefetching(true);
           }}
           data={user}
         />
       )}
-      {changePasswordOpen && (
-        <ChangePasswordModal
-          open={changePasswordOpen}
-          onClose={() => setChangePasswordOpen(false)}
+      {UserAccesOpen && (
+        <UserAccessModal
+          open={UserAccesOpen}
+          onClose={() => setUserAccessOpen(false)}
           user={user}
         />
       )}
@@ -74,8 +73,9 @@ const StaffManager = () => {
         />
       )}
 
-      <h1>کاربران ادمین</h1>
-      <StaffDataGrid
+      <h1>کاربران {personTitle}</h1>
+      <PeopleDataGrid
+        personType={personType}
         isRefetching={isRefetching}
         onSetIsRefetching={(value) => {
           setIsRefetching(value);
@@ -86,4 +86,4 @@ const StaffManager = () => {
   );
 };
 
-export default StaffManager;
+export default PeopleManager;

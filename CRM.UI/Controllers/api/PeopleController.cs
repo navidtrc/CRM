@@ -19,7 +19,6 @@ namespace CRM.UI.Controllers.api
         public PeopleController(IPeopleService peopleService)
         {
             this.peopleService = peopleService;
-
         }
 
         [HttpPost]

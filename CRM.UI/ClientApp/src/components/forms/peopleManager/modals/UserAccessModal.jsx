@@ -1,5 +1,17 @@
 import { React, useState } from "react";
-import { Box, TextField, Divider, Stack, Button } from "@mui/material/";
+import {
+  Box,
+  TextField,
+  Divider,
+  Stack,
+  Button,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Checkbox,
+} from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Swal from "sweetalert2";
@@ -17,13 +29,24 @@ const style = {
   "& .MuiTextField-root": { m: 1 },
 };
 
-export default function ChangePasswordModal({ open, onClose, user }) {
-  const [data, setData] = useState({ password: "", confirmPassword: "" });
+export default function UserAccessModal({ open, onClose, user }) {
+  const [data, setData] = useState({
+    changePassword: false,
+    lockoutEnabled: user.lockoutEnabled,
+    password: "",
+    confirmPassword: "",
+  });
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     setData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
+    }));
+  };
+  const handleCheckboxChange = (e) => {
+    setData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.checked,
     }));
   };
 
@@ -33,6 +56,8 @@ export default function ChangePasswordModal({ open, onClose, user }) {
 
     const raw = JSON.stringify({
       Id: user.userId,
+      LockoutEnabled: data.lockoutEnabled,
+      ChangePassword: data.changePassword,
       Password: data.password,
       ConfirmPassword: data.confirmPassword,
     });
@@ -44,19 +69,16 @@ export default function ChangePasswordModal({ open, onClose, user }) {
       redirect: "follow",
     };
 
-    fetch("/api/account/ForgetPasswordConfirm", requestOptions)
+    fetch("/api/account/UserAccessChange", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        if (result.IsSuccess)
-        {
+        if (result.IsSuccess) {
           onClose();
           Swal.fire({
             title: "انجام شد",
             icon: "success",
           });
-        }
-        else
-        {
+        } else {
           onClose();
           Swal.fire({
             icon: "error",
@@ -85,18 +107,54 @@ export default function ChangePasswordModal({ open, onClose, user }) {
       >
         <Box sx={style} component="form" autoComplete="off">
           <Typography id="modal-modal-title" variant="h5" component="h5">
-            تغییر کلمه عبور
+            دسترسی ورود به سیستم
           </Typography>
           <Divider />
           <Typography variant="body1" component="body1">
-            کاربر: {user.username}
+            کاربر: {user.firstName} {user.lastName}
           </Typography>
 
           <div>
+            <FormControl>
+              <FormLabel id="userLockoutEnabled">وضعیت</FormLabel>
+              <RadioGroup
+                aria-labelledby="userLockoutEnabled"
+                name="lockoutEnabled"
+                onChange={handleChange}
+                value={data.lockoutEnabled}
+              >
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="فعال"
+                />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="غیرفعال"
+                />
+              </RadioGroup>
+            </FormControl>
+          </div>
+
+          <div>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="changePassword"
+                  onChange={handleCheckboxChange}
+                  checked={data.changePassword}
+                />
+              }
+              label="آیا میخواهید کلمه عبور را تغییر دهید؟"
+            />
+          </div>
+
+          {data.changePassword && (
             <>
               <TextField
                 value={data.password}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 required
                 name="password"
                 label="کلمه عبور"
@@ -105,7 +163,7 @@ export default function ChangePasswordModal({ open, onClose, user }) {
               />
               <TextField
                 value={data.confirmPassword}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 required
                 name="confirmPassword"
                 label="تکرار کلمه عبور"
@@ -113,7 +171,8 @@ export default function ChangePasswordModal({ open, onClose, user }) {
                 variant="standard"
               />
             </>
-          </div>
+          )}
+
           <Divider />
 
           <Stack mt={2} spacing={2} direction="row">

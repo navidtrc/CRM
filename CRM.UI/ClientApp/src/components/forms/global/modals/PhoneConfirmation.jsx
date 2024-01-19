@@ -132,7 +132,7 @@ export default function PhoneConfirmation({ open, onClose, user }) {
           </Typography>
           <Divider />
           <Typography variant="body1" component="body1">
-            کاربر: {user.username}
+            کاربر: {user.firstName} {user.lastName}
           </Typography>
           <Stack mt={2} spacing={2} direction="row">
             <Button

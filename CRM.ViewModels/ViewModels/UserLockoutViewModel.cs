@@ -14,7 +14,5 @@ namespace CRM.ViewModels.ViewModels
         [JsonProperty(PropertyName = "LockoutEnabled")]
         public bool LockoutEnabled { get; set; }
         
-        [JsonProperty(PropertyName = "LockoutEnd")]
-        public DateTimeOffset? LockoutEnd { get; set; }
     }
 }

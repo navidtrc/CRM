@@ -1,5 +1,13 @@
 import { React, useState } from "react";
-import { Box, TextField, Divider, Stack, Button } from "@mui/material/";
+import {
+  Box,
+  TextField,
+  Divider,
+  Stack,
+  Button,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Swal from "sweetalert2";
@@ -18,7 +26,7 @@ const style = {
   "& .MuiTextField-root": { m: 1 },
 };
 
-export default function AddEditUserModal({
+export default function AddEditPersonModal({
   open,
   onClose,
   data = {
@@ -35,6 +43,8 @@ export default function AddEditUserModal({
     password: "",
     confirmPassword: "",
   });
+
+  const [hasUserAccess, setHasUserAccess] = useState(false);
 
   const handleInputChange = (e) => {
     setUser((prev) => ({
@@ -147,36 +157,47 @@ export default function AddEditUserModal({
               label="ایمیل"
               variant="standard"
             />
-            <TextField
-              disabled={user.id === 0 ? false : true}
-              value={user.username}
-              onChange={handleInputChange}
-              name="username"
-              required
-              label="نام کاربری"
-              variant="standard"
-            />
 
             {user.id === 0 && (
               <>
-                <TextField
-                  value={user.password}
-                  onChange={handleInputChange}
-                  required
-                  name="password"
-                  label="کلمه عبور"
-                  type="password"
-                  variant="standard"
-                />
-                <TextField
-                  value={user.confirmPassword}
-                  onChange={handleInputChange}
-                  required
-                  name="confirmPassword"
-                  label="تکرار کلمه عبور"
-                  type="password"
-                  variant="standard"
-                />
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="hasUserAccess"
+                        onChange={() => {
+                          setHasUserAccess((prev) => {
+                            return !prev;
+                          });
+                        }}
+                        checked={hasUserAccess}
+                      />
+                    }
+                    label="دسترسی ورود به سیستم"
+                  />
+                </div>
+                {hasUserAccess && (
+                  <>
+                    <TextField
+                      value={user.password}
+                      onChange={handleInputChange}
+                      required
+                      name="password"
+                      label="کلمه عبور"
+                      type="password"
+                      variant="standard"
+                    />
+                    <TextField
+                      value={user.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                      name="confirmPassword"
+                      label="تکرار کلمه عبور"
+                      type="password"
+                      variant="standard"
+                    />
+                  </>
+                )}
               </>
             )}
           </div>

@@ -27,7 +27,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(Common.Enums.eAccessControl.AccountLoginApi, Common.Enums.eAccessType.Api, 0, true)]
         public async Task<IActionResult> Login(LoginViewModel userViewModel, CancellationToken cancellationToken)
         {
-            var result = await userService.Login(userViewModel, cancellationToken);
+            var result = await userService.LoginAsync(userViewModel, cancellationToken);
             if (result.IsSuccess)
             {
                 if (userViewModel.AppendCookie)
@@ -55,7 +55,7 @@ namespace CRM.UI.Controllers.api
         [Authorize]
         public async Task<IActionResult> Logout(CancellationToken cancellationToken)
         {
-            var result = await userService.Logout(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), cancellationToken);
+            var result = await userService.LogoutAsync(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), cancellationToken);
             return RedirectToAction("Login", "/Account");
         }
 
@@ -64,7 +64,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(Common.Enums.eAccessControl.AccountForgetPasswordApi, Common.Enums.eAccessType.Api, 3)]
         public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel forgetPasswordViewModel, CancellationToken cancellationToken)
         {
-            var result = await userService.ForgetPassword(forgetPasswordViewModel, Request, cancellationToken);
+            var result = await userService.ForgetPasswordAsync(forgetPasswordViewModel, Request, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);
@@ -75,7 +75,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(Common.Enums.eAccessControl.AccountForgetPasswordConfirmApi, Common.Enums.eAccessType.Api, 4)]
         public async Task<IActionResult> ForgetPasswordConfirm(ForgetPasswordConfirmViewModel forgetPasswordConfirmViewModel, CancellationToken cancellationToken)
         {
-            var result = await userService.ForgetPasswordConfirm(forgetPasswordConfirmViewModel, cancellationToken);
+            var result = await userService.ForgetPasswordConfirmAsync(forgetPasswordConfirmViewModel, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);
@@ -86,7 +86,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(Common.Enums.eAccessControl.AccountForgetPasswordConfirmApi, Common.Enums.eAccessType.Api, 4)]
         public async Task<IActionResult> Lockout(UserLockoutViewModel userLockoutViewModel, CancellationToken cancellationToken)
         {
-            var result = await userService.Lockout(userLockoutViewModel, cancellationToken);
+            var result = await userService.LockoutAsync(userLockoutViewModel, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);
@@ -97,7 +97,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(Common.Enums.eAccessControl.AccountForgetPasswordConfirmApi, Common.Enums.eAccessType.Api, 4)]
         public async Task<IActionResult> SendCode(SendCodeViewModel sendCodeViewModel, CancellationToken cancellationToken)
         {
-            var result = await userService.SendCode(sendCodeViewModel, cancellationToken);
+            var result = await userService.SendCodeAsync(sendCodeViewModel, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);
@@ -108,7 +108,18 @@ namespace CRM.UI.Controllers.api
         [UserAccess(Common.Enums.eAccessControl.AccountForgetPasswordConfirmApi, Common.Enums.eAccessType.Api, 4)]
         public async Task<IActionResult> Confirmation(ConfirmCodeViewModel confirmCodeViewModel, CancellationToken cancellationToken)
         {
-            var result = await userService.Confirmation(confirmCodeViewModel, cancellationToken);
+            var result = await userService.ConfirmationAsync(confirmCodeViewModel, cancellationToken);
+            if (result.IsSuccess)
+                return Ok(result.Message);
+            return BadRequest(result.Message);
+        }
+
+        [HttpPost]
+        [Route("/api/[controller]/[action]")]
+        [UserAccess(Common.Enums.eAccessControl.AccountForgetPasswordConfirmApi, Common.Enums.eAccessType.Api, 4)]
+        public async Task<IActionResult> UserAccessChange(UserAccessChangeViewModel userAccessChangeViewModel, CancellationToken cancellationToken)
+        {
+            var result = await userService.UserAccessChangeAsync(userAccessChangeViewModel, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);

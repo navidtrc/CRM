@@ -75,7 +75,7 @@ namespace CRM.Service.User
             var result = query.ToDataSourceResult(request);
             return result;
         }
-        public async Task<ResultContent<string>> Login(LoginViewModel loginViewModel, CancellationToken cancellationToken)
+        public async Task<ResultContent<string>> LoginAsync(LoginViewModel loginViewModel, CancellationToken cancellationToken)
         {
             var result = await _uow.Users.GetByPhoneAndPass(loginViewModel.PhoneNumber, loginViewModel.Password, cancellationToken);
             if (result.IsSuccess)
@@ -139,13 +139,13 @@ namespace CRM.Service.User
         //    return new ResultContent(true, Resource.ResourceManager.GetString("UserCreated"));
         //}
 
-        public async Task<ResultContent> Logout(Guid id, CancellationToken cancellationToken)
+        public async Task<ResultContent> LogoutAsync(Guid id, CancellationToken cancellationToken)
         {
             await _uow.Users.UpdateSecuirtyStampAsync(await _uow.Users.GetByIdAsync(cancellationToken, id), cancellationToken);
             return new ResultContent(true, Resource.ResourceManager.GetString("LogOutSuccessfully"));
         }
 
-        public async Task<ResultContent> ForgetPassword(ForgetPasswordViewModel forgetPasswordViewModel, HttpRequest request, CancellationToken cancellationToken)
+        public async Task<ResultContent> ForgetPasswordAsync(ForgetPasswordViewModel forgetPasswordViewModel, HttpRequest request, CancellationToken cancellationToken)
         {
             var user = await _uow.Users.TableNoTracking.FirstOrDefaultAsync(f => f.PhoneNumber == forgetPasswordViewModel.Phone);
             if (user == null)
@@ -166,7 +166,7 @@ namespace CRM.Service.User
             return new ResultContent(true, Resource.ResourceManager.GetString("ForgetLinkSent"));
         }
 
-        public async Task<ResultContent> ForgetPasswordConfirm(ForgetPasswordConfirmViewModel forgetPasswordConfirmViewModel, CancellationToken cancellationToken)
+        public async Task<ResultContent> ForgetPasswordConfirmAsync(ForgetPasswordConfirmViewModel forgetPasswordConfirmViewModel, CancellationToken cancellationToken)
         {
             if (forgetPasswordConfirmViewModel.Password != forgetPasswordConfirmViewModel.ConfirmPassword)
                 return new ResultContent(false, Resource.ResourceManager.GetString("PasswordNotMatch"));
@@ -177,7 +177,7 @@ namespace CRM.Service.User
             return new ResultContent(true, Resource.ResourceManager.GetString("PasswordChanged"));
         }
 
-        public async Task<ResultContent> Lockout(UserLockoutViewModel userLockoutViewModel, CancellationToken cancellationToken)
+        public async Task<ResultContent> LockoutAsync(UserLockoutViewModel userLockoutViewModel, CancellationToken cancellationToken)
         {
             var user = await _uow.Users.GetByIdAsync(cancellationToken, Guid.Parse(userLockoutViewModel.UserId));
             user.LockoutEnabled = userLockoutViewModel.LockoutEnabled;
@@ -188,7 +188,7 @@ namespace CRM.Service.User
             return new ResultContent(true, Resource.ResourceManager.GetString(message));
         }
 
-        public async Task<ResultContent> SendCode(SendCodeViewModel sendCodeViewModel, CancellationToken cancellationToken)
+        public async Task<ResultContent> SendCodeAsync(SendCodeViewModel sendCodeViewModel, CancellationToken cancellationToken)
         {
             var user = await _uow.Users.GetByIdAsync(cancellationToken, Guid.Parse(sendCodeViewModel.Id));
 
@@ -210,8 +210,8 @@ namespace CRM.Service.User
             //}
             return new ResultContent(true);
         }
-        
-        public async Task<ResultContent> Confirmation(ConfirmCodeViewModel confirmCodeViewModel, CancellationToken cancellationToken)
+
+        public async Task<ResultContent> ConfirmationAsync(ConfirmCodeViewModel confirmCodeViewModel, CancellationToken cancellationToken)
         {
             var user = await _uow.Users.GetByIdAsync(cancellationToken, Guid.Parse(confirmCodeViewModel.Id));
             var isCorrect = confirmCodeViewModel.Code.ToString() == user.TempCode
@@ -259,6 +259,26 @@ namespace CRM.Service.User
             }
             await _uow.CompleteAsync(cancellationToken);
             return new ResultContent(true, Resource.ResourceManager.GetString("UserDeleted"));
+        }
+
+        public async Task<ResultContent> UserAccessChangeAsync(UserAccessChangeViewModel userAccessChangeViewModel, CancellationToken cancellationToken)
+        {
+            await LockoutAsync(new UserLockoutViewModel
+            {
+                UserId = userAccessChangeViewModel.Id,
+                LockoutEnabled = userAccessChangeViewModel.LockoutEnabled
+            }, cancellationToken);
+
+            if (userAccessChangeViewModel.ChangePassword)
+            {
+                await ForgetPasswordConfirmAsync(new ForgetPasswordConfirmViewModel
+                {
+                    Id = userAccessChangeViewModel.Id,
+                    Password = userAccessChangeViewModel.Password,
+                    ConfirmPassword = userAccessChangeViewModel.ConfirmPassword
+                }, cancellationToken);
+            }
+            return new ResultContent(true);
         }
 
     }

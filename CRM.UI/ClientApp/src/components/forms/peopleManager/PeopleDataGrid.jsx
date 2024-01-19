@@ -8,18 +8,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MRT_Localization_FA } from "material-react-table/locales/fa";
 import {
   Edit as EditIcon,
-  Key as KeyIcon,
   Delete as DeleteIcon,
   Refresh as RefreshIcon,
-  Lock as LockIcon,
-  LockOpen as LockOpenIcon,
   Email as EmailIcon,
   MobileOff as MobileOffIcon,
   MobileFriendly as MobileFriendlyIcon,
+  VerifiedUser as VerifiedUserIcon,
 } from "@mui/icons-material/";
 import Swal from "sweetalert2";
 
-const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
+const TableGrid = ({
+  isRefetching,
+  onSetIsRefetching,
+  onOpenModal,
+  personType,
+}) => {
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +64,7 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       var raw = JSON.stringify({
-        type: "staff",
+        type: `${personType}`,
         start: Number(fetchURL.searchParams.get("start")),
         size: Number(fetchURL.searchParams.get("size")),
         globalFilter: fetchURL.searchParams.get("globalFilter"),
@@ -116,23 +119,6 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
 
   const columns = useMemo(
     () => [
-      // {
-      //   accessorKey: "username",
-      //   header: "نام کاربری",
-      //   muiEditTextFieldProps: {
-      //     type: "text",
-      //     required: true,
-      //     error: !!validationErrors?.username,
-      //     helperText: validationErrors?.username,
-      //     //remove any previous validation errors when user focuses on the input
-      //     onFocus: () =>
-      //       setValidationErrors({
-      //         ...validationErrors,
-      //         username: undefined,
-      //       }),
-      //     //optionally add validation checking for onBlur or onChange
-      //   },
-      // },
       {
         accessorKey: "firstName",
         header: "نام",
@@ -202,44 +188,9 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
     [validationErrors]
   );
 
-  const handleDeactiveUser = (user) => {
-    debugger;
-    Swal.fire({
-      title: `کاربر ${user.firstName}؟ ${user.lastName}`,
-      text: `وضعیت این کاربر به صورت ${
-        user.lockoutEnabled !== true ? "فعال" : "غیرفعال"
-      } میباشد.`,
-      showCancelButton: true,
-      confirmButtonText: user.lockoutEnabled !== true ? "غیر فعال" : "فعال",
-      cancelButtonText: "انصراف",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        const raw = {
-          UserId: user.userId,
-          LockoutEnabled: !user.lockoutEnabled,
-        };
-        const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: JSON.stringify(raw),
-          redirect: "follow",
-        };
-
-        debugger;
-        fetch("/api/account/lockout", requestOptions).then(() => {
-          Swal.fire("انجام شد", "", "success");
-          onSetIsRefetching(true);
-        });
-      }
-    });
-  };
-
   const handleDeleteUser = (user) => {
-    debugger;
     Swal.fire({
-      title: `آیا از حذف کاربر ${user.firstName} ${user.lastName} اظمینان دارید؟`,
+      title: `آیا از حذف کاربر ${user.firstName} ${user.lastName} اطمینان دارید؟`,
       text: "در صورت حذف امکان بازگشت وجود ندارد",
       icon: "warning",
       showCancelButton: true,
@@ -301,16 +252,10 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
               <EditIcon />
             </Button>
             <Button
-              color="warning"
-              onClick={() => onOpenModal("changepassword", row.original)}
-            >
-              <KeyIcon />
-            </Button>
-            <Button
               color={row.original.lockoutEnabled ? "error" : "success"}
-              onClick={() => handleDeactiveUser(row.original)}
+              onClick={() => onOpenModal("useraccess", row.original)}
             >
-              {row.original.lockoutEnabled ? <LockIcon /> : <LockOpenIcon />}
+              <VerifiedUserIcon />
             </Button>
             <Button
               color={row.original.emailConfirmed ? "success" : "error"}
@@ -375,14 +320,13 @@ const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
 
 const queryClient = new QueryClient();
 
-const StaffDataGrid = ({ modalHandler, isRefetching, onSetIsRefetching }) => (
+const PeopleDataGrid = (props) => (
   <QueryClientProvider client={queryClient}>
     <TableGrid
-      onOpenModal={(type, payload) => modalHandler(type, payload)}
-      onSetIsRefetching={onSetIsRefetching}
-      isRefetching={isRefetching}
+      onOpenModal={(type, payload) => props.modalHandler(type, payload)}
+      {...props}
     />
   </QueryClientProvider>
 );
 
-export default StaffDataGrid;
+export default PeopleDataGrid;

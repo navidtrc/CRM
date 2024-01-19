@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { theme } from "../../context/theme";
@@ -23,8 +23,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import StaffManager from "../forms/staff/StaffManager";
-import CustomerManager from "../forms/customer/CustomerManager";
+import PeopleManager from "../forms/peopleManager/PeopleManager";
 
 const drawerWidth = 240;
 
@@ -215,8 +214,9 @@ export default function DashboardLayout() {
         <DrawerHeader />
         <Grid container>
           <Grid item xs={12} md={12} sx={{ boxShadow: 3 }}></Grid>
-          {activeTab === 1 && <StaffManager />}
-          {activeTab === 3 && <CustomerManager />}
+          {activeTab === 1 && <PeopleManager personType={"staff"} personTitle={"ادمین"} />}
+          {activeTab === 3 && <PeopleManager personType={"customer"} personTitle={"مشتری"} />}
+          {/* {activeTab === 3 && <CustomerManager />} */}
           
         </Grid>
       </Box>
