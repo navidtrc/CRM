@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "IRANSansWeb";
+  src: local("B-Nazanin"), url(./fonts/IranSans/ttf/IRANSansWeb_Light.ttf) format("truetype");
+}
+
+* {
+  font-family: IRANSansWeb !important;
+}
+
+.MuiPaper-root {
+  width: 100%;
+}
