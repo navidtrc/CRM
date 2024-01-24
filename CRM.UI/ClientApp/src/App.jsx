@@ -7,7 +7,6 @@ import DashboardLayout from "./components/layouts/DashboardLayout";
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState("a");
-
   React.useEffect(() => {
     // const user = AuthService.getCurrentUser();
     // if (user) {
