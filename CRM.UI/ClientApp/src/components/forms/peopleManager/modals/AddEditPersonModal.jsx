@@ -5,18 +5,12 @@ import {
   Divider,
   Stack,
   Button,
-  Tabs,
-  Tab,
   FormControlLabel,
   Checkbox,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Swal from "sweetalert2";
-import PropTypes from "prop-types";
-import { AdapterDateFnsJalali } from '@mui/x-date-pickers/AdapterDateFnsJalali';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 const style = {
   position: "absolute",
@@ -32,39 +26,6 @@ const style = {
   "& .MuiTextField-root": { m: 1 },
 };
 
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
 export default function AddEditPersonModal({
   open,
   onClose,
@@ -77,10 +38,76 @@ export default function AddEditPersonModal({
     phoneNumber: "",
   },
 }) {
-  const [value, setValue] = useState(0);
+  const [user, setUser] = useState({
+    ...data,
+    password: "",
+    confirmPassword: "",
+  });
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const [hasUserAccess, setHasUserAccess] = useState(false);
+
+  const handleInputChange = (e) => {
+    setUser((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      User: {
+        Id: 0,
+        UserName: user.username,
+        PhoneNumber: user.phoneNumber,
+        Password: user.id === 0 ? user.password : "1",
+        ConfirmPassword: user.id === 0 ? user.confirmPassword : "1",
+        Email: user.email,
+      },
+      Person: {
+        Id: user.id,
+        ePersonType: 0,
+        FirstName: user.firstName,
+        LastName: user.lastName,
+      },
+    });
+
+    const requestOptions = {
+      method: user.id === 0 ? "POST" : "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    const url = user.id === 0 ? "/api/people/post" : "/api/people/put";
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.IsSuccess) {
+          onClose();
+          Swal.fire({
+            title: "انجام شد",
+            icon: "success",
+          });
+        } else {
+          onClose();
+          Swal.fire({
+            icon: "error",
+            title: "خطا",
+            text: result.Message,
+          });
+        }
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "خطا",
+          text: error.Message,
+        });
+        console.log("error", error);
+      });
   };
 
   return (
@@ -93,45 +120,102 @@ export default function AddEditPersonModal({
       >
         <Box sx={style} component="form" autoComplete="off">
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            تیکت جدید
+            {user.id === 0 ? "ایجاد کاربر جدید" : "ویرایش کاربر"}
           </Typography>
           <Divider />
 
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              aria-label="basic tabs example"
-            >
-              <Tab label="تیکت" {...a11yProps(0)} />
-              <Tab label="مشتری" {...a11yProps(1)} />
-              <Tab label="دستگاه" {...a11yProps(2)} />
-            </Tabs>
-          </Box>
-          <CustomTabPanel value={value} index={0}>
+          <div>
             <TextField
-              label="شماره"
-              id="ticketNumberInput"
-              sx={{ m: 1, width: "25ch" }}
+              value={user.firstName}
+              onChange={handleInputChange}
+              name="firstName"
+              required
+              label="نام"
+              variant="standard"
             />
-            <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-              <DateTimePicker
-                label="تاریخ"
-                defaultValue={new Date()}
-              />
-            </LocalizationProvider>
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
-            Item Two
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
-            Item Three
-          </CustomTabPanel>
+            <TextField
+              value={user.lastName}
+              onChange={handleInputChange}
+              name="lastName"
+              required
+              label="نام خانوادگی"
+              variant="standard"
+            />
+            <TextField
+              value={user.phoneNumber}
+              onChange={handleInputChange}
+              name="phoneNumber"
+              required
+              label="شماره تماس"
+              variant="standard"
+            />
+            <TextField
+              value={user.email}
+              onChange={handleInputChange}
+              name="email"
+              required
+              label="ایمیل"
+              variant="standard"
+            />
+
+            {user.id === 0 && (
+              <>
+                <div>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        name="hasUserAccess"
+                        onChange={() => {
+                          setHasUserAccess((prev) => {
+                            return !prev;
+                          });
+                        }}
+                        checked={hasUserAccess}
+                      />
+                    }
+                    label="دسترسی ورود به سیستم"
+                  />
+                </div>
+                {hasUserAccess && (
+                  <>
+                    <TextField
+                      value={user.password}
+                      onChange={handleInputChange}
+                      required
+                      name="password"
+                      label="کلمه عبور"
+                      type="password"
+                      variant="standard"
+                    />
+                    <TextField
+                      value={user.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                      name="confirmPassword"
+                      label="تکرار کلمه عبور"
+                      type="password"
+                      variant="standard"
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </div>
           <Divider />
 
+          <Typography
+            color="error"
+            id="modal-modal-title"
+            variant="h6"
+            component="h6"
+          >
+            {user.id === 0
+              ? "شماره تماس و ایمیل را بعد از ثبت کاربر تایید کنید. در غیر این صورت پیام ارسال نمیشود"
+              : "در صورت ویرایش شماره تماس یا ایمیل تایید مجدد نیاز میباشد"}
+          </Typography>
           <Stack mt={2} spacing={2} direction="row">
             <Button
-              // onClick={() => handleSubmit()}
+              onClick={() => handleSubmit()}
               variant="contained"
               color="success"
             >
