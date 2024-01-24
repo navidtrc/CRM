@@ -91,12 +91,16 @@ export default function AddEditTicketModal({
     phoneConfirmation: false,
     emailConfirmation: false,
     deviceId:0,
-    
-
+    deviceType:{},
+    deviceBrand:{},
+    model:"",
+    descrption:"",
+    accessories:"",
+    waranty:false,
+    inquiryPrice:""
   },
 }) {
   const [value, setValue] = useState(0);
-  const [age, setAge] = useState("");
 
   // const handleChange = (event) => {
   //   setAge(event.target.value);
