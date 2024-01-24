@@ -80,12 +80,19 @@ export default function AddEditTicketModal({
   open,
   onClose,
   data = {
-    id: 0,
+    ticketId: 0,
     number: "",
+    date:"",
+    customerId:0,
+    firstName:"",
     lastName: "",
-    username: "",
+    phone:"",
     email: "",
-    phoneNumber: "",
+    phoneConfirmation: false,
+    emailConfirmation: false,
+    deviceId:0,
+    
+
   },
 }) {
   const [value, setValue] = useState(0);
