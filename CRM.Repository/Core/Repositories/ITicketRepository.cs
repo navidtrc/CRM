@@ -1,4 +1,4 @@
-﻿using CRM.Entities.DataModels.General;
+﻿using CRM.Entities.DataModels.Security;
 
 namespace CRM.Repository.Core.Repositories
 {

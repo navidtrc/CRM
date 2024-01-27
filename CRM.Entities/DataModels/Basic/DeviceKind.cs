@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace CRM.Entities.DataModels.Ticket
+namespace CRM.Entities.DataModels.Basic
 {
     public class DeviceKind : BaseEntity
     {
@@ -18,7 +18,7 @@ namespace CRM.Entities.DataModels.Ticket
     {
         public void Configure(EntityTypeBuilder<DeviceKind> builder)
         {
-            builder.ToTable("DeviceKind", "Ticket");
+            builder.ToTable("DeviceKind", "Basic");
         }
     }
 }

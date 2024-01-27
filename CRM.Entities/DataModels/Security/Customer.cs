@@ -1,14 +1,11 @@
 ﻿using CRM.Common.Enums;
 using CRM.Common.Resources.StringResources;
 using CRM.Entities.Core;
-using CRM.Entities.DataModels.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRM.Entities.DataModels.General
+namespace CRM.Entities.DataModels.Security
 {
     public class Customer : BaseEntity
     {
@@ -24,7 +21,7 @@ namespace CRM.Entities.DataModels.General
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
-            builder.ToTable("Customer", "General");
+            builder.ToTable("Customer", "Security");
         }
     }
 }

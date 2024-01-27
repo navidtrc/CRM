@@ -1,6 +1,6 @@
 ﻿using CRM.DAL;
 using CRM.Repository.Core.Repositories;
-using CRM.Entities.DataModels.General;
+using CRM.Entities.DataModels.Security;
 
 namespace CRM.Repository.Persistence.Repositories
 {

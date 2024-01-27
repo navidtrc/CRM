@@ -10,7 +10,7 @@ using System.Linq;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using CRM.Common.Enums;
-using CRM.Entities.DataModels.General;
+using CRM.Entities.DataModels.Security;
 using System;
 
 namespace CRM.Service.People
@@ -85,27 +85,26 @@ namespace CRM.Service.People
             var person = new Person
             {
                 BirthDate = registerViewModel.Person.BirthDate,
-                ePersonType = registerViewModel.Person.ePersonType,
+                PersonType = registerViewModel.Person.ePersonType,
                 FirstName = registerViewModel.Person.FirstName,
                 LastName = registerViewModel.Person.LastName,
                 Gender = registerViewModel.Person.Gender,
-                NationalCode = registerViewModel.Person.NationalCode,
                 User = user
             };
-            if (person.ePersonType == ePersonType.Staff)
+            if (person.PersonType == ePersonType.Staff)
             {
                 var lastStaff = await _uow.Staffs.TableNoTracking.OrderByDescending(d => d.StaffCode).FirstOrDefaultAsync();
                 var lastCode = lastStaff == null ? 1 : lastStaff.StaffCode++;
-                person.Staff = new Entities.DataModels.General.Staff
+                person.Staff = new Entities.DataModels.Security.Staff
                 {
                     StaffCode = lastCode
                 };
             }
-            else if (person.ePersonType == ePersonType.Customer)
+            else if (person.PersonType == ePersonType.Customer)
             {
                 var lastCustomer = await _uow.Customers.TableNoTracking.OrderByDescending(d => d.CustomerCode).FirstOrDefaultAsync();
                 var lastCode = lastCustomer == null ? 1 : lastCustomer.CustomerCode++;
-                person.Customer = new Entities.DataModels.General.Customer
+                person.Customer = new Entities.DataModels.Security.Customer
                 {
                     CustomerCode = lastCode
                 };

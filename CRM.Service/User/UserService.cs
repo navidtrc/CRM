@@ -247,7 +247,7 @@ namespace CRM.Service.User
         {
             var person = await _uow.People.GetByIdAsync(cancellationToken, id);
             await _uow.People.DeleteAsync(person, cancellationToken);
-            if (person.ePersonType == Common.Enums.ePersonType.Staff)
+            if (person.PersonType == Common.Enums.ePersonType.Staff)
             {
                 var staff = await _uow.Staffs.GetByIdAsync(cancellationToken, person.Id);
                 await _uow.Staffs.DeleteAsync(staff, cancellationToken);

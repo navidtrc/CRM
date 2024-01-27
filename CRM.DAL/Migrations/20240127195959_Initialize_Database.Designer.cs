@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231123220105_deletecascaderule")]
-    partial class deletecascaderule
+    [Migration("20240127195959_Initialize_Database")]
+    partial class Initialize_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace CRM.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Contact", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Customer", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,11 +33,14 @@ namespace CRM.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ContactLabelId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -54,25 +57,67 @@ namespace CRM.DAL.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("PersonId")
+                    b.Property<long?>("PersonId")
                         .HasColumnType("bigint");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContactLabelId");
-
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Contact", "General");
+                    b.ToTable("Customer", "Basic");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.ContactLabel", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Device", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Accessories")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("DeviceKindId")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Warranty")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceKindId");
+
+                    b.ToTable("Device", "Basic");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceKind", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,26 +144,24 @@ namespace CRM.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactLabel", "General");
+                    b.ToTable("DeviceKind", "Basic");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Customer", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Inquiry", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("CustomerCode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerType")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -129,18 +172,27 @@ namespace CRM.DAL.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("IsConfirmed")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("TicketId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Customer", "General");
+                    b.HasIndex("TicketId")
+                        .IsUnique();
+
+                    b.ToTable("Inquiry", "Basic");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Setting", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Setting", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,13 +231,16 @@ namespace CRM.DAL.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
-                    b.ToTable("Setting", "General");
+                    b.ToTable("Setting", "Basic");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Staff", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -205,12 +260,132 @@ namespace CRM.DAL.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long?>("PersonId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("StaffCode")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Staff", "General");
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("Staff", "Basic");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Ticket", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("CloseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("DeviceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("FinalPrice")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("InquiryPrice")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LastStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProfitMargin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RepairPrice")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("RepairerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("StaffId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DeviceId")
+                        .IsUnique();
+
+                    b.HasIndex("RepairerId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("Ticket", "Basic");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.TicketFellow", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FellowDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<long>("TicketId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("TicketFellow", "Basic");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.Access", b =>
@@ -352,6 +527,40 @@ namespace CRM.DAL.Migrations
                     b.ToTable("AccessRole", "Security");
                 });
 
+            modelBuilder.Entity("CRM.Entities.DataModels.Security.Customer", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CustomerCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customer", "Security");
+                });
+
             modelBuilder.Entity("CRM.Entities.DataModels.Security.MenuAccess", b =>
                 {
                     b.Property<long>("Id")
@@ -473,10 +682,7 @@ namespace CRM.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NationalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ePersonType")
+                    b.Property<int>("PersonType")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -557,6 +763,79 @@ namespace CRM.DAL.Migrations
                     b.ToTable("Role", "Security");
                 });
 
+            modelBuilder.Entity("CRM.Entities.DataModels.Security.Setting", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
+
+                    b.ToTable("Setting", "Security");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Security.Staff", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StaffCode")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Staff", "Security");
+                });
+
             modelBuilder.Entity("CRM.Entities.DataModels.Security.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -577,6 +856,9 @@ namespace CRM.DAL.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("ExpireTempCodeTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("LastLoginDate")
                         .HasColumnType("datetime2");
@@ -608,6 +890,9 @@ namespace CRM.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TempCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -756,286 +1041,6 @@ namespace CRM.DAL.Migrations
                     b.ToTable("UserRole", "Security");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Device", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Accessories")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("CustomerPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("FactorId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("KindId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("RepairWarranty")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal?>("ShopPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("ShopWarranty")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("WarrantyDesc")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FactorId");
-
-                    b.HasIndex("KindId");
-
-                    b.ToTable("Device", "Ticket");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.DeviceKind", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeviceKind", "Ticket");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Inquiry", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("DeviceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("Inquiry", "Ticket");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.InquiryDate", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CallDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long>("InquiryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAnswered")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InquiryId");
-
-                    b.ToTable("InquiryDate", "Ticket");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Invoice", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DoneDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FactorDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FactorNumber")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("RepairerId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RepairerId");
-
-                    b.ToTable("Invoice", "Ticket");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.InvoiceFellow", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime?>("BackDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("DeviceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("SendDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("InvoiceFellow", "Ticket");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -1139,45 +1144,85 @@ namespace CRM.DAL.Migrations
                     b.ToTable("IdentityUserToken", "Security");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Contact", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Customer", b =>
                 {
-                    b.HasOne("CRM.Entities.DataModels.General.ContactLabel", "ContactLabel")
-                        .WithMany("Contacts")
-                        .HasForeignKey("ContactLabelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithMany("Contacts")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ContactLabel");
+                        .WithMany()
+                        .HasForeignKey("PersonId");
 
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Customer", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Device", b =>
                 {
-                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithOne("Customer")
-                        .HasForeignKey("CRM.Entities.DataModels.General.Customer", "Id")
+                    b.HasOne("CRM.Entities.DataModels.Basic.DeviceKind", "DeviceKind")
+                        .WithMany("Devices")
+                        .HasForeignKey("DeviceKindId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DeviceKind");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Inquiry", b =>
+                {
+                    b.HasOne("CRM.Entities.DataModels.Basic.Ticket", "Ticket")
+                        .WithOne("Inquiry")
+                        .HasForeignKey("CRM.Entities.DataModels.Basic.Inquiry", "TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
+                {
+                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId");
 
                     b.Navigation("Person");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Staff", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Ticket", b =>
                 {
-                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithOne("Staff")
-                        .HasForeignKey("CRM.Entities.DataModels.General.Staff", "Id")
+                    b.HasOne("CRM.Entities.DataModels.Basic.Customer", "Customer")
+                        .WithMany("Tickets")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CRM.Entities.DataModels.Basic.Device", "Device")
+                        .WithOne("Ticket")
+                        .HasForeignKey("CRM.Entities.DataModels.Basic.Ticket", "DeviceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CRM.Entities.DataModels.Basic.Staff", "Repairer")
+                        .WithMany("RepairerInvoices")
+                        .HasForeignKey("RepairerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("CRM.Entities.DataModels.Security.Staff", null)
+                        .WithMany("RepairerTickets")
+                        .HasForeignKey("StaffId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Device");
+
+                    b.Navigation("Repairer");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.TicketFellow", b =>
+                {
+                    b.HasOne("CRM.Entities.DataModels.Basic.Ticket", "Ticket")
+                        .WithMany("Fellows")
+                        .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Person");
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.AccessPermission", b =>
@@ -1218,6 +1263,28 @@ namespace CRM.DAL.Migrations
                     b.Navigation("Access");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Security.Customer", b =>
+                {
+                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
+                        .WithOne("Customer")
+                        .HasForeignKey("CRM.Entities.DataModels.Security.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Security.Staff", b =>
+                {
+                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
+                        .WithOne("Staff")
+                        .HasForeignKey("CRM.Entities.DataModels.Security.Staff", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.User", b =>
@@ -1287,69 +1354,6 @@ namespace CRM.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Device", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Ticket.Invoice", "Factor")
-                        .WithMany("Devices")
-                        .HasForeignKey("FactorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("CRM.Entities.DataModels.Ticket.DeviceKind", "DeviceKind")
-                        .WithMany("Devices")
-                        .HasForeignKey("KindId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DeviceKind");
-
-                    b.Navigation("Factor");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Inquiry", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Ticket.Device", "Device")
-                        .WithMany("Inquiries")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.InquiryDate", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Ticket.Inquiry", "Inquiry")
-                        .WithMany("InquiryDates")
-                        .HasForeignKey("InquiryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Inquiry");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Invoice", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.General.Staff", "Repairer")
-                        .WithMany("RepairerInvoices")
-                        .HasForeignKey("RepairerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Repairer");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.InvoiceFellow", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Ticket.Device", "Device")
-                        .WithMany("Fellows")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("CRM.Entities.DataModels.Security.Role", null)
@@ -1401,14 +1405,31 @@ namespace CRM.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.ContactLabel", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Customer", b =>
                 {
-                    b.Navigation("Contacts");
+                    b.Navigation("Tickets");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.General.Staff", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Device", b =>
+                {
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceKind", b =>
+                {
+                    b.Navigation("Devices");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
                 {
                     b.Navigation("RepairerInvoices");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Ticket", b =>
+                {
+                    b.Navigation("Fellows");
+
+                    b.Navigation("Inquiry");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.Access", b =>
@@ -1429,8 +1450,6 @@ namespace CRM.DAL.Migrations
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.Person", b =>
                 {
-                    b.Navigation("Contacts");
-
                     b.Navigation("Customer");
 
                     b.Navigation("Staff");
@@ -1445,6 +1464,11 @@ namespace CRM.DAL.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("CRM.Entities.DataModels.Security.Staff", b =>
+                {
+                    b.Navigation("RepairerTickets");
+                });
+
             modelBuilder.Entity("CRM.Entities.DataModels.Security.User", b =>
                 {
                     b.Navigation("UserAccesses");
@@ -1457,28 +1481,6 @@ namespace CRM.DAL.Migrations
             modelBuilder.Entity("CRM.Entities.DataModels.Security.UserPermission", b =>
                 {
                     b.Navigation("AccessPermissions");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Device", b =>
-                {
-                    b.Navigation("Fellows");
-
-                    b.Navigation("Inquiries");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.DeviceKind", b =>
-                {
-                    b.Navigation("Devices");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Inquiry", b =>
-                {
-                    b.Navigation("InquiryDates");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Ticket.Invoice", b =>
-                {
-                    b.Navigation("Devices");
                 });
 #pragma warning restore 612, 618
         }

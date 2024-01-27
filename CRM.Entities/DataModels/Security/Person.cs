@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using CRM.Common.Enums;
 using CRM.Common.Resources.StringResources;
 using CRM.Entities.Core;
-using CRM.Entities.DataModels.General;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,10 +17,7 @@ namespace CRM.Entities.DataModels.Security
         public string LastName { get; set; }
 
         [Display(Name = "Gender", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public eGender Gender { get; set; }
-
-        [Display(Name = "NationalCode", ResourceType = typeof(Resource))]
-        public string NationalCode { get; set; }
+        public eGender Gender { get; set; }        
 
         [Display(Name = "FullName", ResourceType = typeof(Resource))]
         public string FullName => $"{FirstName} {LastName}";
@@ -35,12 +29,11 @@ namespace CRM.Entities.DataModels.Security
         public byte[] Avatar { get; set; }
 
         [Display(Name = "PersonType", ResourceType = typeof(Resource))]
-        public ePersonType ePersonType { get; set; }
+        public ePersonType PersonType { get; set; }
 
         public Customer Customer { get; set; }
         public Staff Staff { get; set; }
         public User User { get; set; }
-        public ICollection<Contact> Contacts { get; set; }
     }
     public class PersonConfiguration : IEntityTypeConfiguration<Person>
     {

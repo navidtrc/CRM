@@ -2,9 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using CRM.Entities.DataModels.General;
 using System.Collections.Generic;
-using CRM.Entities.Core;
 
 namespace CRM.Entities.DataModels.Security
 {

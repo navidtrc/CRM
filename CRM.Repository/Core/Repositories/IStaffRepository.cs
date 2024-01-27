@@ -1,6 +1,6 @@
 ﻿namespace CRM.Repository.Core.Repositories
 {
-    public interface IStaffRepository : IRepository<Entities.DataModels.General.Staff>
+    public interface IStaffRepository : IRepository<Entities.DataModels.Security.Staff>
     {
     }
 }

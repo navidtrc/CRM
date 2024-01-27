@@ -1,16 +1,12 @@
-﻿using CRM.Common.Enums;
-using CRM.Common.Resources.StringResources;
+﻿using CRM.Common.Resources.StringResources;
 using CRM.Entities.Core;
-using CRM.Entities.DataModels.Security;
-using CRM.Entities.DataModels.Ticket;
+using CRM.Entities.DataModels.Basic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CRM.Entities.DataModels.General
+namespace CRM.Entities.DataModels.Security
 {
     public class Staff : BaseEntity
     {       
@@ -18,13 +14,13 @@ namespace CRM.Entities.DataModels.General
         public int StaffCode { get; set; }
 
         public Person Person { get; set; }
-        public ICollection<Invoice> RepairerInvoices { get; set; }
+        public ICollection<Ticket> RepairerTickets { get; set; }
     }
     public class StaffConfiguration : IEntityTypeConfiguration<Staff>
     {
         public void Configure(EntityTypeBuilder<Staff> builder)
         {
-            builder.ToTable("Staff", "General");
+            builder.ToTable("Staff", "Security");
         }
     }
 }

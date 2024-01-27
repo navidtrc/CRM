@@ -1,5 +1,5 @@
 ﻿using CRM.Entities.HelperModels;
-using CRM.Entities.DataModels.General;
+using CRM.Entities.DataModels.Security;
 using CRM.Repository.Core;
 using CRM.ViewModels.ViewModels;
 using Microsoft.EntityFrameworkCore;

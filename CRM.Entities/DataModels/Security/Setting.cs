@@ -2,12 +2,9 @@
 using CRM.Entities.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace CRM.Entities.DataModels.General
+namespace CRM.Entities.DataModels.Security
 {
     public class Setting : BaseEntity
     {
@@ -21,7 +18,7 @@ namespace CRM.Entities.DataModels.General
     {
         public void Configure(EntityTypeBuilder<Setting> builder)
         {
-            builder.ToTable("Setting", "General");
+            builder.ToTable("Setting", "Security");
             builder.HasIndex(i => i.Key).IsUnique(true);
         }
     }

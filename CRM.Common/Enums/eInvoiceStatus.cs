@@ -1,30 +1,14 @@
-﻿using CRM.Common.Resources.StringResources;
-using System.ComponentModel.DataAnnotations;
-
-namespace CRM.Common.Enums
+﻿namespace CRM.Common.Enums
 {
-    public enum eInvoiceStatus
+    public enum eTicketStatus
     {
-        [Display(Name = "NotSentYet", ResourceType = typeof(Resource))]
-        NotSentYet,
-        
-        [Display(Name = "SentToRepair", ResourceType = typeof(Resource))]
-        SentToRepair,
-        
-        [Display(Name = "Repairing", ResourceType = typeof(Resource))]
-        Repairing,
-        
-        [Display(Name = "Ready", ResourceType = typeof(Resource))]
-        Ready,
-        
-        [Display(Name = "NeedInquiry", ResourceType = typeof(Resource))]
-        NeedInquiry,
-        
-        [Display(Name = "SentToRepairAfterInquiry", ResourceType = typeof(Resource))]
-        SentToRepairAfterInquiry,
-        
-        [Display(Name = "Done", ResourceType = typeof(Resource))]
-        Done
-
+       Waiting,
+       Checking,
+       Inquiry,
+       ReadyToRepair,
+       Repairing,
+       Ready_Repaired,
+       Ready2_NotRepaired,
+       Done
     }
 }
