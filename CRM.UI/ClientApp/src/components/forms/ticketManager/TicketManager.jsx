@@ -4,6 +4,7 @@ import AddEditTicketModal from "./modals/AddEditTicketModal";
 import EmailConfirmation from "../global/modals/EmailConfirmation";
 import PhoneConfirmation from "../global/modals/PhoneConfirmation";
 import WaitingStateModal from "./modals/WaitingStateModal";
+import CheckingStateModal from "./modals/CheckingStateModal";
 
 const TicketManager = ({ personType, personTitle }) => {
   const [ticket, setTicket] = useState(null);
@@ -46,7 +47,7 @@ const TicketManager = ({ personType, personTitle }) => {
       )} */}
 
       {addEditTicketOpen && (
-        <WaitingStateModal
+        <CheckingStateModal
           open={addEditTicketOpen}
           onClose={() => {
             setAddEditTicketOpen(false);
