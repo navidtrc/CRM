@@ -20,6 +20,7 @@ using CRM.Service.UserRole;
 using CRM.Service.Staff;
 using CRM.Service.People;
 using CRM.Service.Customer;
+using CRM.Service.Ticket;
 
 namespace CRM.WebFramework.Configuration
 {
@@ -46,6 +47,7 @@ namespace CRM.WebFramework.Configuration
             services.AddScoped<IPeopleService, PeopleService>();
             services.AddScoped<IStaffService, StaffService>();
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IAccessPermissionService, AccessPermissionService>();
             services.AddScoped<IAccessRoleService, AccessRoleService>();
             services.AddScoped<IMenuAccessService, MenuAccessService>();

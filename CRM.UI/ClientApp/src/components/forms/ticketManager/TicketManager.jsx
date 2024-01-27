@@ -3,10 +3,11 @@ import TicketDataGrid from "./TicketDataGrid";
 import AddEditTicketModal from "./modals/AddEditTicketModal";
 import EmailConfirmation from "../global/modals/EmailConfirmation";
 import PhoneConfirmation from "../global/modals/PhoneConfirmation";
+import WaitingStateModal from "./modals/WaitingStateModal";
 
 const TicketManager = ({ personType, personTitle }) => {
   const [ticket, setTicket] = useState(null);
-  const [addEditPersonOpen, setAddEditPersonOpen] = useState(false);
+  const [addEditTicketOpen, setAddEditTicketOpen] = useState(false);
   const [emailConfirmOpen, setEmailConfirmOpen] = useState(false);
   const [phoneConfirmOpen, setPhoneConfirmOpen] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
@@ -15,7 +16,7 @@ const TicketManager = ({ personType, personTitle }) => {
     switch (type) {
       case "addedit":
         setTicket(payload);
-        setAddEditPersonOpen(true);
+        setAddEditTicketOpen(true);
         break;
       case "emailconfirm":
         setTicket(payload);
@@ -32,15 +33,27 @@ const TicketManager = ({ personType, personTitle }) => {
 
   return (
     <>
-      {addEditPersonOpen && (
+      {/* {addEditTicketOpen && (
         <AddEditTicketModal
-          open={addEditPersonOpen}
+          open={addEditTicketOpen}
           onClose={() => {
-            setAddEditPersonOpen(false);
+            setAddEditTicketOpen(false);
             setTicket(null);
             setIsRefetching(true);
           }}
           data={ticket}
+        />
+      )} */}
+
+      {addEditTicketOpen && (
+        <WaitingStateModal
+          open={addEditTicketOpen}
+          onClose={() => {
+            setAddEditTicketOpen(false);
+            setTicket(null);
+            setIsRefetching(true);
+          }}
+          data={{}}
         />
       )}
 

@@ -47,6 +47,7 @@ namespace CRM.Common.Enums
         StaffGetList,
         PeopleDelete,
         PeopleGetList,
-        PeopleRegisterApi
+        PeopleRegisterApi,
+        TicketGetList
     }
 }
