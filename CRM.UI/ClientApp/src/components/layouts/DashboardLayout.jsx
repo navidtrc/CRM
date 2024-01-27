@@ -24,6 +24,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import PeopleManager from "../forms/peopleManager/PeopleManager";
+import TicketManager from "../forms/ticketManager/TicketManager";
 
 const drawerWidth = 240;
 
@@ -214,6 +215,7 @@ export default function DashboardLayout() {
         <DrawerHeader />
         <Grid container>
           <Grid item xs={12} md={12} sx={{ boxShadow: 3 }}></Grid>
+          {activeTab === 0 && <TicketManager />}
           {activeTab === 1 && <PeopleManager personType={"staff"} personTitle={"ادمین"} />}
           {activeTab === 3 && <PeopleManager personType={"customer"} personTitle={"مشتری"} />}
           {/* {activeTab === 3 && <CustomerManager />} */}
