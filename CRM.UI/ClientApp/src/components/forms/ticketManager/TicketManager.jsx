@@ -53,7 +53,8 @@ const TicketManager = ({ personType, personTitle }) => {
             setTicket(null);
             setIsRefetching(true);
           }}
-          data={{}}
+          // data={}
+
         />
       )}
 

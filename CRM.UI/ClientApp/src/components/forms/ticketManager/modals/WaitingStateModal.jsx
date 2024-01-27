@@ -5,16 +5,10 @@ import {
   Divider,
   Stack,
   Button,
-  IconButton,
   FormControl,
   Paper,
-  OutlinedInput,
-  FormControlLabel,
-  InputAdornment,
+  Autocomplete,
   InputLabel,
-  Radio,
-  RadioGroup,
-  FormLabel,
   Select,
   MenuItem,
 } from "@mui/material/";
@@ -75,167 +69,28 @@ export default function WaitingStateModal({
   onClose,
   data = {
     ticketId: 0,
-    number: "",
-    date: "",
-    customerId: 0,
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
+    ticketNumber: "123456",
+    ticketDate: "2024-01-27",
+    customerName: "Ali Reza",
+    customerPhone: "09123456789",
+    customerEmail: "ali.reza@example.com",
     phoneConfirmation: false,
     emailConfirmation: false,
-    deviceId: 0,
-    deviceType: {},
-    deviceBrand: {},
-    model: "",
-    descrption: "",
-    accessories: "",
-    waranty: false,
-    inquiryPrice: "",
+    deviceType: "Laptop",
+    deviceBrand: "Lenovo",
+    deviceModel: "ThinkPad T14",
+    descrption: "Broken screen",
+    accessories: "Charger, mouse, keyboard",
+    deviceWaranty: false,
+    inquiryPrice: "5,000,000 تومان",
   },
 }) {
-  // const handleChange = (event) => {
-  //   setAge(event.target.value);
-  // };
+  const [ticketId, setTicketId] = useState(data.ticketId);
 
-  // return (
-  //   <div>
-  //     <Modal
-  //       // style={{ minWidth: "800px" }}
-  //       open={open}
-  //       onClose={onClose}
-  //       aria-labelledby="modal-modal-title"
-  //       aria-describedby="modal-modal-description"
-  //     >
-  //       <Box sx={style} component="form" autoComplete="off">
-  //         <Typography id="modal-modal-title" variant="h6" component="h2">
-  //           ارسال تیکت به مرکز تعمیر
-  //         </Typography>
-  //         <Divider />
-
-  //         <TextField
-  //           disabled
-  //           label="شماره تیکت"
-  //           id="ticketNumberInput"
-  //           sx={{ m: 1, width: "25ch" }}
-  //         />
-
-  //         <TextField label="تاریخ تیکت" disabled defaultValue={new Date()} />
-  //         <TextField
-  //           disabled
-  //           name="firstName"
-  //           required
-  //           label="نام"
-  //           variant="standard"
-  //         />
-  //         <TextField
-  //           disabled
-  //           name="lastName"
-  //           required
-  //           label="نام خانوادگی"
-  //           variant="standard"
-  //         />
-  //         <TextField
-  //           disabled
-  //           name="phoneNumber"
-  //           required
-  //           label="شماره تماس"
-  //           variant="standard"
-  //         />
-  //         <TextField
-  //           disabled
-  //           name="email"
-  //           required
-  //           label="ایمیل"
-  //           variant="standard"
-  //         />
-
-  //         <div>
-  //           <div>
-  //             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-  //               <TextField variant="standard" disabled>
-  //                 نوع دستکاه
-  //               </TextField>
-  //             </FormControl>
-  //             <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-  //               <TextField variant="standard" disabled>
-  //                 برند دستکاه
-  //               </TextField>
-  //             </FormControl>
-  //             <TextField disabled label="مدل دستگاه" variant="standard" />
-  //           </div>
-  //           <div>
-  //             <TextField
-  //               disabled
-  //               sx={{ m: 1 }}
-  //               placeholder="توضیحات"
-  //               multiline
-  //               rows={4}
-  //               maxRows={5}
-  //             />
-  //             <TextField
-  //               disabled
-  //               sx={{ m: 1 }}
-  //               placeholder="متعلقات"
-  //               multiline
-  //               rows={4}
-  //               maxRows={5}
-  //             />
-  //           </div>
-  //           <div>
-  //             <FormControl sx={{ m: 1 }}>
-  //               <InputLabel>برآورد هزینه</InputLabel>
-  //               <OutlinedInput
-  //                 disabled
-  //                 startAdornment={
-  //                   <InputAdornment position="start">تومان</InputAdornment>
-  //                 }
-  //                 label="برآورد هزینه"
-  //               />
-  //             </FormControl>
-  //             <FormControl sx={{ m: 1 }}>
-  //             <TextField variant="standard" disabled>
-  //                 گارانتی تعمیر ندارد
-  //               </TextField>
-  //             </FormControl>
-  //           </div>
-  //           <div></div>
-  //         </div>
-  //         <Divider />
-
-  //         <Stack mt={2} spacing={2} direction="row">
-  //           <Button
-  //             // onClick={() => handleSubmit()}
-  //             variant="contained"
-  //             color="success"
-  //           >
-  //             ثبت
-  //           </Button>
-  //           <Button onClick={() => onClose()} variant="outlined" color="error">
-  //             انصراف
-  //           </Button>
-  //         </Stack>
-  //       </Box>
-  //     </Modal>
-  //   </div>
-  // );
-
-  const ticketNumber = "123456";
-  const ticketDate = "2024-01-27";
-  const customerName = "Ali Reza";
-  const customerPhone = "09123456789";
-  const customerEmail = "ali.reza@example.com";
-  const deviceType = "Laptop";
-  const deviceBrand = "Lenovo";
-  const deviceModel = "ThinkPad T14";
-  const deviceProblem = "Broken screen";
-  const deviceAccessories = "Charger, mouse, keyboard";
-  const devicePrice = "5,000,000 تومان";
-  const deviceWarranty = true;
+  const handleSubmit = () => {};
 
   return (
     <Modal
-      // style={{ minWidth: "800px" }}
       open={open}
       onClose={onClose}
       aria-labelledby="modal-modal-title"
@@ -248,46 +103,84 @@ export default function WaitingStateModal({
           </Typography>
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">شماره تیکت: {ticketNumber}</Typography>
-            <Typography variant="h6">تاریخ تیکت: {ticketDate}</Typography>
-          </Box>
-          <Divider />
-          
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">نام مشتری: {customerName}</Typography>
-            <Typography color="error" variant="h6">شماره تماس: {customerPhone}</Typography>
-            <Typography color="success" >ایمیل: {customerEmail}</Typography>
+            <Typography variant="h6">
+              شماره تیکت: {data.ticketNumber}
+            </Typography>
+            <Typography variant="h6">تاریخ تیکت: {data.ticketDate}</Typography>
           </Box>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">نوع دستگاه: {deviceType}</Typography>
-            <Typography variant="h6">برند دستگاه: {deviceBrand}</Typography>
-            <Typography variant="h6">مدل دستگاه: {deviceModel}</Typography>
-          </Box>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="h6">مشکل دستگاه: {deviceProblem}</Typography>
-            <Typography variant="h6">
-              متعلقات دستگاه: {deviceAccessories}
+            <Typography variant="h6">نام مشتری: {data.customerName}</Typography>
+            <Typography
+              color={data.phoneConfirmation ? "" : "error"}
+              variant="h6"
+            >
+              شماره تماس: {data.customerPhone}
             </Typography>
-          </Box>
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">قیمت برآورد شده: {devicePrice}</Typography>
-            <Typography variant="h6">
-              گارانتی :{deviceWarranty === true ? "دارد" : "ندارد"}
+            <Typography color={data.emailConfirmation ? "" : "error"}>
+              ایمیل: {data.customerEmail}
             </Typography>
           </Box>
           <Divider />
+
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">نوع دستگاه: {data.deviceType}</Typography>
+            <Typography variant="h6">
+              برند دستگاه: {data.deviceBrand}
+            </Typography>
+            <Typography variant="h6">مدل دستگاه: {data.deviceModel}</Typography>
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h6">مشکل دستگاه: {data.descrption}</Typography>
+            <Typography variant="h6">
+              متعلقات دستگاه: {data.accessories}
+            </Typography>
+          </Box>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">
+              قیمت برآورد شده: {data.inquiryPrice}
+            </Typography>
+            <Typography variant="h6">
+              گارانتی :{data.deviceWaranty === true ? "دارد" : "ندارد"}
+            </Typography>
+          </Box>
+          <Divider />
+
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <div>
+              <InputLabel>حاشیه سود</InputLabel>
+              <Select
+                //={age}
+                //onChange={handleChange}
+                label="حاشیه سود"
+              >
+                <MenuItem value={1}>% درصد</MenuItem>
+                <MenuItem value={2}>$ مبلغ</MenuItem>
+              </Select>
+              <TextField label="مقدار" type="number" variant="standard" />
+            </div>
+
+            <Autocomplete
+              disablePortal
+              id="repairer"
+              options={top100Films}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="تعمیر کار" />
+              )}
+            />
+          </Box>
 
           <Stack mt={2} spacing={2} direction="row">
             <Button
-              // onClick={() => handleSubmit()}
+              onClick={() => handleSubmit()}
               variant="contained"
               color="success"
             >
-              ثبت
+              ارسال برای تعمیر کار
             </Button>
-            <Button onClick={() => onClose()} variant="outlined" color="error">
+            <Button onClick={() => onClose()} variant="contained" color="error">
               انصراف
             </Button>
           </Stack>
@@ -296,3 +189,9 @@ export default function WaitingStateModal({
     </Modal>
   );
 }
+const top100Films = [
+  { label: "فرشید", id: 1 },
+  { label: "تست 1", id: 2 },
+  { label: "تست 2", id: 3 },
+  
+];
