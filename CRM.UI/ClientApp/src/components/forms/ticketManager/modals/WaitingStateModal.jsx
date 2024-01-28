@@ -10,6 +10,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormControl,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -160,24 +161,28 @@ export default function WaitingStateModal({
               <TextField label="مقدار" type="number" variant="standard" />
             </div>
 
-            <Autocomplete
-              disablePortal
-              id="repairer"
-              options={top100Films}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="تعمیر کار" />
-              )}
-            />
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel>نوع دستکاه</InputLabel>
+              <Select
+                //={age}
+                //onChange={handleChange}
+                label="نوع دستکاه"
+              >
+                <MenuItem value={10}>فرشید</MenuItem>
+                <MenuItem value={20}>اپیلیدی</MenuItem>
+                <MenuItem value={30}>سشوار</MenuItem>
+              </Select>
+            </FormControl>
+
+            
             <TextField
-                  sx={{ m: 1 }}
-                  placeholder="توضیحات (خصوصی)"
-                  multiline
-                  rows={4}
-                  maxRows={5}
-                />
+              sx={{ m: 1 }}
+              placeholder="توضیحات (خصوصی)"
+              multiline
+              rows={4}
+              maxRows={5}
+            />
           </Box>
-         
 
           <Stack mt={2} spacing={2} direction="row">
             <Button
@@ -200,5 +205,4 @@ const top100Films = [
   { label: "فرشید", id: 1 },
   { label: "تست 1", id: 2 },
   { label: "تست 2", id: 3 },
-  
 ];

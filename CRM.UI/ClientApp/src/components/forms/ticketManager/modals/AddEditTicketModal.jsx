@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import {
   Box,
   TextField,
@@ -19,6 +19,7 @@ import {
   Select,
   Grid,
   MenuItem,
+  Autocomplete,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
@@ -36,7 +37,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  minWidth: 700,
+  minWidth: 750,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -95,8 +96,8 @@ export default function AddEditTicketModal({
     deviceId: 0,
     deviceTypes: [],
     deviceBrand: [],
-    selectedDeviceType: 0,
-    selectedDeviceBrand: 0,
+    selectedDeviceType: { id: 0, label: "" },
+    selectedDeviceBrand: { id: 0, label: "" },
     deviceModel: "",
     deviceDescrption: "",
     deviceAccessories: "",
@@ -106,22 +107,37 @@ export default function AddEditTicketModal({
 }) {
   const [tabIndex, setTabIndex] = useState(0);
   const [ticket, setTicket] = useState(data);
+  const [deviceTypeSuggestion, setDeviceTypeSuggestion] = useState();
+  const [deviceBrandSuggestion, setDeviceBrandSuggestion] = useState();
+
+
+  // get deviceType and deviceBrand Suggestion list
+  useEffect(() => {
+    // GET API .. This is just test sample
+    setDeviceTypeSuggestion([
+      { id: 1, label: "ریش تراش" },
+      { id: 2, label: "اپیلیدی" },
+      { id: 3, label: "تریمر" },
+      { id: 4, label: "سشوار" },
+    ]);
+    setDeviceBrandSuggestion([
+      { id: 1, label: "Braun" },
+      { id: 2, label: "Philips" },
+      { id: 3, label: "Panasonic" },
+      { id: 4, label: "Remington" },
+    ]);
+  }, []);
+
+  const handleSubmit = () => {
+    // POST API
+  }
 
   const handleInputChange = (e) => {
-    debugger;
     setTicket((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
     console.log(ticket);
-  };
-
-  const handleDatePickerChange = (e) => {
-    debugger;
-    setTicket((prev) => ({
-      ...prev,
-      ticketDate: new Date(e),
-    }));
   };
 
   const handleTabIndexChange = (event, newValue) => {
@@ -131,7 +147,6 @@ export default function AddEditTicketModal({
   return (
     <div>
       <Modal
-        // style={{ minWidth: "800px" }}
         open={open}
         onClose={onClose}
         aria-labelledby="modal-modal-title"
@@ -196,7 +211,9 @@ export default function AddEditTicketModal({
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={() => onOpenModal("phoneconfirm", ticket.customerId)}
+                      onClick={() =>
+                        onOpenModal("phoneconfirm", ticket.customerId)
+                      }
                       //onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
@@ -217,7 +234,9 @@ export default function AddEditTicketModal({
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
-                      onClick={() => onOpenModal("emailconfirm", ticket.customerId)}
+                      onClick={() =>
+                        onOpenModal("emailconfirm", ticket.customerId)
+                      }
                       //onMouseDown={handleMouseDownPassword}
                       edge="end"
                     >
@@ -232,40 +251,53 @@ export default function AddEditTicketModal({
           <CustomTabPanel value={tabIndex} index={2}>
             <div>
               <div>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel>نوع دستکاه</InputLabel>
-                  <Select
-                    //={age}
-                    //onChange={handleChange}
-                    label="نوع دستکاه"
-                  >
-                    {/* <MenuItem value="">
-            <em>None</em>
-          </MenuItem> */}
-                    <MenuItem value={10}>ریش تراش</MenuItem>
-                    <MenuItem value={20}>اپیلیدی</MenuItem>
-                    <MenuItem value={30}>سشوار</MenuItem>
-                  </Select>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  <Autocomplete
+                    value={ticket.selectedDeviceType?.label}
+                    onChange={(event, newValue) => {
+                      setTicket((prev) => ({
+                        ...prev,
+                        selectedDeviceType: newValue,
+                      }));
+                    }}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="نوع دستگاه" />
+                    )}
+                    disablePortal
+                    options={deviceTypeSuggestion}
+                  />
                 </FormControl>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel>برند دستکاه</InputLabel>
-                  <Select
-                    //={age}
-                    //onChange={handleChange}
-                    label="برند دستکاه"
-                  >
-                    {/* <MenuItem value="">
-            <em>None</em>
-          </MenuItem> */}
-                    <MenuItem value={10}>Braun</MenuItem>
-                    <MenuItem value={20}>Philips</MenuItem>
-                    <MenuItem value={30}>Panasonic</MenuItem>
-                  </Select>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  <Autocomplete
+                    value={ticket.selectedDeviceBrand?.label}
+                    onChange={(event, newValue) => {
+                      setTicket((prev) => ({
+                        ...prev,
+                        selectedDeviceBrand: newValue,
+                      }));
+                    }}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="برند دستگاه" />
+                    )}
+                    disablePortal
+                    options={deviceBrandSuggestion}
+                  />
                 </FormControl>
-                <TextField label="مدل دستگاه" variant="standard" />
+                <TextField
+                  label="مدل دستگاه"
+                  variant="standard"
+                  value={ticket.deviceModel}
+                  onChange={handleInputChange}
+                  name="deviceModel"
+                />
               </div>
               <div>
                 <TextField
+                  value={ticket.deviceDescrption}
+                  onChange={handleInputChange}
+                  name="deviceDescrption"
                   sx={{ m: 1 }}
                   placeholder="توضیحات"
                   multiline
@@ -273,6 +305,9 @@ export default function AddEditTicketModal({
                   maxRows={5}
                 />
                 <TextField
+                  value={ticket.deviceAccessories}
+                  onChange={handleInputChange}
+                  name="deviceAccessories"
                   sx={{ m: 1 }}
                   placeholder="متعلقات"
                   multiline
@@ -284,6 +319,9 @@ export default function AddEditTicketModal({
                 <FormControl sx={{ m: 1 }}>
                   <InputLabel>برآورد هزینه</InputLabel>
                   <OutlinedInput
+                    value={ticket.inquiryPrice}
+                    onChange={handleInputChange}
+                    name="inquiryPrice"
                     startAdornment={
                       <InputAdornment position="start">تومان</InputAdornment>
                     }
@@ -291,11 +329,11 @@ export default function AddEditTicketModal({
                   />
                 </FormControl>
                 <FormControl sx={{ m: 1 }}>
-                  <FormLabel id="waranty">گارانتی تعمیر</FormLabel>
+                  <FormLabel id="deviceWaranty">گارانتی تعمیر</FormLabel>
                   <RadioGroup
-                    name="waranty"
-                    //onChange={handleChange}
-                    //value={data.lockoutEnabled}
+                    name="deviceWaranty"
+                    onChange={handleInputChange}
+                    value={ticket.deviceWaranty}
                   >
                     <FormControlLabel
                       value={false}
@@ -310,14 +348,13 @@ export default function AddEditTicketModal({
                   </RadioGroup>
                 </FormControl>
               </div>
-              <div></div>
             </div>
           </CustomTabPanel>
           <Divider />
 
           <Stack mt={2} spacing={2} direction="row">
             <Button
-              // onClick={() => handleSubmit()}
+              onClick={() => handleSubmit()}
               variant="contained"
               color="success"
             >

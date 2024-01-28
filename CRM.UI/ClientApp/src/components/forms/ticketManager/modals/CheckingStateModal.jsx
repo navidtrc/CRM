@@ -87,7 +87,7 @@ export default function CheckingStateModal({
 }) {
   const [ticketId, setTicketId] = useState(data.ticketId);
   const [isRepairable, setIsRepairable] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
 
   const handleRepairableChange = () => {
     setIsRepairable((prev) => {
