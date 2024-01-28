@@ -9,7 +9,6 @@ namespace CRM.Repository.Core
     {
         IUserRepository Users { get; }
         ISettingRepository Settings { get; }
-        //IInvoiceRepository Invoices { get; }
         IAccessRepository Accesses { get; }
         IMenuAccessRepository MenuAccesses { get; }
         IUserRoleRepository UserRoles { get; }
@@ -23,6 +22,7 @@ namespace CRM.Repository.Core
         IPersonRepository People { get; }
         IStaffRepository Staffs { get; }
         ICustomerRepository Customers { get; }
+        ITicketRepository Tickets { get; }
 
         int Complete();
         Task<int> CompleteAsync(CancellationToken cancellationToken);

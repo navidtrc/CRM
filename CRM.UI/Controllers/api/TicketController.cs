@@ -5,7 +5,6 @@ using CRM.ViewModels.ViewModels;
 using CRM.WebFramework.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,6 +31,27 @@ namespace CRM.UI.Controllers.api
             //if (response.IsSuccess)
             //    return Ok(response);
             //return BadRequest(response.Message);
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("/api/[controller]/[action]")]
+        [UserAccess(eAccessControl.TicketGetList, eAccessType.Api, 0, true)]
+        public async Task<IActionResult> Prerequisite(MaterialDataGridQueryViewModel request, CancellationToken cancellationToken)
+        {
+            //var response = await ticketService.Prerequisite
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("/api/[controller]/[action]")]
+        [UserAccess(eAccessControl.PeopleRegisterApi, eAccessType.Api, 1, true)]
+        public async Task<IActionResult> Post(TicketAddEditViewModel ticketAddEditViewModel, CancellationToken cancellationToken)
+        {
+            //var result = await ticketService.Create(registerViewModel, cancellationToken);
+            //if (result.IsSuccess)
+            //    return Ok(result.Message);
+            //return BadRequest(result.Message);
             return Ok();
         }
 

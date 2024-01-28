@@ -21,9 +21,6 @@ namespace CRM.Repository.Persistence
         private ISettingRepository _settings;
         public ISettingRepository Settings => _settings == null ? _settings = new SettingRepository(_db) : _settings;
 
-        //private IInvoiceRepository _invoices;
-        //public IInvoiceRepository Invoices => _invoices == null ? _invoices = new InvoiceRepository(_db) : _invoices;
-
         private IAccessRepository _accesses;
         public IAccessRepository Accesses => _accesses == null ? _accesses = new AccessRepository(_db) : _accesses;
 
@@ -62,6 +59,9 @@ namespace CRM.Repository.Persistence
 
         private ICustomerRepository _customers;
         public ICustomerRepository Customers => _customers == null ? _customers = new CustomerRepository(_db) : _customers;
+
+        private ITicketRepository _tickets;
+        public ITicketRepository Tickets => _tickets == null ? _tickets = new TicketRepository(_db) : _tickets;
 
 
         public int Complete()

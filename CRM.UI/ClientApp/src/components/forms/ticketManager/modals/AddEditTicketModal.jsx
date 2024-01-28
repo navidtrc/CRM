@@ -110,7 +110,6 @@ export default function AddEditTicketModal({
   const [deviceTypeSuggestion, setDeviceTypeSuggestion] = useState();
   const [deviceBrandSuggestion, setDeviceBrandSuggestion] = useState();
 
-
   // get deviceType and deviceBrand Suggestion list
   useEffect(() => {
     // GET API .. This is just test sample
@@ -129,8 +128,62 @@ export default function AddEditTicketModal({
   }, []);
 
   const handleSubmit = () => {
-    // POST API
-  }
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      TicketId: ticket.ticketId,
+      TicketNumber: ticket.ticketNumber,
+      TicketDate: ticket.ticketDate,
+      CustomerName: ticket.customerName,
+      CustomerPhone: ticket.customerPhone,
+      CustomerEmail: ticket.customerEmail,
+      // CustomerPhoneConfirmation: customerPhoneConfirmation,
+      // CustomerEmailConfirmation: customerEmailConfirmation,
+      DeviceTypeId: ticket.selectedDeviceType.id,
+      DeviceBrandId: ticket.selectedDeviceBrand.id,
+      DeviceModel: ticket.deviceModel,
+      DeviceDescrption: ticket.deviceDescrption,
+      DeviceAccessories: ticket.deviceAccessories,
+      DeviceWaranty: ticket.deviceWaranty,
+      InquiryPrice: ticket.inquiryPrice,
+    });
+
+    const requestOptions = {
+      method: ticket.ticketId === 0 ? "POST" : "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    const url = ticket.ticketId === 0 ? "/api/ticket/post" : "/api/ticket/put";
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.IsSuccess) {
+          onClose();
+          Swal.fire({
+            title: "انجام شد",
+            icon: "success",
+          });
+        } else {
+          onClose();
+          Swal.fire({
+            icon: "error",
+            title: "خطا",
+            text: result.Message,
+          });
+        }
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "خطا",
+          text: error.Message,
+        });
+        console.log("error", error);
+      });
+  };
 
   const handleInputChange = (e) => {
     setTicket((prev) => ({

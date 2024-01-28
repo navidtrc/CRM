@@ -1,13 +1,7 @@
 ﻿using CRM.Common.Api;
 using CRM.Repository.Core;
-using CRM.Service.Ticket;
-using CRM.ViewModels.ViewModels;
 using Kendo.Mvc.Extensions;
-using Kendo.Mvc.UI;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +14,16 @@ namespace CRM.Service.Ticket
         {
             this._uow = uow;
         }
+
+        public async Task<int> Prerequisite(CancellationToken cancellationToken)
+        {
+            var last = await _uow.Tickets.TableNoTracking.LastOrDefaultAsync(cancellationToken);
+            if (last == null)
+                return 1;
+            var newTicketNumber = last.Number++;
+            return newTicketNumber;
+        }
+
         //public async Task<ResultContent<DataSourceResult>> GetTicketsAsync(DataSourceRequest request, CancellationToken cancellationToken)
         //{
         //    var result = await _uow.invoice.TableNoTracking
