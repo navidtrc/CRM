@@ -17,17 +17,19 @@ import {
   RadioGroup,
   FormLabel,
   Select,
+  Grid,
   MenuItem,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 import Modal from "@mui/material/Modal";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
 import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalali";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import SendIcon from "@mui/icons-material/Send";
 import CheckIcon from "@mui/icons-material/Check";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 const style = {
   position: "absolute",
@@ -79,35 +81,51 @@ function a11yProps(index) {
 export default function AddEditTicketModal({
   open,
   onClose,
+  onOpenModal,
   data = {
     ticketId: 0,
-    number: "",
-    date:"",
-    customerId:0,
-    firstName:"",
-    lastName: "",
-    phone:"",
-    email: "",
-    phoneConfirmation: false,
-    emailConfirmation: false,
-    deviceId:0,
-    deviceType:{},
-    deviceBrand:{},
-    model:"",
-    descrption:"",
-    accessories:"",
-    waranty:false,
-    inquiryPrice:""
+    ticketNumber: "",
+    ticketDate: new Date(),
+    customerId: 0,
+    customerName: "",
+    customerPhone: "",
+    customerEmail: "",
+    customerPhoneConfirmation: false,
+    customerEmailConfirmation: false,
+    deviceId: 0,
+    deviceTypes: [],
+    deviceBrand: [],
+    selectedDeviceType: 0,
+    selectedDeviceBrand: 0,
+    deviceModel: "",
+    deviceDescrption: "",
+    deviceAccessories: "",
+    deviceWaranty: false,
+    inquiryPrice: 0,
   },
 }) {
-  const [value, setValue] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [ticket, setTicket] = useState(data);
 
-  // const handleChange = (event) => {
-  //   setAge(event.target.value);
-  // };
+  const handleInputChange = (e) => {
+    debugger;
+    setTicket((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+    console.log(ticket);
+  };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleDatePickerChange = (e) => {
+    debugger;
+    setTicket((prev) => ({
+      ...prev,
+      ticketDate: new Date(e),
+    }));
+  };
+
+  const handleTabIndexChange = (event, newValue) => {
+    setTabIndex(newValue);
   };
 
   return (
@@ -127,8 +145,8 @@ export default function AddEditTicketModal({
 
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
-              value={value}
-              onChange={handleChange}
+              value={tabIndex}
+              onChange={handleTabIndexChange}
               aria-label="basic tabs example"
             >
               <Tab label="تیکت" {...a11yProps(0)} />
@@ -136,90 +154,82 @@ export default function AddEditTicketModal({
               <Tab label="دستگاه" {...a11yProps(2)} />
             </Tabs>
           </Box>
-          <CustomTabPanel value={value} index={0}>
+          <CustomTabPanel value={tabIndex} index={0}>
             <TextField
-              label="شماره"
-              id="ticketNumberInput"
+              value={ticket.ticketNumber}
+              onChange={handleInputChange}
+              name="ticketNumber"
+              label="شماره تیکت"
               sx={{ m: 1, width: "25ch" }}
             />
             <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-              <DateTimePicker label="تاریخ" defaultValue={new Date()} />
+              <DateTimePicker
+                label="تاریخ تیکت"
+                value={ticket.ticketDate}
+                onChange={(newValue) => {
+                  setTicket((prev) => ({
+                    ...prev,
+                    ticketDate: newValue,
+                  }));
+                }}
+                name="ticketDate"
+              />
             </LocalizationProvider>
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={1}>
+          <CustomTabPanel value={tabIndex} index={1}>
             <TextField
-              //value={user.firstName}
-              //onChange={handleInputChange}
-              name="firstName"
+              value={ticket.customerName}
+              onChange={handleInputChange}
+              name="customerName"
               required
-              label="نام"
-              variant="standard"
-            />
-            <TextField
-              //  value={user.lastName}
-              // onChange={handleInputChange}
-              name="lastName"
-              required
-              label="نام خانوادگی"
-              variant="standard"
-            />
-            <TextField
-              //value={user.phoneNumber}
-              //onChange={handleInputChange}
-              name="phoneNumber"
-              required
-              label="شماره تماس"
-              variant="standard"
-            />
-            <TextField
-              //value={user.email}
-              //onChange={handleInputChange}
-              name="email"
-              required
-              label="ایمیل"
-              variant="standard"
+              label="نام و نام خانوادگی"
+              variant="outlined"
             />
 
-            <div>
-              <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-                <InputLabel>تایید شماره همراه</InputLabel>
-                <OutlinedInput
-                  type="text"
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        //onClick={handleClickShowPassword}
-                        //onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        <SendIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="تایید شماره همراه"
-                />
-              </FormControl>
-              <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
-                <InputLabel>تایید ایمیل</InputLabel>
-                <OutlinedInput
-                  type="text"
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        //onClick={handleClickShowPassword}
-                        //onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        <SendIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="تایید ایمیل"
-                />
-              </FormControl>
-            </div>
+            <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+              <InputLabel>شماره تماس</InputLabel>
+              <OutlinedInput
+                value={ticket.customerPhone}
+                onChange={handleInputChange}
+                name="customerPhone"
+                type="text"
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => onOpenModal("phoneconfirm", ticket.customerId)}
+                      //onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      <SendIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="شماره همراه"
+              />
+            </FormControl>
+            <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+              <InputLabel>ایمیل</InputLabel>
+              <OutlinedInput
+                value={ticket.customerEmail}
+                onChange={handleInputChange}
+                name="customerEmail"
+                type="text"
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => onOpenModal("emailconfirm", ticket.customerId)}
+                      //onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      <SendIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="ایمیل"
+              />
+            </FormControl>
           </CustomTabPanel>
-          <CustomTabPanel value={value} index={2}>
+          <CustomTabPanel value={tabIndex} index={2}>
             <div>
               <div>
                 <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>

@@ -49,19 +49,20 @@ const TicketManager = ({ personType, personTitle }) => {
       )} */}
 
       {addEditTicketOpen && (
-        <ReadyToRepairStateModal
+        <AddEditTicketModal
           open={addEditTicketOpen}
           onClose={() => {
             setAddEditTicketOpen(false);
             setTicket(null);
             setIsRefetching(true);
           }}
+          onOpenModal={(type, payload) => modalOpenHandler(type, payload)}
           // data={}
 
         />
       )}
 
-      {/* {emailConfirmOpen && (
+      {emailConfirmOpen && (
         <EmailConfirmation
           open={emailConfirmOpen}
           onClose={() => setEmailConfirmOpen(false)}
@@ -75,7 +76,7 @@ const TicketManager = ({ personType, personTitle }) => {
           onClose={() => setPhoneConfirmOpen(false)}
           user={ticket}
         />
-      )} */}
+      )}
 
       <h1>تیکت ها {personTitle}</h1>
       <TicketDataGrid
