@@ -96,7 +96,7 @@ const Drawer = styled(MuiDrawer, {
 export default function DashboardLayout() {
   //   const [userData, setUserData] = useState(data);
   const [open, setOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(0);
 
   //   useEffect(() => {
   //     setUserData(data);

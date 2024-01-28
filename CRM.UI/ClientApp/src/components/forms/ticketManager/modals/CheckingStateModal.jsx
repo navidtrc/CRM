@@ -111,7 +111,7 @@ export default function CheckingStateModal({
       <Box sx={style}>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography id="modal-modal-title" variant="h5" component="h5">
-            ارسال تیکت به مرکز فروش
+            جهت بررسی و قیمت گذاری تعمیرکار
           </Typography>
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
@@ -220,7 +220,7 @@ export default function CheckingStateModal({
               variant="contained"
               color="success"
             >
-              ارسال برای مرکز فروش
+              اعلام نتیجه بررسی به مرکز فروش
             </Button>
             <Button onClick={() => onClose()} variant="contained" color="error">
               انصراف

@@ -11,6 +11,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Radio,
+  FormControlLabel,
+  RadioGroup,
+  FormLabel,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -64,7 +68,7 @@ function a11yProps(index) {
   };
 }
 
-export default function WaitingStateModal({
+export default function InquiryStateModal({
   open,
   onClose,
   data = {
@@ -83,9 +87,18 @@ export default function WaitingStateModal({
     accessories: "Charger, mouse, keyboard",
     deviceWaranty: false,
     inquiryPrice: "5,000,000 تومان",
+    repairerPrice: "4,000,000 تومان",
+    totalPrice: "6,000,000 تومان",
   },
 }) {
   const [ticketId, setTicketId] = useState(data.ticketId);
+  const [inquiryResult, setInquiryResult] = useState(false);
+
+  const handleInquiryResultChange = () => {
+    setInquiryResult((prev) => {
+      return !prev;
+    });
+  };
 
   const handleSubmit = () => {};
 
@@ -99,7 +112,7 @@ export default function WaitingStateModal({
       <Box sx={style}>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography id="modal-modal-title" variant="h5" component="h5">
-            تیکت در صف انتظار
+            استعلام از مشتری
           </Typography>
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
@@ -137,6 +150,7 @@ export default function WaitingStateModal({
               متعلقات دستگاه: {data.accessories}
             </Typography>
           </Box>
+
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">
               قیمت برآورد شده: {data.inquiryPrice}
@@ -145,40 +159,42 @@ export default function WaitingStateModal({
               گارانتی :{data.deviceWaranty === true ? "دارد" : "ندارد"}
             </Typography>
           </Box>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">
+              قیمت تعمیرکار: {data.repairerPrice}
+            </Typography>
+            <Typography variant="h5">قیمت نهایی: {data.totalPrice}</Typography>
+          </Box>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <div>
-              <InputLabel>حاشیه سود</InputLabel>
-              <Select
-                //={age}
-                //onChange={handleChange}
-                label="حاشیه سود"
+            <FormControl sx={{ m: 1 }}>
+              <FormLabel id="inquiryResult">نتیجه ی استعلام</FormLabel>
+              <RadioGroup
+                name="inquiryResult"
+                onChange={handleInquiryResultChange}
+                value={inquiryResult}
               >
-                <MenuItem value={1}>% درصد</MenuItem>
-                <MenuItem value={2}>$ مبلغ</MenuItem>
-              </Select>
-              <TextField label="مقدار" type="number" variant="standard" />
-            </div>
-
-            <Autocomplete
-              disablePortal
-              id="repairer"
-              options={top100Films}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="تعمیر کار" />
-              )}
-            />
-            <TextField
-                  sx={{ m: 1 }}
-                  placeholder="توضیحات (خصوصی)"
-                  multiline
-                  rows={4}
-                  maxRows={5}
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label="منفی"
                 />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label="مثبت"
+                />
+              </RadioGroup>
+            </FormControl>
+            <TextField
+              sx={{ m: 1 }}
+              placeholder="توضیحات (خصوصی)"
+              multiline
+              rows={4}
+              maxRows={5}
+            />
           </Box>
-         
 
           <Stack mt={2} spacing={2} direction="row">
             <Button
@@ -186,7 +202,7 @@ export default function WaitingStateModal({
               variant="contained"
               color="success"
             >
-              ارسال برای بررسی تعمیر کار
+              {inquiryResult ? "ادامه فرآیند تعمیر" : "برگشت به مرکز فروش"}
             </Button>
             <Button onClick={() => onClose()} variant="contained" color="error">
               انصراف
@@ -201,5 +217,4 @@ const top100Films = [
   { label: "فرشید", id: 1 },
   { label: "تست 1", id: 2 },
   { label: "تست 2", id: 3 },
-  
 ];

@@ -11,6 +11,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Radio,
+  FormControlLabel,
+  RadioGroup,
+  FormLabel,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -64,7 +68,7 @@ function a11yProps(index) {
   };
 }
 
-export default function WaitingStateModal({
+export default function RepairingStateModal({
   open,
   onClose,
   data = {
@@ -83,9 +87,19 @@ export default function WaitingStateModal({
     accessories: "Charger, mouse, keyboard",
     deviceWaranty: false,
     inquiryPrice: "5,000,000 تومان",
+    repairerPrice: "3,000,000 تومان",
+    totalPrice: "5,000,000 تومان",
   },
 }) {
   const [ticketId, setTicketId] = useState(data.ticketId);
+  const [isRepairable, setIsRepairable] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
+
+  const handleRepairableChange = () => {
+    setIsRepairable((prev) => {
+      return !prev;
+    });
+  };
 
   const handleSubmit = () => {};
 
@@ -99,7 +113,7 @@ export default function WaitingStateModal({
       <Box sx={style}>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography id="modal-modal-title" variant="h5" component="h5">
-            تیکت در صف انتظار
+            در حال تعمیر
           </Typography>
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
@@ -110,19 +124,27 @@ export default function WaitingStateModal({
           </Box>
           <Divider />
 
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">نام مشتری: {data.customerName}</Typography>
-            <Typography
-              color={data.phoneConfirmation ? "" : "error"}
-              variant="h6"
-            >
-              شماره تماس: {data.customerPhone}
-            </Typography>
-            <Typography color={data.emailConfirmation ? "" : "error"}>
-              ایمیل: {data.customerEmail}
-            </Typography>
-          </Box>
-          <Divider />
+          {isAdmin && (
+            <>
+              <Box
+                sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
+              >
+                <Typography variant="h6">
+                  نام مشتری: {data.customerName}
+                </Typography>
+                <Typography
+                  color={data.phoneConfirmation ? "" : "error"}
+                  variant="h6"
+                >
+                  شماره تماس: {data.customerPhone}
+                </Typography>
+                <Typography color={data.emailConfirmation ? "" : "error"}>
+                  ایمیل: {data.customerEmail}
+                </Typography>
+              </Box>
+              <Divider />
+            </>
+          )}
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">نوع دستگاه: {data.deviceType}</Typography>
@@ -137,48 +159,42 @@ export default function WaitingStateModal({
               متعلقات دستگاه: {data.accessories}
             </Typography>
           </Box>
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">
-              قیمت برآورد شده: {data.inquiryPrice}
-            </Typography>
-            <Typography variant="h6">
-              گارانتی :{data.deviceWaranty === true ? "دارد" : "ندارد"}
-            </Typography>
-          </Box>
           <Divider />
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="h6">
+              قیمت تعمیرکار: {data.repairerPrice}
+            </Typography>
+          </Box>
+
+          {isAdmin && (
+            <>
+              <Box
+                sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
+              >
+                <Typography variant="h6">
+                  قیمت برآورد شده: {data.inquiryPrice}
+                </Typography>
+                <Typography variant="h6">
+                  قیمت نهایی: {data.totalPrice}
+                </Typography>
+                <Typography variant="h6">
+                  گارانتی :{data.deviceWaranty === true ? "دارد" : "ندارد"}
+                </Typography>
+              </Box>
+              <Divider />
+            </>
+          )}
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <div>
-              <InputLabel>حاشیه سود</InputLabel>
-              <Select
-                //={age}
-                //onChange={handleChange}
-                label="حاشیه سود"
-              >
-                <MenuItem value={1}>% درصد</MenuItem>
-                <MenuItem value={2}>$ مبلغ</MenuItem>
-              </Select>
-              <TextField label="مقدار" type="number" variant="standard" />
-            </div>
-
-            <Autocomplete
-              disablePortal
-              id="repairer"
-              options={top100Films}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="تعمیر کار" />
-              )}
-            />
             <TextField
-                  sx={{ m: 1 }}
-                  placeholder="توضیحات (خصوصی)"
-                  multiline
-                  rows={4}
-                  maxRows={5}
-                />
+              disabled
+              sx={{ m: 1 }}
+              placeholder="توضیحات (خصوصی)"
+              multiline
+              rows={4}
+              maxRows={5}
+            />
           </Box>
-         
 
           <Stack mt={2} spacing={2} direction="row">
             <Button
@@ -186,7 +202,7 @@ export default function WaitingStateModal({
               variant="contained"
               color="success"
             >
-              ارسال برای بررسی تعمیر کار
+              اتمام تعمیر و ارسال به مرکز فروش
             </Button>
             <Button onClick={() => onClose()} variant="contained" color="error">
               انصراف
@@ -201,5 +217,4 @@ const top100Films = [
   { label: "فرشید", id: 1 },
   { label: "تست 1", id: 2 },
   { label: "تست 2", id: 3 },
-  
 ];

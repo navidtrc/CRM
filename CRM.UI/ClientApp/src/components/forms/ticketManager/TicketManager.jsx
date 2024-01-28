@@ -5,6 +5,8 @@ import EmailConfirmation from "../global/modals/EmailConfirmation";
 import PhoneConfirmation from "../global/modals/PhoneConfirmation";
 import WaitingStateModal from "./modals/WaitingStateModal";
 import CheckingStateModal from "./modals/CheckingStateModal";
+import InquiryStateModal from "./modals/InquiryStateModal";
+import ReadyToRepairStateModal from "./modals/ReadyToRepairStateModal";
 
 const TicketManager = ({ personType, personTitle }) => {
   const [ticket, setTicket] = useState(null);
@@ -47,7 +49,7 @@ const TicketManager = ({ personType, personTitle }) => {
       )} */}
 
       {addEditTicketOpen && (
-        <CheckingStateModal
+        <ReadyToRepairStateModal
           open={addEditTicketOpen}
           onClose={() => {
             setAddEditTicketOpen(false);
