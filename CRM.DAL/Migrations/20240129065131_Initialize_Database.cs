@@ -44,13 +44,13 @@ namespace CRM.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeviceKind",
+                name: "DeviceBrand",
                 schema: "Basic",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -60,7 +60,27 @@ namespace CRM.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeviceKind", x => x.Id);
+                    table.PrimaryKey("PK_DeviceBrand", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceType",
+                schema: "Basic",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,8 +238,8 @@ namespace CRM.DAL.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeviceKindId = table.Column<long>(type: "bigint", nullable: false),
-                    Brand = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeviceTypeId = table.Column<long>(type: "bigint", nullable: false),
+                    DeviceBrandId = table.Column<long>(type: "bigint", nullable: false),
                     Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Accessories = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Warranty = table.Column<bool>(type: "bit", nullable: false),
@@ -234,10 +254,17 @@ namespace CRM.DAL.Migrations
                 {
                     table.PrimaryKey("PK_Device", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Device_DeviceKind_DeviceKindId",
-                        column: x => x.DeviceKindId,
+                        name: "FK_Device_DeviceBrand_DeviceBrandId",
+                        column: x => x.DeviceBrandId,
                         principalSchema: "Basic",
-                        principalTable: "DeviceKind",
+                        principalTable: "DeviceBrand",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Device_DeviceType_DeviceTypeId",
+                        column: x => x.DeviceTypeId,
+                        principalSchema: "Basic",
+                        principalTable: "DeviceType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -833,10 +860,16 @@ namespace CRM.DAL.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Device_DeviceKindId",
+                name: "IX_Device_DeviceBrandId",
                 schema: "Basic",
                 table: "Device",
-                column: "DeviceKindId");
+                column: "DeviceBrandId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Device_DeviceTypeId",
+                schema: "Basic",
+                table: "Device",
+                column: "DeviceTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityRoleClaim_RoleId",
@@ -1094,7 +1127,11 @@ namespace CRM.DAL.Migrations
                 schema: "Security");
 
             migrationBuilder.DropTable(
-                name: "DeviceKind",
+                name: "DeviceBrand",
+                schema: "Basic");
+
+            migrationBuilder.DropTable(
+                name: "DeviceType",
                 schema: "Basic");
 
             migrationBuilder.DropTable(

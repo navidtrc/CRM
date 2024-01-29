@@ -11,6 +11,7 @@ namespace CRM.Repository.Core.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class
     {
+        IQueryable<TEntity> SqlRaw(string sql);
         DbSet<TEntity> Entities { get; }
         IQueryable<TEntity> Table { get; }
         IQueryable<TEntity> TableNoTracking { get; }

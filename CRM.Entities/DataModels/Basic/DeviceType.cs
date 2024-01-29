@@ -7,18 +7,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CRM.Entities.DataModels.Basic
 {
-    public class DeviceKind : BaseEntity
+    public class DeviceType : BaseEntity
     {
-        [Display(Name = "Title", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [Display(Name = "Title", ResourceType = typeof(Resource))]
         public string Title { get; set; }
 
         public ICollection<Device> Devices { get; set; }
     }
-    public class DeviceKindConfiguration : IEntityTypeConfiguration<DeviceKind>
+    public class DeviceTypeConfiguration : IEntityTypeConfiguration<DeviceType>
     {
-        public void Configure(EntityTypeBuilder<DeviceKind> builder)
+        public void Configure(EntityTypeBuilder<DeviceType> builder)
         {
-            builder.ToTable("DeviceKind", "Basic");
+            builder.ToTable("DeviceType", "Basic");
         }
     }
 }

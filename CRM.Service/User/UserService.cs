@@ -47,7 +47,7 @@ namespace CRM.Service.User
                         where user.Id == userId
                         select new UserInfoViewModel
                         {
-                            FullName = person != null ? person.FullName : string.Empty,
+                            FullName = person != null ? person.Name : string.Empty,
                             Id = user.Id,
                             Username = user.UserName
                         };
@@ -63,12 +63,8 @@ namespace CRM.Service.User
                         select new
                         {
                             Id = users.Id,
-                            FirstName = allUserProfiles.FirstName,
-                            LastName = allUserProfiles.LastName,
-                            Avatar = allUserProfiles.Avatar,
-                            BirthDate = allUserProfiles.BirthDate,
+                            Name = allUserProfiles.Name,
                             CreatedDate = allUserProfiles.CreatedDate,
-                            Gender = allUserProfiles.Gender,
                             Mobile = users.PhoneNumber,
                             Lockout = users.LockoutEnabled,
                         };

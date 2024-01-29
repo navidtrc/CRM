@@ -45,7 +45,7 @@ const TableGrid = ({
       }
 
       const fetchURL = new URL(
-        "/api/people/get",
+        "/api/ticket/get",
         process.env.NODE_ENV === "production"
           ? "https://www.material-react-table.com"
           : "https://localhost:5001"
@@ -81,15 +81,12 @@ const TableGrid = ({
         const json = await response.json();
         const result = json.Data.Data.Data.map((item) => {
           return {
-            // id: item.Person.Id,
-            // userId: item.Person.User.Id,
-            // firstName: item.Person.FirstName,
-            // lastName: item.Person.LastName,
-            // email: item.Person.User.Email,
-            // phoneNumber: item.Person.User.PhoneNumber,
-            // lockoutEnabled: item.Person.User.LockoutEnabled,
-            // emailConfirmed: item.Person.User.EmailConfirmed,
-            // phoneConfirmed: item.Person.User.PhoneNumberConfirmed,
+            id: item.TicketId,
+            ticketNumber: item.TicketNumber,
+            ticketDate: item.TicketDate,
+            customerName: item.Customer.LastName,
+            customerPhone: item.Customer.User.PhoneNumber,
+            customerEmail: item.Person.User.Email,
           };
         });
 

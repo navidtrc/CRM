@@ -6,7 +6,7 @@ namespace CRM.ViewModels.ViewModels
     [JsonObject(MemberSerialization.OptIn)]
     public class TicketAddEditViewModel
     {
-        [JsonProperty(PropertyName = "UserId")]
+        [JsonProperty(PropertyName = "TicketId")]
         public long TicketId { get; set; }
 
 

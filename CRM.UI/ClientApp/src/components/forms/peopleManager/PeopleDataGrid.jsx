@@ -85,8 +85,7 @@ const TableGrid = ({
           return {
             id: item.Person.Id,
             userId: item.Person.User.Id,
-            firstName: item.Person.FirstName,
-            lastName: item.Person.LastName,
+            name: item.Person.Name,
             email: item.Person.User.Email,
             phoneNumber: item.Person.User.PhoneNumber,
             lockoutEnabled: item.Person.User.LockoutEnabled,
@@ -120,36 +119,20 @@ const TableGrid = ({
   const columns = useMemo(
     () => [
       {
-        accessorKey: "firstName",
-        header: "نام",
+        accessorKey: "name",
+        header: "نام و نام خانوادگی",
         muiEditTextFieldProps: {
           type: "text",
           required: true,
-          error: !!validationErrors?.firstName,
-          helperText: validationErrors?.firstName,
+          error: !!validationErrors?.name,
+          helperText: validationErrors?.name,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              firstName: undefined,
+              name: undefined,
             }),
           //optionally add validation checking for onBlur or onChange
-        },
-      },
-      {
-        accessorKey: "lastName",
-        header: "نام خانوادگی",
-        muiEditTextFieldProps: {
-          type: "text",
-          required: true,
-          error: !!validationErrors?.lastName,
-          helperText: validationErrors?.lastName,
-          //remove any previous validation errors when user focuses on the input
-          onFocus: () =>
-            setValidationErrors({
-              ...validationErrors,
-              lastName: undefined,
-            }),
         },
       },
       {
@@ -190,7 +173,7 @@ const TableGrid = ({
 
   const handleDeleteUser = (user) => {
     Swal.fire({
-      title: `آیا از حذف کاربر ${user.firstName} ${user.lastName} اطمینان دارید؟`,
+      title: `آیا از حذف کاربر ${user.name} اطمینان دارید؟`,
       text: "در صورت حذف امکان بازگشت وجود ندارد",
       icon: "warning",
       showCancelButton: true,
@@ -208,7 +191,7 @@ const TableGrid = ({
         fetch(`/api/people/delete?id=${user.id}`, requestOptions)
           .then(() => {
             Swal.fire({
-              title: `کاربر ${user.firstName} ${user.lastName} حذف شد`,
+              title: `کاربر ${user.name} حذف شد`,
               icon: "success",
             });
             onSetIsRefetching(true);

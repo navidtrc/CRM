@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240127195959_Initialize_Database")]
-    partial class Initialize_Database
+    [Migration("20240129084629_change_fn_and_ln_to_FullName")]
+    partial class change_fn_and_ln_to_FullName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,17 +78,16 @@ namespace CRM.DAL.Migrations
                     b.Property<string>("Accessories")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Brand")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("DeviceKindId")
+                    b.Property<long>("DeviceBrandId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("DeviceTypeId")
                         .HasColumnType("bigint");
 
                     b.Property<Guid>("Guid")
@@ -112,12 +111,14 @@ namespace CRM.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceKindId");
+                    b.HasIndex("DeviceBrandId");
+
+                    b.HasIndex("DeviceTypeId");
 
                     b.ToTable("Device", "Basic");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceKind", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceBrand", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,12 +145,45 @@ namespace CRM.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeviceKind", "Basic");
+                    b.ToTable("DeviceBrand", "Basic");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceType", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("Guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeviceType", "Basic");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Inquiry", b =>
@@ -647,24 +681,11 @@ namespace CRM.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<byte[]>("Avatar")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
@@ -678,8 +699,7 @@ namespace CRM.DAL.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
+                    b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PersonType")
@@ -1155,13 +1175,21 @@ namespace CRM.DAL.Migrations
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Device", b =>
                 {
-                    b.HasOne("CRM.Entities.DataModels.Basic.DeviceKind", "DeviceKind")
+                    b.HasOne("CRM.Entities.DataModels.Basic.DeviceBrand", "DeviceBrand")
                         .WithMany("Devices")
-                        .HasForeignKey("DeviceKindId")
+                        .HasForeignKey("DeviceBrandId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("DeviceKind");
+                    b.HasOne("CRM.Entities.DataModels.Basic.DeviceType", "DeviceType")
+                        .WithMany("Devices")
+                        .HasForeignKey("DeviceTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DeviceBrand");
+
+                    b.Navigation("DeviceType");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Inquiry", b =>
@@ -1415,7 +1443,12 @@ namespace CRM.DAL.Migrations
                     b.Navigation("Ticket");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceKind", b =>
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceBrand", b =>
+                {
+                    b.Navigation("Devices");
+                });
+
+            modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceType", b =>
                 {
                     b.Navigation("Devices");
                 });

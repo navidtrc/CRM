@@ -31,8 +31,7 @@ export default function AddEditPersonModal({
   onClose,
   data = {
     id: 0,
-    firstName: "",
-    lastName: "",
+    name: "",
     username: "",
     email: "",
     phoneNumber: "",
@@ -69,8 +68,7 @@ export default function AddEditPersonModal({
       Person: {
         Id: user.id,
         ePersonType: 0,
-        FirstName: user.firstName,
-        LastName: user.lastName,
+        Name: user.name,
       },
     });
 
@@ -126,19 +124,11 @@ export default function AddEditPersonModal({
 
           <div>
             <TextField
-              value={user.firstName}
+              value={user.name}
               onChange={handleInputChange}
-              name="firstName"
+              name="name"
               required
-              label="نام"
-              variant="standard"
-            />
-            <TextField
-              value={user.lastName}
-              onChange={handleInputChange}
-              name="lastName"
-              required
-              label="نام خانوادگی"
+              label="نام و نام خانوادگی"
               variant="standard"
             />
             <TextField

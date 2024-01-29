@@ -63,6 +63,12 @@ namespace CRM.Repository.Persistence
         private ITicketRepository _tickets;
         public ITicketRepository Tickets => _tickets == null ? _tickets = new TicketRepository(_db) : _tickets;
 
+        private IDeviceTypeRepository _deviceTypes;
+        public IDeviceTypeRepository DeviceTypes => _deviceTypes == null ? _deviceTypes = new DeviceTypeRepository(_db) : _deviceTypes;
+
+        private IDeviceBrandRepository _deviceBrands;
+        public IDeviceBrandRepository DeviceBrands => _deviceBrands == null ? _deviceBrands = new DeviceBrandRepository(_db) : _deviceBrands;
+
 
         public int Complete()
         {

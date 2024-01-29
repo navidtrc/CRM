@@ -31,6 +31,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import SendIcon from "@mui/icons-material/Send";
 import CheckIcon from "@mui/icons-material/Check";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import TicketService from "../../../../services/ticket.service";
 
 const style = {
   position: "absolute",
@@ -112,19 +113,28 @@ export default function AddEditTicketModal({
 
   // get deviceType and deviceBrand Suggestion list
   useEffect(() => {
-    // GET API .. This is just test sample
-    setDeviceTypeSuggestion([
-      { id: 1, label: "ریش تراش" },
-      { id: 2, label: "اپیلیدی" },
-      { id: 3, label: "تریمر" },
-      { id: 4, label: "سشوار" },
-    ]);
-    setDeviceBrandSuggestion([
-      { id: 1, label: "Braun" },
-      { id: 2, label: "Philips" },
-      { id: 3, label: "Panasonic" },
-      { id: 4, label: "Remington" },
-    ]);
+    TicketService.prerequisite().then((result) => {
+      debugger;
+      setTicket((prev) => ({
+        ...prev,
+        ticketNumber: result.data.Data.Data.LastTicketNumber,
+      }));
+      setDeviceTypeSuggestion(result.data.Data.Data.DeviceTypeList);
+      setDeviceBrandSuggestion(result.data.Data.Data.DeviceBrandList);
+    });
+
+    // setDeviceTypeSuggestion([
+    //   { id: 1, label: "ریش تراش" },
+    //   { id: 2, label: "اپیلیدی" },
+    //   { id: 3, label: "تریمر" },
+    //   { id: 4, label: "سشوار" },
+    // ]);
+    // setDeviceBrandSuggestion([
+    //   { id: 1, label: "Braun" },
+    //   { id: 2, label: "Philips" },
+    //   { id: 3, label: "Panasonic" },
+    //   { id: 4, label: "Remington" },
+    // ]);
   }, []);
 
   const handleSubmit = () => {

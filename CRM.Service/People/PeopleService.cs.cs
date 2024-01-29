@@ -84,11 +84,8 @@ namespace CRM.Service.People
 
             var person = new Person
             {
-                BirthDate = registerViewModel.Person.BirthDate,
                 PersonType = registerViewModel.Person.ePersonType,
-                FirstName = registerViewModel.Person.FirstName,
-                LastName = registerViewModel.Person.LastName,
-                Gender = registerViewModel.Person.Gender,
+                Name = registerViewModel.Person.Name,
                 User = user
             };
             if (person.PersonType == ePersonType.Staff)
@@ -122,12 +119,8 @@ namespace CRM.Service.People
                 .Include(i => i.Customer)
                 .FirstOrDefaultAsync(i => i.Id == registerViewModel.Person.Id, cancellationToken);
 
-            var (FirstName, LastName, BirthDate, Gender) = registerViewModel.Person;
 
-            person.FirstName = FirstName;
-            person.LastName = LastName;
-            person.BirthDate = BirthDate;
-            person.Gender = Gender;
+            person.Name = registerViewModel.Person.Name;
 
             if (person.User.Email != registerViewModel.User.Email)
                 person.User.EmailConfirmed = false;

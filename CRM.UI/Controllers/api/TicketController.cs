@@ -26,21 +26,21 @@ namespace CRM.UI.Controllers.api
         [UserAccess(eAccessControl.TicketGetList, eAccessType.Api, 0, true)]
         public async Task<IActionResult> Get(MaterialDataGridQueryViewModel request, CancellationToken cancellationToken)
         {
-            //ePersonType personType = (ePersonType)Enum.Parse(typeof(ePersonType), request.type, true);
-            //var response = await ticketService.GetAsync(request.ToDataSourceRequest(), personType, cancellationToken);
-            //if (response.IsSuccess)
-            //    return Ok(response);
-            //return BadRequest(response.Message);
-            return Ok();
+            var response = await ticketService.GetTicketsAsync(request.ToDataSourceRequest(), cancellationToken);
+            if (response.IsSuccess)
+                return Ok(response);
+            return BadRequest(response.Message);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("/api/[controller]/[action]")]
         [UserAccess(eAccessControl.TicketGetList, eAccessType.Api, 0, true)]
-        public async Task<IActionResult> Prerequisite(MaterialDataGridQueryViewModel request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Prerequisite(CancellationToken cancellationToken)
         {
-            //var response = await ticketService.Prerequisite
-            return Ok();
+            var response = await ticketService.Prerequisite(cancellationToken);
+            if (response.IsSuccess)
+                return Ok(response);
+            return BadRequest(response.Message);
         }
 
         [HttpPost]

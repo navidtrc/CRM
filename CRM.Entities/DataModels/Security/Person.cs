@@ -10,23 +10,8 @@ namespace CRM.Entities.DataModels.Security
 {
     public class Person : BaseEntity
     {
-        [Display(Name = "FirstName", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public string FirstName { get; set; }
-
-        [Display(Name = "LastName", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public string LastName { get; set; }
-
-        [Display(Name = "Gender", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public eGender Gender { get; set; }        
-
-        [Display(Name = "FullName", ResourceType = typeof(Resource))]
-        public string FullName => $"{FirstName} {LastName}";
-
-        [Display(Name = "BirthDate", ResourceType = typeof(Resource))]
-        public DateTime? BirthDate { get; set; }
-
-        [Display(Name = "Avatar", ResourceType = typeof(Resource))]
-        public byte[] Avatar { get; set; }
+        [Display(Name = "Name", ResourceType = typeof(Resource))]
+        public string Name { get; set; }
 
         [Display(Name = "PersonType", ResourceType = typeof(Resource))]
         public ePersonType PersonType { get; set; }

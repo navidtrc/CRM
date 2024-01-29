@@ -111,7 +111,7 @@ export default function UserAccessModal({ open, onClose, user }) {
           </Typography>
           <Divider />
           <Typography variant="body1" component="body1">
-            کاربر: {user.firstName} {user.lastName}
+            کاربر: {user.name}
           </Typography>
 
           <div>

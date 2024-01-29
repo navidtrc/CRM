@@ -23,6 +23,8 @@ namespace CRM.Repository.Core
         IStaffRepository Staffs { get; }
         ICustomerRepository Customers { get; }
         ITicketRepository Tickets { get; }
+        IDeviceTypeRepository DeviceTypes { get; }
+        IDeviceBrandRepository DeviceBrands { get; }
 
         int Complete();
         Task<int> CompleteAsync(CancellationToken cancellationToken);

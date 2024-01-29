@@ -32,35 +32,11 @@ namespace CRM.ViewModels.ViewModels
         [Display(Name = "Id", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
         public long Id { get; set; }
 
-        [Display(Name = "FirstName", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public string FirstName { get; set; }
-
-        [Display(Name = "LastName", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public string LastName { get; set; }
-
-        [Display(Name = "Gender", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
-        public eGender Gender { get; set; }
-
-        [Display(Name = "NationalCode", ResourceType = typeof(Resource))]
-        public string NationalCode { get; set; }
-
-        [Display(Name = "BirthDate", ResourceType = typeof(Resource))]
-        public DateTime? BirthDate { get; set; }
+        [Display(Name = "Name", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        public string Name { get; set; }
 
         [Display(Name = "PersonType", ResourceType = typeof(Resource))]
         public ePersonType ePersonType { get; set; }
 
-        public void Deconstruct(
-            out string FirstName,
-            out string LastName,
-            out DateTime? BirthDate,
-            out eGender Gender
-        )
-        {
-            FirstName = this.FirstName;
-            LastName = this.LastName;
-            BirthDate = this.BirthDate;
-            Gender = this.Gender;
-        }
     }
 }

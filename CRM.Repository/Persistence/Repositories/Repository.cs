@@ -19,6 +19,7 @@ namespace CRM.Repository.Persistence.Repositories
         public DbSet<TEntity> Entities { get; }
         public virtual IQueryable<TEntity> Table => Entities;
         public virtual IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
+        
 
         public Repository(ApplicationDbContext dbContext)
         {
@@ -92,6 +93,12 @@ namespace CRM.Repository.Persistence.Repositories
         #endregion
 
         #region Sync Methods
+        public virtual IQueryable<TEntity> SqlRaw (string sql)
+        {
+            return Entities.FromSqlRaw(sql);
+        }
+
+
         public virtual TEntity GetById(params object[] ids)
         {
             return Entities.Find(ids);
