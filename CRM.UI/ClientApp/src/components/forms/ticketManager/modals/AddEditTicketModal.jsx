@@ -106,7 +106,7 @@ export default function AddEditTicketModal({
     inquiryPrice: 0,
   },
 }) {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(1);
   const [ticket, setTicket] = useState(data);
   const [deviceTypeSuggestion, setDeviceTypeSuggestion] = useState();
   const [deviceBrandSuggestion, setDeviceBrandSuggestion] = useState();
