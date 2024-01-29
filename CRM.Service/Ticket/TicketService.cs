@@ -1,9 +1,12 @@
 ﻿using CRM.Common.Api;
+using CRM.Entities.DataModels.Basic;
 using CRM.Repository.Core;
+using CRM.Service.People;
 using CRM.ViewModels.ViewModels;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,12 +16,24 @@ namespace CRM.Service.Ticket
     public class TicketService : ITicketService
     {
         private readonly IUnitOfWork _uow;
-        public TicketService(IUnitOfWork uow)
+        private readonly IPeopleService _peopleService;
+        public TicketService(IUnitOfWork uow, IPeopleService peopleService)
         {
             this._uow = uow;
+            _peopleService = peopleService;
+        }
+        public async Task<ResultContent<DataSourceResult>> GetTicketsAsync(DataSourceRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _uow.Tickets.TableNoTracking
+                        .Where(w => w.IsDeleted == false)
+                        .Include(i => i.Customer)
+                        .ThenInclude(i => i.Person)
+                        .ThenInclude(i => i.User)
+                        .ToDataSourceResultAsync(request, cancellationToken);
+            return new ResultContent<DataSourceResult>(true, result);
         }
 
-        public async Task<ResultContent<TicketPrerequisiteViewModel>> Prerequisite(CancellationToken cancellationToken)
+        public async Task<ResultContent<TicketPrerequisiteViewModel>> PrerequisiteAsync(CancellationToken cancellationToken)
         {
             var result = new TicketPrerequisiteViewModel();
             var types = await _uow.DeviceTypes.TableNoTracking.ToListAsync(cancellationToken);
@@ -34,16 +49,52 @@ namespace CRM.Service.Ticket
                 result.LastTicketNumber = last.Number++;
             return new ResultContent<TicketPrerequisiteViewModel>(true, result);
         }
-
-        public async Task<ResultContent<DataSourceResult>> GetTicketsAsync(DataSourceRequest request, CancellationToken cancellationToken)
+        public async Task<ResultContent<TicketPrerequisiteViewModel>> CreateAsync(TicketAddEditViewModel ticketAddEditViewModel, CancellationToken cancellationToken)
         {
-            var result = await _uow.Tickets.TableNoTracking
-                        .Where(w => w.IsDeleted == false)
-                        .Include(i => i.Customer)
-                        .ThenInclude(i => i.Person)
-                        .ThenInclude(i => i.User)
-                        .ToDataSourceResultAsync(request, cancellationToken);
-            return new ResultContent<DataSourceResult>(true, result);
+            var peopleCreateResponse = await _peopleService.CreateAsync(new PersonUser_AddEdit_ViewModel
+            {
+                Person = new PersonViewModel
+                {
+                    ePersonType = Common.Enums.ePersonType.Customer,
+                    Name = ticketAddEditViewModel.CustomerName,
+                },
+                User = new UserViewModel
+                {
+                    Email = ticketAddEditViewModel.CustomerEmail,
+                    PhoneNumber = ticketAddEditViewModel.CustomerPhone,
+                }
+            }, cancellationToken);
+            if (!peopleCreateResponse.IsSuccess)
+                return new ResultContent<TicketPrerequisiteViewModel>(false, null, "Customer creation failed");
+
+            var peopleId = (long)peopleCreateResponse.Data;
+
+            var device = new Device
+            {
+                DeviceTypeId = ticketAddEditViewModel.DeviceTypeId,
+                DeviceBrandId = ticketAddEditViewModel.DeviceBrandId,
+                Model = ticketAddEditViewModel.DeviceModel,
+                Description = ticketAddEditViewModel.DeviceDescrption,
+                Accessories = ticketAddEditViewModel.DeviceAccessories,
+                Warranty = ticketAddEditViewModel.DeviceWaranty,
+            };
+
+            var ticket = new Entities.DataModels.Basic.Ticket
+            {
+                Date = DateTime.Parse(ticketAddEditViewModel.TicketDate),
+                Number = ticketAddEditViewModel.TicketNumber,
+                InquiryPrice = ticketAddEditViewModel.InquiryPrice,
+                Device = device,
+                CustomerId = peopleId
+            };
+
+            await _uow.Devices.AddAsync(device, cancellationToken);
+            await _uow.Tickets.AddAsync(ticket, cancellationToken);
+            await _uow.CompleteAsync(cancellationToken);
+
+            return new ResultContent<TicketPrerequisiteViewModel>(true, null);
+
+
         }
     }
 }

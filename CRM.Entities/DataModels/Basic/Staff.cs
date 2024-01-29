@@ -14,7 +14,7 @@ namespace CRM.Entities.DataModels.Basic
         public int StaffCode { get; set; }
 
         public Person Person { get; set; }
-        public ICollection<Ticket> RepairerInvoices { get; set; }
+        public ICollection<Ticket> RepairerTickets { get; set; }
     }
     public class StaffConfiguration : IEntityTypeConfiguration<Staff>
     {

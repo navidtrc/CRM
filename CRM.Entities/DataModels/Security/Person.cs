@@ -1,8 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using CRM.Common.Enums;
 using CRM.Common.Resources.StringResources;
 using CRM.Entities.Core;
+using CRM.Entities.DataModels.Basic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,7 +24,7 @@ namespace CRM.Entities.DataModels.Security
     {
         public void Configure(EntityTypeBuilder<Person> builder)
         {
-            builder.ToTable("Person", "Security");
+            builder.ToTable("Person", "Basic");
             builder.HasOne(h => h.Staff).WithOne(c => c.Person)
                 .HasForeignKey<Staff>(f => f.Id)
                 .OnDelete(DeleteBehavior.Cascade)

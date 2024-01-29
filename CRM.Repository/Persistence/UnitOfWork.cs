@@ -69,6 +69,9 @@ namespace CRM.Repository.Persistence
         private IDeviceBrandRepository _deviceBrands;
         public IDeviceBrandRepository DeviceBrands => _deviceBrands == null ? _deviceBrands = new DeviceBrandRepository(_db) : _deviceBrands;
 
+        private IDeviceRepository _devices;
+        public IDeviceRepository Devices => _devices == null ? _devices = new DeviceRepository(_db) : _devices;
+
 
         public int Complete()
         {

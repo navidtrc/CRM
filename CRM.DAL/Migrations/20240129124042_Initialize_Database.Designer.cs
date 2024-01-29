@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240129084629_change_fn_and_ln_to_FullName")]
-    partial class change_fn_and_ln_to_FullName
+    [Migration("20240129124042_Initialize_Database")]
+    partial class Initialize_Database
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,10 +28,7 @@ namespace CRM.DAL.Migrations
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Customer", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -57,12 +54,7 @@ namespace CRM.DAL.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("PersonId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
 
                     b.ToTable("Customer", "Basic");
                 });
@@ -271,10 +263,7 @@ namespace CRM.DAL.Migrations
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
                 {
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -294,15 +283,10 @@ namespace CRM.DAL.Migrations
                     b.Property<DateTime?>("LastModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<long?>("PersonId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("StaffCode")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
 
                     b.ToTable("Staff", "Basic");
                 });
@@ -323,6 +307,9 @@ namespace CRM.DAL.Migrations
 
                     b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -363,9 +350,6 @@ namespace CRM.DAL.Migrations
                     b.Property<long?>("RepairerId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("StaffId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
@@ -374,8 +358,6 @@ namespace CRM.DAL.Migrations
                         .IsUnique();
 
                     b.HasIndex("RepairerId");
-
-                    b.HasIndex("StaffId");
 
                     b.ToTable("Ticket", "Basic");
                 });
@@ -561,40 +543,6 @@ namespace CRM.DAL.Migrations
                     b.ToTable("AccessRole", "Security");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Security.Customer", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CustomerCode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customer", "Security");
-                });
-
             modelBuilder.Entity("CRM.Entities.DataModels.Security.MenuAccess", b =>
                 {
                     b.Property<long>("Id")
@@ -707,7 +655,7 @@ namespace CRM.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Person", "Security");
+                    b.ToTable("Person", "Basic");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.Recovery", b =>
@@ -823,37 +771,6 @@ namespace CRM.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("Setting", "Security");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Security.Staff", b =>
-                {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("StaffCode")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Staff", "Security");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.User", b =>
@@ -1167,8 +1084,10 @@ namespace CRM.DAL.Migrations
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Customer", b =>
                 {
                     b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId");
+                        .WithOne("Customer")
+                        .HasForeignKey("CRM.Entities.DataModels.Basic.Customer", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
                 });
@@ -1206,8 +1125,10 @@ namespace CRM.DAL.Migrations
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
                 {
                     b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId");
+                        .WithOne("Staff")
+                        .HasForeignKey("CRM.Entities.DataModels.Basic.Staff", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Person");
                 });
@@ -1230,10 +1151,6 @@ namespace CRM.DAL.Migrations
                         .WithMany("RepairerInvoices")
                         .HasForeignKey("RepairerId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("CRM.Entities.DataModels.Security.Staff", null)
-                        .WithMany("RepairerTickets")
-                        .HasForeignKey("StaffId");
 
                     b.Navigation("Customer");
 
@@ -1291,28 +1208,6 @@ namespace CRM.DAL.Migrations
                     b.Navigation("Access");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Security.Customer", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithOne("Customer")
-                        .HasForeignKey("CRM.Entities.DataModels.Security.Customer", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Security.Staff", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
-                        .WithOne("Staff")
-                        .HasForeignKey("CRM.Entities.DataModels.Security.Staff", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.User", b =>
@@ -1495,11 +1390,6 @@ namespace CRM.DAL.Migrations
                     b.Navigation("AccessRoles");
 
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("CRM.Entities.DataModels.Security.Staff", b =>
-                {
-                    b.Navigation("RepairerTickets");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.User", b =>

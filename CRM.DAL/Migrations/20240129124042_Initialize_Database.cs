@@ -128,16 +128,12 @@ namespace CRM.DAL.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Person",
-                schema: "Security",
+                schema: "Basic",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Avatar = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PersonType = table.Column<int>(type: "int", nullable: false),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -274,34 +270,6 @@ namespace CRM.DAL.Migrations
                 schema: "Basic",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CustomerType = table.Column<int>(type: "int", nullable: false),
-                    CustomerCode = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<long>(type: "bigint", nullable: true),
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Customer_Person_PersonId",
-                        column: x => x.PersonId,
-                        principalSchema: "Security",
-                        principalTable: "Person",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Customer",
-                schema: "Security",
-                columns: table => new
-                {
                     Id = table.Column<long>(type: "bigint", nullable: false),
                     CustomerType = table.Column<int>(type: "int", nullable: false),
                     CustomerCode = table.Column<int>(type: "int", nullable: false),
@@ -318,7 +286,7 @@ namespace CRM.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Customer_Person_Id",
                         column: x => x.Id,
-                        principalSchema: "Security",
+                        principalSchema: "Basic",
                         principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -327,33 +295,6 @@ namespace CRM.DAL.Migrations
             migrationBuilder.CreateTable(
                 name: "Staff",
                 schema: "Basic",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StaffCode = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<long>(type: "bigint", nullable: true),
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Staff", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Staff_Person_PersonId",
-                        column: x => x.PersonId,
-                        principalSchema: "Security",
-                        principalTable: "Person",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Staff",
-                schema: "Security",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false),
@@ -371,7 +312,7 @@ namespace CRM.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Staff_Person_Id",
                         column: x => x.Id,
-                        principalSchema: "Security",
+                        principalSchema: "Basic",
                         principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -408,7 +349,7 @@ namespace CRM.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_User_Person_PersonId",
                         column: x => x.PersonId,
-                        principalSchema: "Security",
+                        principalSchema: "Basic",
                         principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -478,6 +419,7 @@ namespace CRM.DAL.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CloseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CustomerId = table.Column<long>(type: "bigint", nullable: false),
                     RepairerId = table.Column<long>(type: "bigint", nullable: true),
@@ -487,7 +429,6 @@ namespace CRM.DAL.Migrations
                     FinalPrice = table.Column<int>(type: "int", nullable: false),
                     ProfitMargin = table.Column<int>(type: "int", nullable: false),
                     DeviceId = table.Column<long>(type: "bigint", nullable: false),
-                    StaffId = table.Column<long>(type: "bigint", nullable: true),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -519,12 +460,6 @@ namespace CRM.DAL.Migrations
                         principalTable: "Staff",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Ticket_Staff_StaffId",
-                        column: x => x.StaffId,
-                        principalSchema: "Security",
-                        principalTable: "Staff",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -854,12 +789,6 @@ namespace CRM.DAL.Migrations
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Customer_PersonId",
-                schema: "Basic",
-                table: "Customer",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Device_DeviceBrandId",
                 schema: "Basic",
                 table: "Device",
@@ -925,12 +854,6 @@ namespace CRM.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Staff_PersonId",
-                schema: "Basic",
-                table: "Staff",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Ticket_CustomerId",
                 schema: "Basic",
                 table: "Ticket",
@@ -948,12 +871,6 @@ namespace CRM.DAL.Migrations
                 schema: "Basic",
                 table: "Ticket",
                 column: "RepairerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ticket_StaffId",
-                schema: "Basic",
-                table: "Ticket",
-                column: "StaffId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TicketFellow_TicketId",
@@ -1028,10 +945,6 @@ namespace CRM.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "AccessRole",
-                schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "Customer",
                 schema: "Security");
 
             migrationBuilder.DropTable(
@@ -1123,10 +1036,6 @@ namespace CRM.DAL.Migrations
                 schema: "Basic");
 
             migrationBuilder.DropTable(
-                name: "Staff",
-                schema: "Security");
-
-            migrationBuilder.DropTable(
                 name: "DeviceBrand",
                 schema: "Basic");
 
@@ -1136,7 +1045,7 @@ namespace CRM.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Person",
-                schema: "Security");
+                schema: "Basic");
         }
     }
 }

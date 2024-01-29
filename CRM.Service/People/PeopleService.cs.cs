@@ -10,7 +10,6 @@ using System.Linq;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using CRM.Common.Enums;
-using CRM.Entities.DataModels.Security;
 using System;
 
 namespace CRM.Service.People
@@ -51,19 +50,19 @@ namespace CRM.Service.People
             }
             return new ResultContent(true);
         }
-        public async Task<ResultContent> Create(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
+        public async Task<ResultContent<object>> CreateAsync(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
         {
             // چک کردن یکی بودن پسورد و تکرار آن
             if (!string.IsNullOrEmpty(registerViewModel.User.Password) && registerViewModel.User.Password != registerViewModel.User.ConfirmPassword)
-                return new ResultContent(false, Resource.ResourceManager.GetString("PasswordNotMatch"));
+                return new ResultContent<object>(false, Resource.ResourceManager.GetString("PasswordNotMatch"));
 
             // چک کردن تکراری نبودن شماره تماس
             if (await _uow.Users.TableNoTracking.FirstOrDefaultAsync(w => w.PhoneNumber == registerViewModel.User.PhoneNumber, cancellationToken) != null)
-                return new ResultContent(false, Resource.ResourceManager.GetString("DuplicatePhone"));
+                return new ResultContent<object>(false, Resource.ResourceManager.GetString("DuplicatePhone"));
 
             // چک کردن تکراری نبودن ایمیل
             if (await _uow.Users.TableNoTracking.FirstOrDefaultAsync(w => w.Email == registerViewModel.User.Email, cancellationToken) != null)
-                return new ResultContent(false, Resource.ResourceManager.GetString("DuplicateEmail"));
+                return new ResultContent<object>(false, Resource.ResourceManager.GetString("DuplicateEmail"));
 
             Entities.DataModels.Security.User user = new Entities.DataModels.Security.User
             {
@@ -78,7 +77,7 @@ namespace CRM.Service.People
             {
                 user.LockoutEnabled = true;
                 user.LockoutEnd = DateTime.MaxValue;
-                user.PasswordHash = $"!@#{user.PhoneNumber}$%^";
+                registerViewModel.User.Password = $"!@#{user.PhoneNumber}$%^";
             }
             await _uow.Users.AddAsync(user, registerViewModel.User.Password, cancellationToken);
 
@@ -92,7 +91,7 @@ namespace CRM.Service.People
             {
                 var lastStaff = await _uow.Staffs.TableNoTracking.OrderByDescending(d => d.StaffCode).FirstOrDefaultAsync();
                 var lastCode = lastStaff == null ? 1 : lastStaff.StaffCode++;
-                person.Staff = new Entities.DataModels.Security.Staff
+                person.Staff = new Entities.DataModels.Basic.Staff
                 {
                     StaffCode = lastCode
                 };
@@ -101,17 +100,17 @@ namespace CRM.Service.People
             {
                 var lastCustomer = await _uow.Customers.TableNoTracking.OrderByDescending(d => d.CustomerCode).FirstOrDefaultAsync();
                 var lastCode = lastCustomer == null ? 1 : lastCustomer.CustomerCode++;
-                person.Customer = new Entities.DataModels.Security.Customer
+                person.Customer = new Entities.DataModels.Basic.Customer
                 {
                     CustomerCode = lastCode
                 };
             }
             await _uow.People.AddAsync(person, cancellationToken);
             await _uow.CompleteAsync(cancellationToken);
-            return new ResultContent(true, Resource.ResourceManager.GetString("UserCreated"));
+            return new ResultContent<object>(true, person.Id, Resource.ResourceManager.GetString("UserCreated"));
         }
 
-        public async Task<ResultContent> Put(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
+        public async Task<ResultContent> PutAsync(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
         {
             var person = await _uow.People.Table
                 .Include(i => i.User)

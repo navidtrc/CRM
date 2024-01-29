@@ -61,6 +61,7 @@ export default function AddEditPersonModal({
         Id: 0,
         UserName: user.username,
         PhoneNumber: user.phoneNumber,
+        Name: user.name,
         Password: user.id === 0 ? user.password : "1",
         ConfirmPassword: user.id === 0 ? user.confirmPassword : "1",
         Email: user.email,
@@ -78,6 +79,8 @@ export default function AddEditPersonModal({
       body: raw,
       redirect: "follow",
     };
+
+    debugger;
 
     const url = user.id === 0 ? "/api/people/post" : "/api/people/put";
     fetch(url, requestOptions)
@@ -99,6 +102,7 @@ export default function AddEditPersonModal({
         }
       })
       .catch((error) => {
+        debugger;
         Swal.fire({
           icon: "error",
           title: "خطا",

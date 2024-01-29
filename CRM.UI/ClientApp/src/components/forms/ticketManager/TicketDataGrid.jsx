@@ -80,6 +80,7 @@ const TableGrid = ({
         const response = await fetch("/api/ticket/get", requestOptions);
         const json = await response.json();
         const result = json.Data.Data.Data.map((item) => {
+          debugger;
           return {
             id: item.TicketId,
             ticketNumber: item.TicketNumber,

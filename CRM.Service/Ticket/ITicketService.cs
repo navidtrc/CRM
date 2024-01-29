@@ -9,6 +9,7 @@ namespace CRM.Service.Ticket
     public interface ITicketService
     {
         Task<ResultContent<DataSourceResult>> GetTicketsAsync(DataSourceRequest request, CancellationToken cancellationToken);
-        Task<ResultContent<TicketPrerequisiteViewModel>> Prerequisite(CancellationToken cancellationToken);
+        Task<ResultContent<TicketPrerequisiteViewModel>> PrerequisiteAsync(CancellationToken cancellationToken);
+        Task<ResultContent<TicketPrerequisiteViewModel>> CreateAsync(TicketAddEditViewModel ticketAddEditViewModel, CancellationToken cancellationToken);
     }
 }

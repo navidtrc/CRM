@@ -39,7 +39,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(eAccessControl.PeopleRegisterApi, eAccessType.Api, 1, true)]
         public async Task<IActionResult> Post(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
         {
-            var result = await peopleService.Create(registerViewModel, cancellationToken);
+            var result = await peopleService.CreateAsync(registerViewModel, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);
@@ -50,7 +50,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(eAccessControl.PeopleRegisterApi, eAccessType.Api, 1, true)]
         public async Task<IActionResult> Put(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken)
         {
-            var result = await peopleService.Put(registerViewModel, cancellationToken);
+            var result = await peopleService.PutAsync(registerViewModel, cancellationToken);
             if (result.IsSuccess)
                 return Ok(result.Message);
             return BadRequest(result.Message);

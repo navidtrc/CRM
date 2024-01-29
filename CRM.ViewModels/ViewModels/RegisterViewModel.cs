@@ -1,41 +1,45 @@
 ﻿using CRM.Common.Enums;
 using CRM.Common.Resources.StringResources;
-using System;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace CRM.ViewModels.ViewModels
 {
-    public class PersonUser_AddEdit_ViewModel
+    [JsonObject(MemberSerialization.OptIn)]
+    public class PersonUser_AddEdit_ViewModel    
     {
+        [JsonProperty(PropertyName = "User")]
         public UserViewModel User { get; set; }
+
+        [JsonProperty(PropertyName = "Person")]
         public PersonViewModel Person { get; set; }
     }
     public class UserViewModel
     {
-        [Display(Name = "Id", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "Id")]
         public string Id { get; set; }
 
-        [Display(Name = "Password", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "Password")]
         public string Password { get; set; }
 
-        [Display(Name = "ConfirmPassword", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "ConfirmPassword")]
         public string ConfirmPassword { get; set; }
 
-        [Display(Name = "PhoneNumber", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "PhoneNumber")]
         public string PhoneNumber { get; set; }
-        
-        [Display(Name = "Email", ResourceType = typeof(Resource))]
+
+        [JsonProperty(PropertyName = "Email")]
         public string Email { get; set; }
     }
     public class PersonViewModel
     {
-        [Display(Name = "Id", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "Id")]
         public long Id { get; set; }
 
-        [Display(Name = "Name", ResourceType = typeof(Resource)), Required(ErrorMessageResourceName = "RequiredMessage", ErrorMessageResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
 
-        [Display(Name = "PersonType", ResourceType = typeof(Resource))]
+        [JsonProperty(PropertyName = "ePersonType")]
         public ePersonType ePersonType { get; set; }
 
     }

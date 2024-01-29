@@ -37,7 +37,7 @@ namespace CRM.UI.Controllers.api
         [UserAccess(eAccessControl.TicketGetList, eAccessType.Api, 0, true)]
         public async Task<IActionResult> Prerequisite(CancellationToken cancellationToken)
         {
-            var response = await ticketService.Prerequisite(cancellationToken);
+            var response = await ticketService.PrerequisiteAsync(cancellationToken);
             if (response.IsSuccess)
                 return Ok(response);
             return BadRequest(response.Message);
@@ -48,11 +48,10 @@ namespace CRM.UI.Controllers.api
         [UserAccess(eAccessControl.PeopleRegisterApi, eAccessType.Api, 1, true)]
         public async Task<IActionResult> Post(TicketAddEditViewModel ticketAddEditViewModel, CancellationToken cancellationToken)
         {
-            //var result = await ticketService.Create(registerViewModel, cancellationToken);
-            //if (result.IsSuccess)
-            //    return Ok(result.Message);
-            //return BadRequest(result.Message);
-            return Ok();
+            var result = await ticketService.CreateAsync(ticketAddEditViewModel, cancellationToken);
+            if (result.IsSuccess)
+                return Ok(result.Message);
+            return BadRequest(result.Message);
         }
 
 

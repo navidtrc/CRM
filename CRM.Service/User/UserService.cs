@@ -1,8 +1,6 @@
-﻿using Azure.Core;
-using CRM.Common.Api;
+﻿using CRM.Common.Api;
 using CRM.Common.Resources.StringResources;
 using CRM.Common.Utilities;
-using CRM.Entities.DataModels.Security;
 using CRM.Repository.Core;
 using CRM.Service.Authentication;
 using CRM.Service.Email;
@@ -15,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Permissions;
 using System.Threading;
 using System.Threading.Tasks;
 
