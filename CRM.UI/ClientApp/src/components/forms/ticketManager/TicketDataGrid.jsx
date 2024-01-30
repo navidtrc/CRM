@@ -26,7 +26,6 @@ const TableGrid = ({
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [rowCount, setRowCount] = useState(0);
-
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState([]);
@@ -80,14 +79,17 @@ const TableGrid = ({
         const response = await fetch("/api/ticket/get", requestOptions);
         const json = await response.json();
         const result = json.Data.Data.Data.map((item) => {
-          debugger;
+          const dateType = new Date(item.Date);
+          const persianDate = `${dateType.toLocaleDateString('fa-IR-u-nu-latn')} ${dateType.toLocaleTimeString('fa-IR-u-nu-latn')}`
           return {
-            id: item.TicketId,
-            ticketNumber: item.TicketNumber,
-            ticketDate: item.TicketDate,
-            customerName: item.Customer.LastName,
-            customerPhone: item.Customer.User.PhoneNumber,
-            customerEmail: item.Person.User.Email,
+            id: item.Id,
+            ticketNumber: item.Number,
+            ticketDate: item.Date,
+            ticketPersianDate: persianDate,
+            customerName: item.Customer.Person.Name,
+            customerPhone: item.Customer.Person.User.PhoneNumber,
+            customerEmail: item.Customer.Person.User.Email,
+            statusDisplay: item.StatusDisplay,
           };
         });
 
@@ -121,53 +123,52 @@ const TableGrid = ({
         muiEditTextFieldProps: {
           type: "number",
           required: true,
-          error: !!validationErrors?.firstName,
-          helperText: validationErrors?.firstName,
+          error: !!validationErrors?.ticketNumber,
+          helperText: validationErrors?.ticketNumber,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              firstName: undefined,
+              ticketNumber: undefined,
             }),
           //optionally add validation checking for onBlur or onChange
         },
       },
       {
-        accessorKey: "ticketDate",
+        accessorKey: "ticketPersianDate",
         header: "تاریخ تیکت",
         muiEditTextFieldProps: {
           type: "text",
           required: true,
-          error: !!validationErrors?.lastName,
-          helperText: validationErrors?.lastName,
+          error: !!validationErrors?.ticketPersianDate,
+          helperText: validationErrors?.ticketPersianDate,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              lastName: undefined,
+              ticketPersianDate: undefined,
             }),
         },
       },
       
       {
-        accessorKey: "customer",
+        accessorKey: "customerName",
         header: "مشتری",
         muiEditTextFieldProps: {
           type: "text",
           required: true,
-          error: !!validationErrors?.email,
-          helperText: validationErrors?.email,
+          error: !!validationErrors?.name,
+          helperText: validationErrors?.name,
           //remove any previous validation errors when user focuses on the input
           onFocus: () =>
             setValidationErrors({
               ...validationErrors,
-              email: undefined,
+              name: undefined,
             }),
         },
       },
-
       {
-        accessorKey: "phoneNumber",
+        accessorKey: "customerPhone",
         header: "شماره تماس",
         muiEditTextFieldProps: {
           type: "phone",
@@ -179,6 +180,22 @@ const TableGrid = ({
             setValidationErrors({
               ...validationErrors,
               phoneNumber: undefined,
+            }),
+        },
+      },
+      {
+        accessorKey: "statusDisplay",
+        header: "وضعیت",
+        muiEditTextFieldProps: {
+          type: "text",
+          required: true,
+          error: !!validationErrors?.statusDisplay,
+          helperText: validationErrors?.statusDisplay,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              statusDisplay: undefined,
             }),
         },
       },

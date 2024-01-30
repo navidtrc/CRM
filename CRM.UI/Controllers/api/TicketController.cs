@@ -43,6 +43,17 @@ namespace CRM.UI.Controllers.api
             return BadRequest(response.Message);
         }
 
+        [HttpGet]
+        [Route("/api/[controller]/[action]")]
+        [UserAccess(eAccessControl.TicketGetList, eAccessType.Api, 0, true)]
+        public async Task<IActionResult> Get(long id, CancellationToken cancellationToken)
+        {
+            var response = await ticketService.GetTicketAsync(id, cancellationToken);
+            if (response.IsSuccess)
+                return Ok(response);
+            return BadRequest(response.Message);
+        }
+
         [HttpPost]
         [Route("/api/[controller]/[action]")]
         [UserAccess(eAccessControl.PeopleRegisterApi, eAccessType.Api, 1, true)]

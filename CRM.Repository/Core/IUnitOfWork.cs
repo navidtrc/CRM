@@ -26,6 +26,7 @@ namespace CRM.Repository.Core
         IDeviceTypeRepository DeviceTypes { get; }
         IDeviceBrandRepository DeviceBrands { get; }
         IDeviceRepository Devices { get; }
+        IFellowRepository Fellows { get; }
 
         int Complete();
         Task<int> CompleteAsync(CancellationToken cancellationToken);

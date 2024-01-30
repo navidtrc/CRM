@@ -7,6 +7,7 @@ import WaitingStateModal from "./modals/WaitingStateModal";
 import CheckingStateModal from "./modals/CheckingStateModal";
 import InquiryStateModal from "./modals/InquiryStateModal";
 import ReadyToRepairStateModal from "./modals/ReadyToRepairStateModal";
+import FellowTimeline from "../fellowManager/FellowTimeline";
 
 const TicketManager = ({ personType, personTitle }) => {
   const [ticket, setTicket] = useState(null);
@@ -49,16 +50,7 @@ const TicketManager = ({ personType, personTitle }) => {
       )} */}
 
       {addEditTicketOpen && (
-        <AddEditTicketModal
-          open={addEditTicketOpen}
-          onClose={() => {
-            setAddEditTicketOpen(false);
-            setTicket(null);
-            setIsRefetching(true);
-          }}
-          onOpenModal={(type, payload) => modalOpenHandler(type, payload)}
-          // data={}
-
+        <FellowTimeline
         />
       )}
 

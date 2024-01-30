@@ -1,4 +1,5 @@
 ﻿using CRM.Common.Api;
+using CRM.Common.Utilities;
 using CRM.Entities.DataModels.Basic;
 using CRM.Repository.Core;
 using CRM.Service.People;
@@ -30,7 +31,24 @@ namespace CRM.Service.Ticket
                         .ThenInclude(i => i.Person)
                         .ThenInclude(i => i.User)
                         .ToDataSourceResultAsync(request, cancellationToken);
+
             return new ResultContent<DataSourceResult>(true, result);
+        }
+        public async Task<ResultContent<Entities.DataModels.Basic.Ticket>> GetTicketAsync(long id, CancellationToken cancellationToken)
+        {
+            var result = await _uow.Tickets.TableNoTracking
+                        .Include(i => i.Device)
+                        .Include(i => i.Fellows)
+                        .Include(i => i.Customer)
+                        .ThenInclude(i => i.Person)
+                        .ThenInclude(i => i.User)
+                        .Include(i => i.Repairer)
+                        .ThenInclude(i => i.Person)
+                        .ThenInclude(i => i.User)
+                        .FirstOrDefaultAsync(w => w.Id == id, cancellationToken);
+            
+            return new ResultContent<Entities.DataModels.Basic.Ticket>(true, result);
+
         }
 
         public async Task<ResultContent<TicketPrerequisiteViewModel>> PrerequisiteAsync(CancellationToken cancellationToken)
@@ -88,6 +106,14 @@ namespace CRM.Service.Ticket
                 CustomerId = peopleId
             };
 
+            var fellow = new TicketFellow
+            {
+                Ticket = ticket,
+                Status = Common.Enums.eTicketStatus.Waiting,
+                FellowDate = DateTime.Now,
+            };
+
+            await _uow.Fellows.AddAsync(fellow, cancellationToken);
             await _uow.Devices.AddAsync(device, cancellationToken);
             await _uow.Tickets.AddAsync(ticket, cancellationToken);
             await _uow.CompleteAsync(cancellationToken);
@@ -96,5 +122,7 @@ namespace CRM.Service.Ticket
 
 
         }
+
+
     }
 }
