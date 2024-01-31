@@ -16,31 +16,12 @@ import TicketService from "../../../services/ticket.service";
 
 export default function FellowTimeline() {
   const [ticket, setTicket] = useState(null);
-  const [waitingState, setWaitingState] = useState(null);
-  const [checkingState, setCheckingState] = useState(null);
-  const [inquiryState, setInquiryState] = useState(null);
-  const [readyToRepairState, setReadyToRepairState] = useState(null);
-  const [repairingState, setRepairingState] = useState(null);
-  const [readyState, setReadyState] = useState(null);
-  const [doneState, setDoneState] = useState(null);
 
   useEffect(() => {
     TicketService.get(4).then((result) => {
       debugger;
     });
 
-    // setDeviceTypeSuggestion([
-    //   { id: 1, label: "ریش تراش" },
-    //   { id: 2, label: "اپیلیدی" },
-    //   { id: 3, label: "تریمر" },
-    //   { id: 4, label: "سشوار" },
-    // ]);
-    // setDeviceBrandSuggestion([
-    //   { id: 1, label: "Braun" },
-    //   { id: 2, label: "Philips" },
-    //   { id: 3, label: "Panasonic" },
-    //   { id: 4, label: "Remington" },
-    // ]);
   }, []);
 
   return (
@@ -50,6 +31,7 @@ export default function FellowTimeline() {
       ) : (
         <>
           <Timeline position="alternate">
+            {/* new = 0 */}
             <TimelineItem>
               <TimelineOppositeContent
                 sx={{ m: "auto 0" }}
@@ -57,11 +39,11 @@ export default function FellowTimeline() {
                 variant="body2"
                 color="text.secondary"
               >
-                {waitingState !== null && `${waitingState.persianDate}`}
+                {ticket.persianDate}
               </TimelineOppositeContent>
               <TimelineSeparator>
                 <TimelineConnector />
-                <TimelineDot color={ticket.state === 0 ? "success" : "primary"}>
+                <TimelineDot color="primary">
                   <StoreIcon />
                 </TimelineDot>
                 <TimelineConnector />
@@ -74,192 +56,180 @@ export default function FellowTimeline() {
               </TimelineContent>
             </TimelineItem>
 
-            <TimelineItem>
-              <TimelineOppositeContent
-                sx={{ m: "auto 0" }}
-                variant="body2"
-                color="text.secondary"
-              >
-                {checkingState !== null && `${checkingState.persianDate}`}
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot
-                  color={
-                    checkingState === null
-                      ? ""
-                      : ticket.state === 1
-                      ? "success"
-                      : "primary"
-                  }
-                >
-                  <RunningWithErrorsIcon />
-                </TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent sx={{ py: "12px", px: 2 }}>
-                <Typography variant="h6" component="span">
-                  بررسی تعمیرکار
-                </Typography>
-                <Typography>{ticket?.repairerName}</Typography>
-              </TimelineContent>
-            </TimelineItem>
+            {/* checking = 1 */}
+            {ticket.status > 0 && (
+              <>
+                <TimelineItem>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {ticket.persianDate}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="primary">
+                      <RunningWithErrorsIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      بررسی تعمیرکار
+                    </Typography>
+                    <Typography>{ticket.repairerName}</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </>
+            )}
 
-            {/* <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: "auto 0" }}
-          variant="body2"
-          color="text.secondary"
-        >
-          {inquiryState !== null && `${inquiryState.persianDate}`}
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot
-            color={
-              inquiryState === null
-                ? ""
-                : ticket.state === 2
-                ? "success"
-                : "primary"
-            }
-          >
-            <RunningWithErrorsIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography variant="h6" component="span">
-            استعلام
-          </Typography>
-          <Typography>مثبت</Typography>
-        </TimelineContent>
-      </TimelineItem>
+            {/* inquiry = 2 */}
+            {ticket.Fellows.some((a) => a.Status === 2) && (
+              <>
+                <TimelineItem>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {ticket.persianDate}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="warning">
+                      <RunningWithErrorsIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      استعلام
+                    </Typography>
+                    <Typography>مثبت</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </>
+            )}
 
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: "auto 0" }}
-          align="right"
-          variant="body2"
-          color="text.secondary"
-        >
-          {readyToRepairState !== null && `${readyToRepairState.persianDate}`}
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot
-            color={
-              readyToRepairState === null
-                ? ""
-                : ticket.state === 3
-                ? "success"
-                : "primary"
-            }
-          >
-            <PendingIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography variant="h6" component="span">
-            آماده تعمیر
-          </Typography>
-          <Typography>تیکت 10670</Typography>
-        </TimelineContent>
-      </TimelineItem>
+            {/* readyToRepair = 3 */}
+            {ticket.Fellows.some((a) => a.Status === 3) && (
+              <>
+                <TimelineItem>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    align="right"
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {ticket.persianDate}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="success">
+                      <PendingIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      آماده تعمیر
+                    </Typography>
+                    <Typography>تیکت 10670</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </>
+            )}
 
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: "auto 0" }}
-          variant="body2"
-          color="text.secondary"
-        >
-          {repairingState !== null && `${repairingState.persianDate}`}
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot
-            color={
-              repairingState === null
-                ? ""
-                : ticket.state === 4
-                ? "success"
-                : "primary"
-            }
-          >
-            <BuildIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography variant="h6" component="span">
-            در حال تعمیر
-          </Typography>
-          <Typography>توسط فرشید</Typography>
-        </TimelineContent>
-      </TimelineItem>
+            {/* repairing = 4 */}
+            {ticket.Fellows.some((a) => a.Status === 4) && (
+              <>
+                <TimelineItem>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {ticket.persianDate}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="success">
+                      <BuildIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      در حال تعمیر
+                    </Typography>
+                    <Typography>توسط فرشید</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </>
+            )}
 
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: "auto 0" }}
-          align="right"
-          variant="body2"
-          color="text.secondary"
-        >
-          {readyState !== null && `${readyState.persianDate}`}
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot
-            color={
-              readyState === null
-                ? ""
-                : ticket.state === 5 || ticket.state === 6
-                ? "success"
-                : "primary"
-            }
-          >
-            <BuildIcon />
-          </TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography variant="h6" component="span">
-            آماده
-          </Typography>
-          <Typography>تیکت 10670</Typography>
-        </TimelineContent>
-      </TimelineItem>
+            {/* ready = 5(+) or 6(-) */}
+            {ticket.Fellows.some((a) => a.Status === 5 || a.Status === 6) && (
+              <>
+                <TimelineItem>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    align="right"
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {ticket.persianDate}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot
+                      color={
+                        ticket.Fellows.some((a) => a.Status === 5)
+                          ? "success"
+                          : "error"
+                      }
+                    >
+                      <BuildIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      آماده
+                    </Typography>
+                    <Typography>تیکت 10670</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </>
+            )}
 
-      <TimelineItem>
-        <TimelineOppositeContent
-          sx={{ m: "auto 0" }}
-          variant="body2"
-          color="text.secondary"
-        >
-          {doneState !== null && `${doneState.persianDate}`}
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineConnector />
-          <TimelineDot
-            color={
-              doneState === null
-                ? ""
-                : ticket.state === 7
-                ? "success"
-                : "primary"
-            }
-          >
-            <DoneIcon />
-          </TimelineDot>
-        </TimelineSeparator>
-        <TimelineContent sx={{ py: "12px", px: 2 }}>
-          <Typography variant="h6" component="span">
-            بسته شده
-          </Typography>
-          <Typography>هزینه نهایی 000و005و1 تومتن</Typography>
-        </TimelineContent>
-      </TimelineItem> */}
+            {/* done = 7 */}
+            {ticket.Fellows.some((a) => a.Status === 7) && (
+              <>
+                <TimelineItem>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {ticket.persianDate}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="primary">
+                      <DoneIcon />
+                    </TimelineDot>
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      بسته شده
+                    </Typography>
+                    <Typography>هزینه نهایی 000و005و1 تومتن</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              </>
+            )}
           </Timeline>
         </>
       )}
