@@ -57,42 +57,18 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-export default function CheckingStateModal({
-  open,
-  onClose,
-  data = {
-    ticketId: 0,
-    ticketNumber: "123456",
-    ticketDate: "2024-01-27",
-    customerName: "Ali Reza",
-    customerPhone: "09123456789",
-    customerEmail: "ali.reza@example.com",
-    phoneConfirmation: false,
-    emailConfirmation: false,
-    deviceType: "Laptop",
-    deviceBrand: "Lenovo",
-    deviceModel: "ThinkPad T14",
-    descrption: "Broken screen",
-    accessories: "Charger, mouse, keyboard",
-    deviceWaranty: false,
-    inquiryPrice: "5,000,000 تومان",
-  },
-}) {
-  const [ticketId, setTicketId] = useState(data.ticketId);
-  const [isRepairable, setIsRepairable] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(true);
+export default function CheckingStateModal({ open, onClose, data }) {
+  const [ticket, setTicket] = useState({
+    ...data,
+    isRepairable: false,
+  });
+  const [isAdmin] = useState(true);
 
   const handleRepairableChange = () => {
-    setIsRepairable((prev) => {
-      return !prev;
-    });
+    setTicket((prev) => ({
+      ...prev,
+      isRepairable: !prev.isRepairable,
+    }));
   };
 
   const handleSubmit = () => {};
@@ -112,9 +88,11 @@ export default function CheckingStateModal({
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">
-              شماره تیکت: {data.ticketNumber}
+              شماره تیکت: {ticket.ticketNumber}
             </Typography>
-            <Typography variant="h6">تاریخ تیکت: {data.ticketDate}</Typography>
+            <Typography variant="h6">
+              تاریخ تیکت: {ticket.ticketPersianDate}
+            </Typography>
           </Box>
           <Divider />
 
@@ -124,16 +102,18 @@ export default function CheckingStateModal({
                 sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
               >
                 <Typography variant="h6">
-                  نام مشتری: {data.customerName}
+                  نام مشتری: {ticket.customerName}
                 </Typography>
                 <Typography
-                  color={data.phoneConfirmation ? "" : "error"}
+                  color={ticket.customerPhoneConfirmation ? "" : "error"}
                   variant="h6"
                 >
-                  شماره تماس: {data.customerPhone}
+                  شماره تماس: {ticket.customerPhone}
                 </Typography>
-                <Typography color={data.emailConfirmation ? "" : "error"}>
-                  ایمیل: {data.customerEmail}
+                <Typography
+                  color={ticket.customerPhoneConfirmation ? "" : "error"}
+                >
+                  ایمیل: {ticket.customerEmail}
                 </Typography>
               </Box>
               <Divider />
@@ -143,14 +123,16 @@ export default function CheckingStateModal({
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">نوع دستگاه: {data.deviceType}</Typography>
             <Typography variant="h6">
-              برند دستگاه: {data.deviceBrand}
+              برند دستگاه: {ticket.deviceBrand}
             </Typography>
-            <Typography variant="h6">مدل دستگاه: {data.deviceModel}</Typography>
+            <Typography ticket="h6">مدل دستگاه: {data.deviceModel}</Typography>
           </Box>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="h6">مشکل دستگاه: {data.descrption}</Typography>
             <Typography variant="h6">
-              متعلقات دستگاه: {data.accessories}
+              مشکل دستگاه: {data.deviceDescrption}
+            </Typography>
+            <Typography variant="h6">
+              متعلقات دستگاه: {ticket.deviceAccessories}
             </Typography>
           </Box>
 
@@ -160,15 +142,15 @@ export default function CheckingStateModal({
                 sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
               >
                 <Typography variant="h6">
-                  قیمت برآورد شده: {data.inquiryPrice}
+                  قیمت برآورد شده: {ticket.inquiryPrice}
                 </Typography>
                 <Typography variant="h6">
-                  گارانتی :{data.deviceWaranty === true ? "دارد" : "ندارد"}
+                  گارانتی :{ticket.deviceWaranty === true ? "دارد" : "ندارد"}
                 </Typography>
               </Box>
-              <Divider />
             </>
           )}
+          <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <FormControl sx={{ m: 1 }}>
@@ -176,7 +158,7 @@ export default function CheckingStateModal({
               <RadioGroup
                 name="repairIsPossible"
                 onChange={handleRepairableChange}
-                value={isRepairable}
+                value={ticket.isRepairable}
               >
                 <FormControlLabel
                   value={false}
@@ -189,7 +171,7 @@ export default function CheckingStateModal({
                   label="دارد"
                 />
               </RadioGroup>
-              {isRepairable && (
+              {ticket.isRepairable && (
                 <TextField
                   //  value={user.lastName}
                   //  onChange={handleRepairableChange}
@@ -227,8 +209,3 @@ export default function CheckingStateModal({
     </Modal>
   );
 }
-const top100Films = [
-  { label: "فرشید", id: 1 },
-  { label: "تست 1", id: 2 },
-  { label: "تست 2", id: 3 },
-];

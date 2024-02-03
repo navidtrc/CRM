@@ -11,6 +11,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using CRM.Common.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace CRM.Service.People
 {
@@ -39,6 +40,14 @@ namespace CRM.Service.People
                         .ToDataSourceResultAsync(request, cancellationToken);
                 return new ResultContent<DataSourceResult>(true, result);
             }
+        }
+        public async Task<List<Entities.DataModels.Basic.Staff>> GetByRoleAsync(CancellationToken cancellationToken)
+        {
+            var result = await _uow.Staffs.TableNoTracking
+                        .Where(w => w.IsDeleted == false)
+                        .Include(i => i.Person.User).ToListAsync(cancellationToken);
+            return result;
+
         }
         public async Task<ResultContent> DeleteAsync(long id, CancellationToken cancellationToken)
         {

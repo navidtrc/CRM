@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace CRM.DAL.Migrations
 {
     /// <inheritdoc />
@@ -429,6 +431,8 @@ namespace CRM.DAL.Migrations
                     FinalPrice = table.Column<int>(type: "int", nullable: false),
                     ProfitMargin = table.Column<int>(type: "int", nullable: false),
                     DeviceId = table.Column<long>(type: "bigint", nullable: false),
+                    InquiryNeed = table.Column<bool>(type: "bit", nullable: true),
+                    InquiryConfirmation = table.Column<bool>(type: "bit", nullable: true),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -660,34 +664,6 @@ namespace CRM.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Inquiry",
-                schema: "Basic",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IsConfirmed = table.Column<bool>(type: "bit", nullable: true),
-                    TicketId = table.Column<long>(type: "bigint", nullable: false),
-                    Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Inquiry", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Inquiry_Ticket_TicketId",
-                        column: x => x.TicketId,
-                        principalSchema: "Basic",
-                        principalTable: "Ticket",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TicketFellow",
                 schema: "Basic",
                 columns: table => new
@@ -758,6 +734,28 @@ namespace CRM.DAL.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.InsertData(
+                schema: "Basic",
+                table: "DeviceBrand",
+                columns: new[] { "Id", "CreatedDate", "Description", "Guid", "IsActive", "IsDeleted", "LastModifiedDate", "Title" },
+                values: new object[,]
+                {
+                    { 1L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7314), null, new Guid("318d1625-b840-4b89-8ac6-2009654ea155"), true, false, null, "Braun" },
+                    { 2L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7328), null, new Guid("f0c58824-80be-47c5-b102-62513106066c"), true, false, null, "Philips" },
+                    { 3L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7329), null, new Guid("fa3aaff5-4da0-48c0-97e7-ec839a158c79"), true, false, null, "Panasonic" }
+                });
+
+            migrationBuilder.InsertData(
+                schema: "Basic",
+                table: "DeviceType",
+                columns: new[] { "Id", "CreatedDate", "Description", "Guid", "IsActive", "IsDeleted", "LastModifiedDate", "Title" },
+                values: new object[,]
+                {
+                    { 1L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8505), null, new Guid("55feae1d-4f32-4669-b9cc-98ec037488d8"), true, false, null, "Trimmer" },
+                    { 2L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8510), null, new Guid("08f548dd-4569-469b-abe4-758f818a4ded"), true, false, null, "Shaver" },
+                    { 3L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8511), null, new Guid("fd6ed8ed-835d-4bbe-976a-aa7f9acfc0c8"), true, false, null, "Epilady" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AccessPermission_AccessId",
                 schema: "Security",
@@ -823,13 +821,6 @@ namespace CRM.DAL.Migrations
                 schema: "Security",
                 table: "IdentityUserRole",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Inquiry_TicketId",
-                schema: "Basic",
-                table: "Inquiry",
-                column: "TicketId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -966,10 +957,6 @@ namespace CRM.DAL.Migrations
             migrationBuilder.DropTable(
                 name: "IdentityUserToken",
                 schema: "Security");
-
-            migrationBuilder.DropTable(
-                name: "Inquiry",
-                schema: "Basic");
 
             migrationBuilder.DropTable(
                 name: "MenuAccess",

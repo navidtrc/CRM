@@ -38,6 +38,7 @@ namespace CRM.Service.Ticket
         {
             var result = await _uow.Tickets.TableNoTracking
                         .Include(i => i.Device)
+                        .ThenInclude(i => i.DeviceBrand).Include(i => i.Device).ThenInclude(i => i.DeviceType)
                         .Include(i => i.Fellows)
                         .Include(i => i.Customer)
                         .ThenInclude(i => i.Person)

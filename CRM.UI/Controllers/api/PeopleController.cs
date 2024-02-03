@@ -33,6 +33,15 @@ namespace CRM.UI.Controllers.api
             return BadRequest(response.Message);
         }
 
+        [HttpGet]
+        [Route("/api/[controller]/[action]")]
+        [UserAccess(eAccessControl.PeopleGetList, eAccessType.Api, 0, true)]
+        public async Task<IActionResult> GetByRole(CancellationToken cancellationToken)
+        {
+            var response = await peopleService.GetByRoleAsync(cancellationToken);
+            return Ok(response);
+        }
+
 
         [HttpPost]
         [Route("/api/[controller]/[action]")]

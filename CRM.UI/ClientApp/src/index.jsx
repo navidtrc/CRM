@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import { ThemeProvider } from "@mui/material/styles";
 import { CacheProvider } from "@emotion/react";
 import './fonts/IranSans/ttf/IRANSansWeb_Light.ttf'

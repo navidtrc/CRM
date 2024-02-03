@@ -84,7 +84,10 @@ export default function AddEditTicketModal({
   open,
   onClose,
   onOpenModal,
-  data = {
+  data = null,
+}) {
+  const [tabIndex, setTabIndex] = useState(1);
+  const [ticket, setTicket] = useState({
     ticketId: 0,
     ticketNumber: "",
     ticketDate: new Date(),
@@ -104,24 +107,55 @@ export default function AddEditTicketModal({
     deviceAccessories: "",
     deviceWaranty: false,
     inquiryPrice: 0,
-  },
-}) {
-  const [tabIndex, setTabIndex] = useState(1);
-  const [ticket, setTicket] = useState(data);
+  });
   const [deviceTypeSuggestion, setDeviceTypeSuggestion] = useState();
   const [deviceBrandSuggestion, setDeviceBrandSuggestion] = useState();
 
-  // get deviceType and deviceBrand Suggestion list
   useEffect(() => {
     TicketService.prerequisite().then((result) => {
-      debugger;
-      setTicket((prev) => ({
-        ...prev,
-        ticketNumber: result.data.Data.Data.LastTicketNumber,
-      }));
       setDeviceTypeSuggestion(result.data.Data.Data.DeviceTypeList);
       setDeviceBrandSuggestion(result.data.Data.Data.DeviceBrandList);
+      debugger;
+      if (data === null) {
+        setTicket((prev) => ({
+          ...prev,
+          ticketNumber: result.data.Data.Data.LastTicketNumber,
+        }));
+      }
     });
+
+    if (data !== null) {
+      TicketService.get(data.id).then((response) => {
+        debugger;
+        const result = response.data.Data.Data;
+        setTicket({
+          ticketId: result.Id,
+          ticketNumber: result.Number,
+          ticketDate: new Date(result.Date),
+          customerId: result.CustomerId,
+          customerName: result.Customer.Person.Name,
+          customerPhone: result.Customer.Person.User.PhoneNumber,
+          customerEmail: result.Customer.Person.User.Email,
+          customerPhoneConfirmation:
+            result.Customer.Person.User.PhoneNumberConfirmed,
+          customerEmailConfirmation: result.Customer.Person.User.EmailConfirmed,
+          deviceId: result.DeviceId,
+          selectedDeviceType: {
+            id: result.Device.DeviceTypeId,
+            label: result.Device.DeviceType.Title,
+          },
+          selectedDeviceBrand: {
+            id: result.Device.DeviceBrandId,
+            label: result.Device.DeviceBrand.Title,
+          },
+          deviceModel: result.Device.Model,
+          deviceDescrption: result.Device.Description,
+          deviceAccessories: result.Device.Accessories,
+          deviceWaranty: result.Device.Warranty,
+          inquiryPrice: result.InquiryPrice,
+        });
+      });
+    }
 
     // setDeviceTypeSuggestion([
     //   { id: 1, label: "ریش تراش" },

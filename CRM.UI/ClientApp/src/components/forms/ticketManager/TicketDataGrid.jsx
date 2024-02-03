@@ -14,6 +14,8 @@ import {
   MobileOff as MobileOffIcon,
   MobileFriendly as MobileFriendlyIcon,
   VerifiedUser as VerifiedUserIcon,
+  DonutSmall as DonutSmallIcon,
+  NextPlan as NextPlanIcon,
 } from "@mui/icons-material/";
 import Swal from "sweetalert2";
 
@@ -90,6 +92,7 @@ const TableGrid = ({
             customerPhone: item.Customer.Person.User.PhoneNumber,
             customerEmail: item.Customer.Person.User.Email,
             statusDisplay: item.StatusDisplay,
+            statusId: item.LastStatus,
           };
         });
 
@@ -266,46 +269,15 @@ const TableGrid = ({
             <Button onClick={() => onOpenModal("addedit", row.original)}>
               <EditIcon />
             </Button>
-            <Button
-              color={row.original.lockoutEnabled ? "error" : "success"}
-              onClick={() => onOpenModal("useraccess", row.original)}
-            >
-              <VerifiedUserIcon />
+
+            <Button onClick={() => onOpenModal("fellow", row.original)}>
+              <DonutSmallIcon />
             </Button>
-            <Button
-              color={row.original.emailConfirmed ? "success" : "error"}
-              onClick={() => {
-                if (row.original.emailConfirmed) {
-                  Swal.fire({
-                    icon: "info",
-                    text: "ایمیل قبلا تایید شده است. در صورت تغییر آن به تایید مجدد نیاز میباشد.",
-                  });
-                  return;
-                }
-                onOpenModal("emailconfirm", row.original);
-              }}
-            >
-              <EmailIcon />
+
+            <Button onClick={() => onOpenModal("action", row.original)}>
+              <NextPlanIcon />
             </Button>
-            <Button
-              color={row.original.phoneConfirmed ? "success" : "error"}
-              onClick={() => {
-                if (row.original.phoneConfirmed) {
-                  Swal.fire({
-                    icon: "info",
-                    text: "شماره تماس قبلا تایید شده است. در صورت تغییر آن به تایید مجدد نیاز میباشد.",
-                  });
-                  return;
-                }
-                onOpenModal("phoneconfirm", row.original);
-              }}
-            >
-              {row.original.phoneConfirmed ? (
-                <MobileFriendlyIcon />
-              ) : (
-                <MobileOffIcon />
-              )}
-            </Button>
+            
             <Button
               color="error"
               onClick={() => handleDeleteUser(row.original)}

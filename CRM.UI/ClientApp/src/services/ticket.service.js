@@ -10,9 +10,15 @@ const get = (id) => {
   return axios.get(`/api/ticket/get?id=${id}`);
 };
 
+const getRepairers = () => {
+  return axios.get(`/api/people/GetByRole`);
+}
+
+
 const TicketService = {
   prerequisite,
-  get
+  get,
+  getRepairers
 }
 
 export default TicketService;

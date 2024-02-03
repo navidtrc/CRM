@@ -19,6 +19,10 @@ namespace CRM.Entities.DataModels.Basic
         public void Configure(EntityTypeBuilder<DeviceBrand> builder)
         {
             builder.ToTable("DeviceBrand", "Basic");
+            builder.HasData(
+                new DeviceBrand { Id = 1, Title = "Braun" },
+                new DeviceBrand { Id = 2, Title = "Philips" },
+                new DeviceBrand { Id = 3, Title = "Panasonic" });
         }
     }
 }

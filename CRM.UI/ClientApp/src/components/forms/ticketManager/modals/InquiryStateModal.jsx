@@ -64,30 +64,12 @@ function a11yProps(index) {
   };
 }
 
-export default function InquiryStateModal({
-  open,
-  onClose,
-  data = {
-    ticketId: 0,
-    ticketNumber: "123456",
-    ticketDate: "2024-01-27",
-    customerName: "Ali Reza",
-    customerPhone: "09123456789",
-    customerEmail: "ali.reza@example.com",
-    phoneConfirmation: false,
-    emailConfirmation: false,
-    deviceType: "Laptop",
-    deviceBrand: "Lenovo",
-    deviceModel: "ThinkPad T14",
-    descrption: "Broken screen",
-    accessories: "Charger, mouse, keyboard",
-    deviceWaranty: false,
-    inquiryPrice: "5,000,000 تومان",
-    repairerPrice: "4,000,000 تومان",
-    totalPrice: "6,000,000 تومان",
-  },
-}) {
-  const [ticketId, setTicketId] = useState(data.ticketId);
+export default function InquiryStateModal({ open, onClose, data }) {
+  const [ticket, setTicket] = useState({
+    ...data,
+    profitMargin: "",
+    repairer: { id: 0, label: "" },
+  });
   const [inquiryResult, setInquiryResult] = useState(false);
 
   const handleInquiryResultChange = () => {
@@ -113,22 +95,26 @@ export default function InquiryStateModal({
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">
-              شماره تیکت: {data.ticketNumber}
+              شماره تیکت: {ticket.ticketNumber}
             </Typography>
-            <Typography variant="h6">تاریخ تیکت: {data.ticketDate}</Typography>
+            <Typography variant="h6">
+              تاریخ تیکت: {ticket.ticketPersianDate}
+            </Typography>
           </Box>
           <Divider />
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">نام مشتری: {data.customerName}</Typography>
+            <Typography variant="h6">
+              نام مشتری: {ticket.customerName}
+            </Typography>
             <Typography
-              color={data.phoneConfirmation ? "" : "error"}
+              color={ticket.customerPhoneConfirmation ? "" : "error"}
               variant="h6"
             >
-              شماره تماس: {data.customerPhone}
+              شماره تماس: {ticket.customerPhone}
             </Typography>
-            <Typography color={data.emailConfirmation ? "" : "error"}>
-              ایمیل: {data.customerEmail}
+            <Typography color={ticket.customerPhoneConfirmation ? "" : "error"}>
+              ایمیل: {ticket.customerEmail}
             </Typography>
           </Box>
           <Divider />
@@ -136,30 +122,33 @@ export default function InquiryStateModal({
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">نوع دستگاه: {data.deviceType}</Typography>
             <Typography variant="h6">
-              برند دستگاه: {data.deviceBrand}
+              برند دستگاه: {ticket.deviceBrand}
             </Typography>
-            <Typography variant="h6">مدل دستگاه: {data.deviceModel}</Typography>
+            <Typography ticket="h6">مدل دستگاه: {data.deviceModel}</Typography>
           </Box>
           <Box sx={{ mt: 2 }}>
-            <Typography variant="h6">مشکل دستگاه: {data.descrption}</Typography>
             <Typography variant="h6">
-              متعلقات دستگاه: {data.accessories}
-            </Typography>
-          </Box>
-
-          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h6">
-              قیمت برآورد شده: {data.inquiryPrice}
+              مشکل دستگاه: {data.deviceDescrption}
             </Typography>
             <Typography variant="h6">
-              گارانتی :{data.deviceWaranty === true ? "دارد" : "ندارد"}
+              متعلقات دستگاه: {ticket.deviceAccessories}
             </Typography>
           </Box>
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">
-              قیمت تعمیرکار: {data.repairerPrice}
+              قیمت برآورد شده: {ticket.inquiryPrice}
             </Typography>
-            <Typography variant="h5">قیمت نهایی: {data.totalPrice}</Typography>
+            <Typography variant="h6">
+              گارانتی :{ticket.deviceWaranty === true ? "دارد" : "ندارد"}
+            </Typography>
+          </Box>
+          <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">
+              قیمت تعمیرکار: {ticket.repairerPrice}
+            </Typography>
+            <Typography variant="h5">
+              قیمت نهایی: {ticket.totalPrice}
+            </Typography>
           </Box>
           <Divider />
 

@@ -19,6 +19,10 @@ namespace CRM.Entities.DataModels.Basic
         public void Configure(EntityTypeBuilder<DeviceType> builder)
         {
             builder.ToTable("DeviceType", "Basic");
+            builder.HasData(
+                new DeviceType { Id = 1, Title = "Trimmer" },
+                new DeviceType { Id = 2, Title = "Shaver" },
+                new DeviceType { Id = 3, Title = "Epilady" });
         }
     }
 }

@@ -2,6 +2,7 @@
 using CRM.Common.Enums;
 using CRM.ViewModels.ViewModels;
 using Kendo.Mvc.UI;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,5 +14,6 @@ namespace CRM.Service.People
         Task<ResultContent<object>> CreateAsync(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken);
         Task<ResultContent> PutAsync(PersonUser_AddEdit_ViewModel registerViewModel, CancellationToken cancellationToken);
         Task<ResultContent> DeleteAsync(long id, CancellationToken cancellationToken);
+        Task<List<Entities.DataModels.Basic.Staff>> GetByRoleAsync(CancellationToken cancellationToken);
     }
 }

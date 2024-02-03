@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRM.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240129124042_Initialize_Database")]
+    [Migration("20240131215317_Initialize_Database")]
     partial class Initialize_Database
     {
         /// <inheritdoc />
@@ -142,6 +142,35 @@ namespace CRM.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeviceBrand", "Basic");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7314),
+                            Guid = new Guid("318d1625-b840-4b89-8ac6-2009654ea155"),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Title = "Braun"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7328),
+                            Guid = new Guid("f0c58824-80be-47c5-b102-62513106066c"),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Title = "Philips"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7329),
+                            Guid = new Guid("fa3aaff5-4da0-48c0-97e7-ec839a158c79"),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Title = "Panasonic"
+                        });
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.DeviceType", b =>
@@ -176,46 +205,35 @@ namespace CRM.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DeviceType", "Basic");
-                });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Inquiry", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("Guid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("TicketId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TicketId")
-                        .IsUnique();
-
-                    b.ToTable("Inquiry", "Basic");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8505),
+                            Guid = new Guid("55feae1d-4f32-4669-b9cc-98ec037488d8"),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Title = "Trimmer"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8510),
+                            Guid = new Guid("08f548dd-4569-469b-abe4-758f818a4ded"),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Title = "Shaver"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8511),
+                            Guid = new Guid("fd6ed8ed-835d-4bbe-976a-aa7f9acfc0c8"),
+                            IsActive = true,
+                            IsDeleted = false,
+                            Title = "Epilady"
+                        });
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Setting", b =>
@@ -322,6 +340,12 @@ namespace CRM.DAL.Migrations
 
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("InquiryConfirmation")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("InquiryNeed")
+                        .HasColumnType("bit");
 
                     b.Property<int>("InquiryPrice")
                         .HasColumnType("int");
@@ -1111,17 +1135,6 @@ namespace CRM.DAL.Migrations
                     b.Navigation("DeviceType");
                 });
 
-            modelBuilder.Entity("CRM.Entities.DataModels.Basic.Inquiry", b =>
-                {
-                    b.HasOne("CRM.Entities.DataModels.Basic.Ticket", "Ticket")
-                        .WithOne("Inquiry")
-                        .HasForeignKey("CRM.Entities.DataModels.Basic.Inquiry", "TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ticket");
-                });
-
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
                 {
                     b.HasOne("CRM.Entities.DataModels.Security.Person", "Person")
@@ -1148,7 +1161,7 @@ namespace CRM.DAL.Migrations
                         .IsRequired();
 
                     b.HasOne("CRM.Entities.DataModels.Basic.Staff", "Repairer")
-                        .WithMany("RepairerInvoices")
+                        .WithMany("RepairerTickets")
                         .HasForeignKey("RepairerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1350,14 +1363,12 @@ namespace CRM.DAL.Migrations
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Staff", b =>
                 {
-                    b.Navigation("RepairerInvoices");
+                    b.Navigation("RepairerTickets");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Basic.Ticket", b =>
                 {
                     b.Navigation("Fellows");
-
-                    b.Navigation("Inquiry");
                 });
 
             modelBuilder.Entity("CRM.Entities.DataModels.Security.Access", b =>

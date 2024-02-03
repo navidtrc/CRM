@@ -7,11 +7,15 @@ import WaitingStateModal from "./modals/WaitingStateModal";
 import CheckingStateModal from "./modals/CheckingStateModal";
 import InquiryStateModal from "./modals/InquiryStateModal";
 import ReadyToRepairStateModal from "./modals/ReadyToRepairStateModal";
-import FellowTimeline from "../fellowManager/FellowTimeline";
+import FellowTimeline from "./modals/FellowTimelineModal";
+import FellowTimelineModal from "./modals/FellowTimelineModal";
+import ActionModal from "./modals/ActionModal";
 
 const TicketManager = ({ personType, personTitle }) => {
   const [ticket, setTicket] = useState(null);
   const [addEditTicketOpen, setAddEditTicketOpen] = useState(false);
+  const [fellowTicketOpen, setFellowTicketOpen] = useState(false);
+  const [actionTicketOpen, setActionTicketOpen] = useState(false);
   const [emailConfirmOpen, setEmailConfirmOpen] = useState(false);
   const [phoneConfirmOpen, setPhoneConfirmOpen] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
@@ -21,6 +25,14 @@ const TicketManager = ({ personType, personTitle }) => {
       case "addedit":
         setTicket(payload);
         setAddEditTicketOpen(true);
+        break;
+      case "fellow":
+        setTicket(payload);
+        setFellowTicketOpen(true);
+        break;
+      case "action":
+        setTicket(payload);
+        setActionTicketOpen(true);
         break;
       case "emailconfirm":
         setTicket(payload);
@@ -37,7 +49,7 @@ const TicketManager = ({ personType, personTitle }) => {
 
   return (
     <>
-      {/* {addEditTicketOpen && (
+      {addEditTicketOpen && (
         <AddEditTicketModal
           open={addEditTicketOpen}
           onClose={() => {
@@ -47,10 +59,29 @@ const TicketManager = ({ personType, personTitle }) => {
           }}
           data={ticket}
         />
-      )} */}
+      )}
 
-      {addEditTicketOpen && (
-        <FellowTimeline
+      {fellowTicketOpen && (
+        <FellowTimelineModal
+          open={fellowTicketOpen}
+          onClose={() => {
+            setFellowTicketOpen(false);
+            setTicket(null);
+            setIsRefetching(true);
+          }}
+          data={ticket}
+        />
+      )}
+
+      {actionTicketOpen && (
+        <ActionModal
+          open={actionTicketOpen}
+          onClose={() => {
+            setActionTicketOpen(false);
+            setTicket(null);
+            setIsRefetching(true);
+          }}
+          data={ticket}
         />
       )}
 
