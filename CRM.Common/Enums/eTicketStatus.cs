@@ -8,24 +8,27 @@ namespace CRM.Common.Enums
         Waiting = 0,
 
         [Display(Name = "بررسی تعمیرکار")]
-        Checking = 1,
+        Repairer_Check = 1,
+
+        [Display(Name = "بررسی مرکز")]
+        Store_Check = 2,
 
         [Display(Name = "استعلام")]
-        Inquiry = 2,
+        Inquiry = 3,
 
         [Display(Name = "آماده تعمیر")]
-        ReadyToRepair = 3,
+        ReadyToRepair = 4,
 
         [Display(Name = "در حال تعمیر")]
-        Repairing = 4,
+        Repairing = 5,
 
         [Display(Name = "آماده+")]
-        Ready_Repaired = 5,
+        Ready_Repaired = 6,
 
         [Display(Name = "آماده-")]
-        Ready_NotRepaired = 6,
+        Ready_NotRepaired = 7,
 
         [Display(Name = "بسته شده")]
-        Done = 7
+        Done = 8
     }
 }

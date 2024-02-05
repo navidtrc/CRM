@@ -64,32 +64,9 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-const statusButtonText = (level) => {
-  switch (level) {
-    case 0:
-      return "ارسال برای بررسی تعمیر کار";
-    case 1:
-      return "اعلام نتیجه بررسی";
-    case 2:
-      return "ادامه";
-    case 3:
-      return "شروع تعمیر";
-    case 4:
-      return "اتمام تعمیر و ارسال به مرکز فروش";
-    case 5:
-      return "تحویل داده شد";
-    case 6:
-      return "تحویل داده شد";
-    default:
-      break;
-  }
-};
 
 export default function ActionModal(props) {
-  const [status] = useState({
-    level: 2, // props.data.statusId
-    buttonText: statusButtonText(props.data.statusId),
-  });
+  const [status] = useState(props.data.status)
 
   const [ticket, setTicket] = useState(null);
   const [isAdmin] = useState(true);
@@ -97,40 +74,17 @@ export default function ActionModal(props) {
   useEffect(() => {
     TicketService.get(props.data.id).then((response) => {
       const result = response.data.Data.Data;
+      setTicket(result);
       debugger;
-      setTicket({
-        ticketId: result.Id,
-        ticketNumber: result.Number,
-        ticketDate: new Date(result.Date),
-        ticketPersianDate: result.PersianDate,
-        customerName: result.Customer.Person.Name,
-        customerPhone: result.Customer.Person.User.PhoneNumber,
-        customerEmail: result.Customer.Person.User.Email,
-        customerPhoneConfirmation:
-          result.Customer.Person.User.PhoneNumberConfirmed,
-        customerEmailConfirmation: result.Customer.Person.User.EmailConfirmed,
-        deviceType: result.Device.DeviceType.Title,
-        deviceBrand: result.Device.DeviceBrand.Title,
-        deviceModel: result.Device.Model,
-        deviceDescrption: result.Device.Description,
-        deviceAccessories: result.Device.Accessories,
-        deviceWaranty: result.Device.Warranty,
-        inquiryPrice: result.InquiryPrice,
-        repairer: {
-          id: result.RepairerId,
-          label: result.Repairer.Person.Name,
-        },
-        privateDescription: result.PrivateDescription,
-      });
     });
   }, []);
 
   const handleSubmit = () => {};
 
-  if (props.data === null) {
+  if (ticket === null) {
     return "Loading";
   }
-  if (status.level === 7) {
+  if (status.level === 8) {
     Swal.fire("تیکت بسته شده و فرآیند آن به پایان رسیده");
     return;
   }
@@ -144,15 +98,13 @@ export default function ActionModal(props) {
       <Box sx={style}>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography id="modal-modal-title" variant="h5" component="h5">
-            تیکت در صف انتظار
+            {status.headerText}
           </Typography>
           <Divider />
           <Box sx={{ m: 2, display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="h6">شماره تیکت: {ticket.Number}</Typography>
             <Typography variant="h6">
-              شماره تیکت: {ticket.ticketNumber}
-            </Typography>
-            <Typography variant="h6">
-              تاریخ تیکت: {ticket.ticketPersianDate}
+              تاریخ تیکت: {ticket.PersianDate}
             </Typography>
           </Box>
           <Divider />
@@ -162,18 +114,22 @@ export default function ActionModal(props) {
                 sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
               >
                 <Typography variant="h6">
-                  نام مشتری: {ticket.customerName}
+                  نام مشتری: {ticket.Customer.Person.Name}
                 </Typography>
                 <Typography
-                  color={ticket.customerPhoneConfirmation ? "" : "error"}
+                  color={
+                    ticket.Customer.Person.User.PhoneConfirmation ? "" : "error"
+                  }
                   variant="h6"
                 >
-                  شماره تماس: {ticket.customerPhone}
+                  شماره تماس: {ticket.Customer.Person.PhoneNumber}
                 </Typography>
                 <Typography
-                  color={ticket.customerPhoneConfirmation ? "" : "error"}
+                  color={
+                    ticket.Customer.Person.User.EmailConfirmation ? "" : "error"
+                  }
                 >
-                  ایمیل: {ticket.customerEmail}
+                  ایمیل: {ticket.Customer.Person.Email}
                 </Typography>
               </Box>
               <Divider />
@@ -182,21 +138,21 @@ export default function ActionModal(props) {
 
           <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h6">
-              نوع دستگاه: {ticket.deviceType}
+              نوع دستگاه: {ticket.Device.DeviceType.Title}
             </Typography>
             <Typography variant="h6">
-              برند دستگاه: {ticket.deviceBrand}
+              برند دستگاه: {ticket.Device.DeviceBrand.Title}
             </Typography>
             <Typography ticket="h6">
-              مدل دستگاه: {ticket.deviceModel}
+              مدل دستگاه: {ticket.Device.Model}
             </Typography>
           </Box>
           <Box sx={{ mt: 2 }}>
             <Typography variant="h6">
-              مشکل دستگاه: {ticket.deviceDescrption}
+              مشکل دستگاه: {ticket.Device.Description}
             </Typography>
             <Typography variant="h6">
-              متعلقات دستگاه: {ticket.deviceAccessories}
+              متعلقات دستگاه: {ticket.Device.Accessories}
             </Typography>
           </Box>
           {isAdmin && (
@@ -205,7 +161,17 @@ export default function ActionModal(props) {
                 sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
               >
                 <Typography variant="h6">
-                  قیمت برآورد شده: {ticket.inquiryPrice}
+                  قیمت حد استعلام: {ticket.InquiryPrice}
+                </Typography>
+                {ticket}
+                <Typography variant="h6">
+                  قیمت تعمیرکار: {ticket.RepairerPrice}
+                </Typography>
+                <Typography variant="h6">
+                  قیمت فروشگاه: {ticket.ProfitMargin}
+                </Typography>
+                <Typography variant="h6">
+                  قیمت نهایی: {ticket.FinalPrice}
                 </Typography>
                 <Typography variant="h6">
                   گارانتی :{ticket.deviceWaranty === true ? "دارد" : "ندارد"}
@@ -217,10 +183,14 @@ export default function ActionModal(props) {
 
           {status.level === 0 && <WaitingStateModal />}
           {status.level === 1 && <CheckingStateModal />}
-          {status.level === 2 && <InquiryStateModal />}
-          {status.level === 3 && <ReadyToRepairStateModal />}
-          {status.level === 4 && <RepairingStateModal />}
-          {(status.level === 5 || status.level === 6) && <ReadyStateModal />}
+
+          {/* CHANGE */}
+          {status.level === 2 && <CheckingStateModal />} 
+          
+          {status.level === 3 && <InquiryStateModal />}
+          {status.level === 4 && <ReadyToRepairStateModal />}
+          {status.level === 5 && <RepairingStateModal />}
+          {(status.level === 6 || status.level === 7) && <ReadyStateModal />}
 
           <Stack mt={2} spacing={2} direction="row">
             <Button

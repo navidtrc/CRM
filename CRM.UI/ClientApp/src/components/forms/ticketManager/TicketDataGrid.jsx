@@ -19,11 +19,9 @@ import {
 } from "@mui/icons-material/";
 import Swal from "sweetalert2";
 
-const TableGrid = ({
-  isRefetching,
-  onSetIsRefetching,
-  onOpenModal
-}) => {
+
+
+const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,7 +80,10 @@ const TableGrid = ({
         const json = await response.json();
         const result = json.Data.Data.Data.map((item) => {
           const dateType = new Date(item.Date);
-          const persianDate = `${dateType.toLocaleDateString('fa-IR-u-nu-latn')} ${dateType.toLocaleTimeString('fa-IR-u-nu-latn')}`
+          const persianDate = `${dateType.toLocaleDateString(
+            "fa-IR-u-nu-latn"
+          )} ${dateType.toLocaleTimeString("fa-IR-u-nu-latn")}`;
+
           return {
             id: item.Id,
             ticketNumber: item.Number,
@@ -91,8 +92,8 @@ const TableGrid = ({
             customerName: item.Customer.Person.Name,
             customerPhone: item.Customer.Person.User.PhoneNumber,
             customerEmail: item.Customer.Person.User.Email,
-            statusDisplay: item.StatusDisplay,
-            statusId: item.LastStatus,
+            StatusDisplay: item.StatusDisplay,
+            status: statusHelper(item.LastStatus, item.StatusDisplay),
           };
         });
 
@@ -153,7 +154,7 @@ const TableGrid = ({
             }),
         },
       },
-      
+
       {
         accessorKey: "customerName",
         header: "مشتری",
@@ -277,7 +278,7 @@ const TableGrid = ({
             <Button onClick={() => onOpenModal("action", row.original)}>
               <NextPlanIcon />
             </Button>
-            
+
             <Button
               color="error"
               onClick={() => handleDeleteUser(row.original)}
@@ -317,3 +318,49 @@ const TicketDataGrid = (props) => (
 );
 
 export default TicketDataGrid;
+
+
+const statusHelper = (step, text) => {
+  let buttonText = "";
+  let headerText = "";
+
+  switch (step) {
+    case 0:
+      buttonText = "ارسال برای بررسی تعمیر کار";
+      headerText = "";
+      break;
+    case 1:
+      buttonText = "اعلام نتیجه بررسی";
+      headerText = "";
+      break;
+    case 2:
+      buttonText = "ادامه";
+      headerText = "";
+      break;
+    case 3:
+      buttonText = "شروع تعمیر";
+      headerText = "";
+      break;
+    case 4:
+      buttonText = "اتمام تعمیر و ارسال به مرکز فروش";
+      headerText = "";
+      break;
+    case 5:
+      buttonText = "تحویل داده شد";
+      headerText = "";
+      break;
+    case 6:
+      buttonText = "تحویل داده شد";
+      headerText = "";
+      break;
+    default:
+      break;
+  }
+
+  return {
+    step,
+    text,
+    buttonText,
+    headerText,
+  };
+};
