@@ -64,9 +64,8 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-
 export default function ActionModal(props) {
-  const [status] = useState(props.data.status)
+  const [status] = useState(props.data.status);
 
   const [ticket, setTicket] = useState(null);
   const [isAdmin] = useState(true);
@@ -75,7 +74,6 @@ export default function ActionModal(props) {
     TicketService.get(props.data.id).then((response) => {
       const result = response.data.Data.Data;
       setTicket(result);
-      debugger;
     });
   }, []);
 
@@ -88,6 +86,7 @@ export default function ActionModal(props) {
     Swal.fire("تیکت بسته شده و فرآیند آن به پایان رسیده");
     return;
   }
+  debugger;
   return (
     <Modal
       open={props.open}
@@ -118,18 +117,18 @@ export default function ActionModal(props) {
                 </Typography>
                 <Typography
                   color={
-                    ticket.Customer.Person.User.PhoneConfirmation ? "" : "error"
+                    ticket.Customer.Person.User.PhoneNumberConfirmed ? "" : "error"
                   }
                   variant="h6"
                 >
-                  شماره تماس: {ticket.Customer.Person.PhoneNumber}
+                  شماره تماس: {ticket.Customer.Person.User.PhoneNumber}
                 </Typography>
                 <Typography
                   color={
-                    ticket.Customer.Person.User.EmailConfirmation ? "" : "error"
+                    ticket.Customer.Person.User.EmailConfirmed ? "" : "error"
                   }
                 >
-                  ایمیل: {ticket.Customer.Person.Email}
+                  ایمیل: {ticket.Customer.Person.User.Email}
                 </Typography>
               </Box>
               <Divider />
@@ -155,7 +154,7 @@ export default function ActionModal(props) {
               متعلقات دستگاه: {ticket.Device.Accessories}
             </Typography>
           </Box>
-          {isAdmin && (
+          {/* {isAdmin && (
             <>
               <Box
                 sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
@@ -165,13 +164,13 @@ export default function ActionModal(props) {
                 </Typography>
                 {ticket}
                 <Typography variant="h6">
-                  قیمت تعمیرکار: {ticket.RepairerPrice}
+                  قیمت تعمیرکار: {ticket?.RepairerPrice}
                 </Typography>
                 <Typography variant="h6">
-                  قیمت فروشگاه: {ticket.ProfitMargin}
+                  قیمت فروشگاه: {ticket?.ProfitMargin}
                 </Typography>
                 <Typography variant="h6">
-                  قیمت نهایی: {ticket.FinalPrice}
+                  قیمت نهایی: {ticket?.FinalPrice}
                 </Typography>
                 <Typography variant="h6">
                   گارانتی :{ticket.deviceWaranty === true ? "دارد" : "ندارد"}
@@ -179,18 +178,17 @@ export default function ActionModal(props) {
               </Box>
               <Divider />
             </>
-          )}
+          )} */}
 
-          {status.level === 0 && <WaitingStateModal />}
+          {/* {status.level === 0 && <WaitingStateModal />}
           {status.level === 1 && <CheckingStateModal />}
 
-          {/* CHANGE */}
-          {status.level === 2 && <CheckingStateModal />} 
-          
+          {status.level === 2 && <CheckingStateModal />}
+
           {status.level === 3 && <InquiryStateModal />}
           {status.level === 4 && <ReadyToRepairStateModal />}
           {status.level === 5 && <RepairingStateModal />}
-          {(status.level === 6 || status.level === 7) && <ReadyStateModal />}
+          {(status.level === 6 || status.level === 7) && <ReadyStateModal />} */}
 
           <Stack mt={2} spacing={2} direction="row">
             <Button
