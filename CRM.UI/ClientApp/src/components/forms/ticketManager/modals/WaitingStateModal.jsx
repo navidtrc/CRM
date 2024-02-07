@@ -2,14 +2,7 @@ import { React, useEffect, useState } from "react";
 import {
   Box,
   TextField,
-  Divider,
-  Stack,
-  Button,
-  Paper,
   Autocomplete,
-  InputLabel,
-  Select,
-  MenuItem,
   FormControl,
 } from "@mui/material/";
 import Typography from "@mui/material/Typography";
@@ -60,20 +53,18 @@ export default function WaitingStateModal({ actionState }) {
     debugger;
   }, []);
 
-  const handleChange = (e) => {
-    debugger;
-    setData((prev) => {
-      debugger;
-      return { ...prev, profit: e.target.value };
-    });
-  };
-
   return (
     <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
       <div>
         <TextField
           value={data.profit}
-          onChange={handleChange}
+          onChange={(e) => {
+            debugger;
+            setData((prev) => {
+              debugger;
+              return { ...prev, profit: e.target.value };
+            });
+          }}
           label="قیمت فروشگاه"
           type="number"
           variant="outlined"

@@ -42,12 +42,9 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function CheckingStateModal({ onClose, data }) {
-  const [ticket, setTicket] = useState({
-    ...data,
-    isRepairable: false,
-  });
-  const [isAdmin] = useState(true);
+export default function CheckingStateModal({ actionState }) {
+  const [data, setData] = actionState;
+
 
   const handleRepairableChange = () => {
     setTicket((prev) => ({
