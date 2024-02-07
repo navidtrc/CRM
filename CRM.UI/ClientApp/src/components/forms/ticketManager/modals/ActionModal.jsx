@@ -69,6 +69,12 @@ export default function ActionModal(props) {
 
   const [ticket, setTicket] = useState(null);
   const [isAdmin] = useState(true);
+  const [privateDescription, setPrivateDescription] = useState(null);
+
+  const step_0_data = useState({
+    profit: null,
+    repairer: { id: 0, label: "" },
+  });
 
   useEffect(() => {
     TicketService.get(props.data.id).then((response) => {
@@ -77,7 +83,9 @@ export default function ActionModal(props) {
     });
   }, []);
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    console.log(step_0_data);
+  };
 
   if (ticket === null) {
     return "Loading";
@@ -86,7 +94,6 @@ export default function ActionModal(props) {
     Swal.fire("تیکت بسته شده و فرآیند آن به پایان رسیده");
     return;
   }
-  debugger;
   return (
     <Modal
       open={props.open}
@@ -117,7 +124,9 @@ export default function ActionModal(props) {
                 </Typography>
                 <Typography
                   color={
-                    ticket.Customer.Person.User.PhoneNumberConfirmed ? "" : "error"
+                    ticket.Customer.Person.User.PhoneNumberConfirmed
+                      ? ""
+                      : "error"
                   }
                   variant="h6"
                 >
@@ -154,7 +163,7 @@ export default function ActionModal(props) {
               متعلقات دستگاه: {ticket.Device.Accessories}
             </Typography>
           </Box>
-          {/* {isAdmin && (
+          {isAdmin && (
             <>
               <Box
                 sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
@@ -162,9 +171,8 @@ export default function ActionModal(props) {
                 <Typography variant="h6">
                   قیمت حد استعلام: {ticket.InquiryPrice}
                 </Typography>
-                {ticket}
                 <Typography variant="h6">
-                  قیمت تعمیرکار: {ticket?.RepairerPrice}
+                  قیمت تعمیرکار: {ticket?.RepairPrice}
                 </Typography>
                 <Typography variant="h6">
                   قیمت فروشگاه: {ticket?.ProfitMargin}
@@ -173,22 +181,34 @@ export default function ActionModal(props) {
                   قیمت نهایی: {ticket?.FinalPrice}
                 </Typography>
                 <Typography variant="h6">
-                  گارانتی :{ticket.deviceWaranty === true ? "دارد" : "ندارد"}
+                  گارانتی :{ticket.Device.Warranty === true ? "دارد" : "ندارد"}
                 </Typography>
               </Box>
               <Divider />
             </>
-          )} */}
+          )}
 
-          {/* {status.level === 0 && <WaitingStateModal />}
-          {status.level === 1 && <CheckingStateModal />}
+          {status.step === 0 && <WaitingStateModal actionState={step_0_data} />}
+          {status.step === 1 && <CheckingStateModal />}
 
-          {status.level === 2 && <CheckingStateModal />}
+          {status.step === 2 && <CheckingStateModal />}
 
-          {status.level === 3 && <InquiryStateModal />}
-          {status.level === 4 && <ReadyToRepairStateModal />}
-          {status.level === 5 && <RepairingStateModal />}
-          {(status.level === 6 || status.level === 7) && <ReadyStateModal />} */}
+          {status.step === 3 && <InquiryStateModal />}
+          {status.step === 4 && <ReadyToRepairStateModal />}
+          {status.step === 5 && <RepairingStateModal />}
+          {(status.step === 6 || status.step === 7) && <ReadyStateModal />}
+
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              sx={{ m: 1 }}
+              value={privateDescription}
+              onChange={(e) => setPrivateDescription(e.target.value)}
+              placeholder="توضیحات (خصوصی)"
+              multiline
+              rows={4}
+              maxRows={5}
+            />
+          </Box>
 
           <Stack mt={2} spacing={2} direction="row">
             <Button

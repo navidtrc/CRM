@@ -34,8 +34,10 @@ namespace CRM.Service.Ticket
 
             return new ResultContent<DataSourceResult>(true, result);
         }
+
         public async Task<ResultContent<Entities.DataModels.Basic.Ticket>> GetTicketAsync(long id, CancellationToken cancellationToken)
         {
+           
             var result = await _uow.Tickets.TableNoTracking
                         .Include(i => i.Device)
                         .ThenInclude(i => i.DeviceBrand).Include(i => i.Device).ThenInclude(i => i.DeviceType)

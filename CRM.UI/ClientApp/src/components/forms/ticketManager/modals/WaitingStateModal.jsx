@@ -43,11 +43,9 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function WaitingStateModal() {
-  const [ticket, setTicket] = useState({
-    profitMargin: "",
-    repairer: { id: 0, label: "" },
-  });
+export default function WaitingStateModal({ actionState }) {
+  const [data, setData] = actionState;
+
   const [repairerSuggestions, setRepairerSuggestions] = useState(null);
 
   useEffect(() => {
@@ -62,30 +60,36 @@ export default function WaitingStateModal() {
     debugger;
   }, []);
 
-  debugger;
+  const handleChange = (e) => {
+    debugger;
+    setData((prev) => {
+      debugger;
+      return { ...prev, profit: e.target.value };
+    });
+  };
+
   return (
     <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
       <div>
-        <InputLabel>حاشیه سود</InputLabel>
-        <Select
-          //={age}
-          //onChange={handleChange}
-          label="حاشیه سود"
-        >
-          <MenuItem value={1}>% درصد</MenuItem>
-          <MenuItem value={2}>$ مبلغ</MenuItem>
-        </Select>
-        <TextField label="مقدار" type="number" variant="standard" />
+        <TextField
+          value={data.profit}
+          onChange={handleChange}
+          label="قیمت فروشگاه"
+          type="number"
+          variant="outlined"
+        />
       </div>
 
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <Autocomplete
-          value={ticket?.repairer.label}
+          value={data.repairer.label}
           onChange={(event, newValue) => {
-            setTicket((prev) => ({
-              ...prev,
-              repairer: newValue,
-            }));
+            setData((prev) => {
+              return {
+                ...prev,
+                repairer: newValue,
+              };
+            });
           }}
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="تعمیر کار" />}
@@ -93,15 +97,6 @@ export default function WaitingStateModal() {
           options={repairerSuggestions === null ? [] : repairerSuggestions}
         />
       </FormControl>
-
-      <TextField
-        sx={{ m: 1 }}
-        value={ticket.privateDescription}
-        placeholder="توضیحات (خصوصی)"
-        multiline
-        rows={4}
-        maxRows={5}
-      />
     </Box>
   );
 }
