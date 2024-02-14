@@ -72,7 +72,7 @@ namespace CRM.Entities.DataModels.Basic
         [Display(Name = "PersianDate", ResourceType = typeof(Resource))]
         public string PersianDate { get { return Date.ToPersianDate(true, true); } }
     }
-    public class StatusConfiguration : IEntityTypeConfiguration<Ticket>
+    public class TicketConfiguration : IEntityTypeConfiguration<Ticket>
     {
         public void Configure(EntityTypeBuilder<Ticket> builder)
         {

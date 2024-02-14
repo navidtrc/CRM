@@ -19,8 +19,6 @@ import {
 } from "@mui/icons-material/";
 import Swal from "sweetalert2";
 
-
-
 const TableGrid = ({ isRefetching, onSetIsRefetching, onOpenModal }) => {
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
@@ -319,7 +317,6 @@ const TicketDataGrid = (props) => (
 
 export default TicketDataGrid;
 
-
 const statusHelper = (step, text) => {
   let buttonText = "";
   let headerText = "";
@@ -327,31 +324,35 @@ const statusHelper = (step, text) => {
   switch (step) {
     case 0:
       buttonText = "ارسال برای بررسی تعمیر کار";
-      headerText = "";
+      headerText = "در صف انتظار";
       break;
     case 1:
       buttonText = "اعلام نتیجه بررسی";
-      headerText = "";
+      headerText = "بررسی تعمیرکار";
       break;
     case 2:
       buttonText = "ادامه";
-      headerText = "";
+      headerText = "بررسی مرکز";
       break;
     case 3:
-      buttonText = "شروع تعمیر";
-      headerText = "";
+      buttonText = "اعلام نتیجه استعلام";
+      headerText = "استعلام";
       break;
     case 4:
-      buttonText = "اتمام تعمیر و ارسال به مرکز فروش";
-      headerText = "";
+      buttonText = "شروع تعمیر";
+      headerText = "آماده برای تعمیر";
       break;
     case 5:
-      buttonText = "تحویل داده شد";
-      headerText = "";
+      buttonText = "اتمام تعمیر و ارسال به مرکز فروش";
+      headerText = "در حال تعمیر";
       break;
     case 6:
       buttonText = "تحویل داده شد";
-      headerText = "";
+      headerText = "آماده ی تحویل (+)";
+      break;
+    case 7:
+      buttonText = "تحویل داده شد";
+      headerText = "آماده ی تحویل (-)";
       break;
     default:
       break;
