@@ -16,14 +16,14 @@ namespace CRM.Service.Sms
         {
             this.unitOfWork = unitOfWork;
         }
-        public async Task<IRestResponse> SendSmsAsync(string sendTo, string text, CancellationToken cancellationToken)
+        public async Task<RestResponse> SendSmsAsync(string sendTo, string text, CancellationToken cancellationToken)
         {
             var smsSetting = await unitOfWork.Settings.TableNoTracking.FirstOrDefaultAsync(f => f.Key == SmsConfig.Key, cancellationToken);
             var options = JsonConvert.DeserializeObject<SmsConfig>(Encoding.UTF8.GetString(smsSetting.Content));
 
             var client = new RestClient(options.Url);
-            client.Timeout = -1;
-            var request = new RestRequest(options.Method);
+            //client.Timeout = -1;
+            var request = new RestRequest();
             request.AddHeader("Content-Type", options.ContentType);
             request.AddParameter("userName", options.UserName);
             request.AddParameter("password", options.Password);
@@ -31,7 +31,7 @@ namespace CRM.Service.Sms
             request.AddParameter("from", options.SendFrom);
             request.AddParameter("text", text);
             request.AddParameter("isFlash", options.IsFlash.ToString());
-            IRestResponse response = await client.ExecuteAsync(request, cancellationToken);
+            var response = await client.PostAsync(request, cancellationToken);
             return response;
         }
     }

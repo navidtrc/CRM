@@ -6,6 +6,6 @@ namespace CRM.Service.Sms
 {
     public interface ISmsService
     {
-        Task<IRestResponse> SendSmsAsync(string sendTo, string text, CancellationToken cancellationToken);
+        Task<RestResponse> SendSmsAsync(string sendTo, string text, CancellationToken cancellationToken);
     }
 }

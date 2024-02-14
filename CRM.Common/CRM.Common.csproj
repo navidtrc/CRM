@@ -22,8 +22,8 @@
 		<PackageReference Include="AutoMapper" Version="8.0.0" />
 		<PackageReference Include="Pluralize.NET" Version="1.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.14" />
-		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.0.3" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.3.1" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.14" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="7.0.14" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.14" />
@@ -33,7 +33,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="RestSharp" Version="106.10.1" />
+		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2023.1.117" />
 	</ItemGroup>
 	<ItemGroup>
