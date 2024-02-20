@@ -144,8 +144,8 @@ namespace CRM.DAL.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7314),
-                            Guid = new Guid("318d1625-b840-4b89-8ac6-2009654ea155"),
+                            CreatedDate = new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3142),
+                            Guid = new Guid("c1894f1e-e13f-4bc2-8023-0eec8c63b13f"),
                             IsActive = true,
                             IsDeleted = false,
                             Title = "Braun"
@@ -153,8 +153,8 @@ namespace CRM.DAL.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7328),
-                            Guid = new Guid("f0c58824-80be-47c5-b102-62513106066c"),
+                            CreatedDate = new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3153),
+                            Guid = new Guid("d9976a0a-c86d-4fdd-8027-abbb71e4decb"),
                             IsActive = true,
                             IsDeleted = false,
                             Title = "Philips"
@@ -162,8 +162,8 @@ namespace CRM.DAL.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7329),
-                            Guid = new Guid("fa3aaff5-4da0-48c0-97e7-ec839a158c79"),
+                            CreatedDate = new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3154),
+                            Guid = new Guid("62ddaf5e-689a-4bea-a33c-1f1fa1a87f53"),
                             IsActive = true,
                             IsDeleted = false,
                             Title = "Panasonic"
@@ -207,8 +207,8 @@ namespace CRM.DAL.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8505),
-                            Guid = new Guid("55feae1d-4f32-4669-b9cc-98ec037488d8"),
+                            CreatedDate = new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3940),
+                            Guid = new Guid("5f7c5e3d-94f6-4268-9762-58e8b05b733a"),
                             IsActive = true,
                             IsDeleted = false,
                             Title = "Trimmer"
@@ -216,8 +216,8 @@ namespace CRM.DAL.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8510),
-                            Guid = new Guid("08f548dd-4569-469b-abe4-758f818a4ded"),
+                            CreatedDate = new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3942),
+                            Guid = new Guid("befab6b6-23bd-4650-9237-6a50fdd10f81"),
                             IsActive = true,
                             IsDeleted = false,
                             Title = "Shaver"
@@ -225,8 +225,8 @@ namespace CRM.DAL.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedDate = new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8511),
-                            Guid = new Guid("fd6ed8ed-835d-4bbe-976a-aa7f9acfc0c8"),
+                            CreatedDate = new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3944),
+                            Guid = new Guid("4e800c14-c1f8-4bac-83bc-b93ff2f58ecd"),
                             IsActive = true,
                             IsDeleted = false,
                             Title = "Epilady"
@@ -361,6 +361,9 @@ namespace CRM.DAL.Migrations
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
+
+                    b.Property<string>("PrivateDescription")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProfitMargin")
                         .HasColumnType("int");

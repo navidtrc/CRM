@@ -1,10 +1,5 @@
 import { React, useEffect, useState } from "react";
-import {
-  Box,
-  TextField,
-  Autocomplete,
-  FormControl,
-} from "@mui/material/";
+import { Box, TextField, Autocomplete, FormControl } from "@mui/material/";
 import Typography from "@mui/material/Typography";
 import Swal from "sweetalert2";
 import PropTypes from "prop-types";
@@ -36,56 +31,50 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-export default function WaitingStateModal({ actionState }) {
-  const [data, setData] = actionState;
-
+export default function WaitingStateModal({ data, onHandleChange }) {
   const [repairerSuggestions, setRepairerSuggestions] = useState(null);
+  const [selectedRepairer, setSelectedRepairer] = useState(null);
 
   useEffect(() => {
     TicketService.getRepairers().then((result) => {
-      debugger;
       setRepairerSuggestions(
         result.data.Data.map((item) => {
           return { id: item.Id, label: item.Person.Name };
         })
       );
     });
-    debugger;
   }, []);
+
+  if (repairerSuggestions === null) {
+    return "Loading";
+  }
 
   return (
     <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
       <div>
         <TextField
           value={data.profit}
-          onChange={(e) => {
-            debugger;
-            setData((prev) => {
-              debugger;
-              return { ...prev, profit: e.target.value };
-            });
-          }}
+          onChange={(e) => onHandleChange(e)}
           label="قیمت فروشگاه"
           type="number"
+          name="ProfitMargin"
           variant="outlined"
         />
       </div>
 
       <FormControl sx={{ m: 1, minWidth: 120 }}>
         <Autocomplete
-          value={data.repairer.label}
+          value={selectedRepairer?.label}
           onChange={(event, newValue) => {
-            setData((prev) => {
-              return {
-                ...prev,
-                repairer: newValue,
-              };
+            setSelectedRepairer(newValue);
+            onHandleChange({
+              target: { name: "RepairerId", value: newValue.id },
             });
           }}
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="تعمیر کار" />}
           disablePortal
-          options={repairerSuggestions === null ? [] : repairerSuggestions}
+          options={repairerSuggestions}
         />
       </FormControl>
     </Box>

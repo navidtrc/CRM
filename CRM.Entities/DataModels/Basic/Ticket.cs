@@ -68,6 +68,9 @@ namespace CRM.Entities.DataModels.Basic
         [Display(Name = "InquiryConfirmation", ResourceType = typeof(Resource))]
         public bool? InquiryConfirmation { get; set; }
 
+        [Display(Name = "PrivateDescription", ResourceType = typeof(Resource))]
+        public string PrivateDescription { get; set; }
+        
         [NotMapped]
         [Display(Name = "PersianDate", ResourceType = typeof(Resource))]
         public string PersianDate { get { return Date.ToPersianDate(true, true); } }

@@ -115,12 +115,21 @@ namespace CRM.Service.Ticket
                 Status = Common.Enums.eTicketStatus.Waiting,
                 FellowDate = DateTime.Now,
             };
+            try
+            {
+                await _uow.Fellows.AddAsync(fellow, cancellationToken);
+                await _uow.Devices.AddAsync(device, cancellationToken);
+                await _uow.Tickets.AddAsync(ticket, cancellationToken);
+                await _uow.CompleteAsync(cancellationToken);
 
-            await _uow.Fellows.AddAsync(fellow, cancellationToken);
-            await _uow.Devices.AddAsync(device, cancellationToken);
-            await _uow.Tickets.AddAsync(ticket, cancellationToken);
-            await _uow.CompleteAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
 
+                throw;
+            }
+
+           
             return new ResultContent<TicketPrerequisiteViewModel>(true, null);
 
 

@@ -433,6 +433,7 @@ namespace CRM.DAL.Migrations
                     DeviceId = table.Column<long>(type: "bigint", nullable: false),
                     InquiryNeed = table.Column<bool>(type: "bit", nullable: true),
                     InquiryConfirmation = table.Column<bool>(type: "bit", nullable: true),
+                    PrivateDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -740,9 +741,9 @@ namespace CRM.DAL.Migrations
                 columns: new[] { "Id", "CreatedDate", "Description", "Guid", "IsActive", "IsDeleted", "LastModifiedDate", "Title" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7314), null, new Guid("318d1625-b840-4b89-8ac6-2009654ea155"), true, false, null, "Braun" },
-                    { 2L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7328), null, new Guid("f0c58824-80be-47c5-b102-62513106066c"), true, false, null, "Philips" },
-                    { 3L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(7329), null, new Guid("fa3aaff5-4da0-48c0-97e7-ec839a158c79"), true, false, null, "Panasonic" }
+                    { 1L, new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3142), null, new Guid("c1894f1e-e13f-4bc2-8023-0eec8c63b13f"), true, false, null, "Braun" },
+                    { 2L, new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3153), null, new Guid("d9976a0a-c86d-4fdd-8027-abbb71e4decb"), true, false, null, "Philips" },
+                    { 3L, new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3154), null, new Guid("62ddaf5e-689a-4bea-a33c-1f1fa1a87f53"), true, false, null, "Panasonic" }
                 });
 
             migrationBuilder.InsertData(
@@ -751,9 +752,9 @@ namespace CRM.DAL.Migrations
                 columns: new[] { "Id", "CreatedDate", "Description", "Guid", "IsActive", "IsDeleted", "LastModifiedDate", "Title" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8505), null, new Guid("55feae1d-4f32-4669-b9cc-98ec037488d8"), true, false, null, "Trimmer" },
-                    { 2L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8510), null, new Guid("08f548dd-4569-469b-abe4-758f818a4ded"), true, false, null, "Shaver" },
-                    { 3L, new DateTime(2024, 2, 1, 1, 23, 17, 536, DateTimeKind.Local).AddTicks(8511), null, new Guid("fd6ed8ed-835d-4bbe-976a-aa7f9acfc0c8"), true, false, null, "Epilady" }
+                    { 1L, new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3940), null, new Guid("5f7c5e3d-94f6-4268-9762-58e8b05b733a"), true, false, null, "Trimmer" },
+                    { 2L, new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3942), null, new Guid("befab6b6-23bd-4650-9237-6a50fdd10f81"), true, false, null, "Shaver" },
+                    { 3L, new DateTime(2024, 2, 20, 12, 25, 2, 984, DateTimeKind.Local).AddTicks(3944), null, new Guid("4e800c14-c1f8-4bac-83bc-b93ff2f58ecd"), true, false, null, "Epilady" }
                 });
 
             migrationBuilder.CreateIndex(

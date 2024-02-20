@@ -66,26 +66,28 @@ CustomTabPanel.propTypes = {
 
 export default function ActionModal(props) {
   const [status] = useState(props.data.status);
-
   const [ticket, setTicket] = useState(null);
   const [isAdmin] = useState(true);
-  const [privateDescription, setPrivateDescription] = useState(null);
 
-  const step_0_data = useState({
-    profit: null,
-    repairer: { id: 0, label: "" },
-  });
+  const handleChange = (e) => {
+    debugger;
+    setTicket((prev) => {
+      return {
+        ...prev,
+        [e.target.name]: e.target.value,
+      };
+    });
+  };
 
   useEffect(() => {
     TicketService.get(props.data.id).then((response) => {
       const result = response.data.Data.Data;
+      debugger;
       setTicket(result);
     });
   }, []);
 
-  const handleSubmit = () => {
-    console.log(step_0_data);
-  };
+  const handleSubmit = () => {};
 
   if (ticket === null) {
     return "Loading";
@@ -188,8 +190,24 @@ export default function ActionModal(props) {
             </>
           )}
 
-          {status.step === 0 && <WaitingStateModal actionState={step_0_data} />}
-          {status.step === 1 && <CheckingStateModal />}
+          {status.step === 0 && (
+            <WaitingStateModal
+              onHandleChange={handleChange}
+              data={{
+                RepairerId: ticket.RepairerId,
+                ProfitMargin: ticket.ProfitMargin,
+              }}
+            />
+          )}
+          {status.step === 1 && (
+            <CheckingStateModal
+              onHandleChange={handleChange}
+              data={{
+                IsRepairable: ticket.RepairerId,
+                RepairPrice: ticket.ProfitMargin,
+              }}
+            />
+          )}
 
           {status.step === 2 && <CheckingStateModal />}
 
@@ -201,8 +219,9 @@ export default function ActionModal(props) {
           <Box sx={{ mt: 2 }}>
             <TextField
               sx={{ m: 1 }}
-              value={privateDescription}
-              onChange={(e) => setPrivateDescription(e.target.value)}
+              name="PrivateDescription"
+              value={ticket.PrivateDescription}
+              onChange={(e) => handleChange(e)}
               placeholder="توضیحات (خصوصی)"
               multiline
               rows={4}
